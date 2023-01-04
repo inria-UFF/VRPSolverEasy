@@ -1,5 +1,0 @@
-demos
-doc
-lib
-src
-tests
