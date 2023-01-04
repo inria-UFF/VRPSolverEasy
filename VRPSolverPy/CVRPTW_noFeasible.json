@@ -1,0 +1,131 @@
+{
+ "Points": [
+  {
+   "id": 0,
+   "name": "D1",
+   "idCustomer": 0,
+   "serviceTime": 0,
+   "TWbegin": 0,
+   "TWend": 0,
+   "penaltyOrCost": 0,
+   "demandOrCapacity": 0,
+   "incompatibleVehicles": []
+  },
+  {
+   "id": 1,
+   "name": "C1",
+   "idCustomer": 1,
+   "serviceTime": 0,
+   "TWbegin": 0,
+   "TWend": 5,
+   "penaltyOrCost": 0,
+   "demandOrCapacity": 20,
+   "incompatibleVehicles": []
+  },
+  {
+   "id": 2,
+   "name": "C2",
+   "idCustomer": 2,
+   "serviceTime": 0,
+   "TWbegin": 5,
+   "TWend": 10,
+   "penaltyOrCost": 0,
+   "demandOrCapacity": 20,
+   "incompatibleVehicles": []
+  },
+  {
+   "id": 3,
+   "name": "C3",
+   "idCustomer": 3,
+   "serviceTime": 0,
+   "TWbegin": 10,
+   "TWend": 15,
+   "penaltyOrCost": 0,
+   "demandOrCapacity": 20,
+   "incompatibleVehicles": []
+  },
+  {
+   "id": 4,
+   "name": "C4",
+   "idCustomer": 4,
+   "serviceTime": 0,
+   "TWbegin": 15,
+   "TWend": 20,
+   "penaltyOrCost": 0,
+   "demandOrCapacity": 20,
+   "incompatibleVehicles": []
+  }
+ ],
+ "VehicleTypes": [
+  {
+   "id": 1,
+   "startPointId": 0,
+   "endPointId": 0,
+   "name": "VEH1",
+   "capacity": 200,
+   "fixedCost": 0,
+   "varCostDist": 10,
+   "varCostTime": 10,
+   "maxNumber": 3,
+   "TWbegin": 0,
+   "TWend": 0
+  }
+ ],
+ "Links": [
+  {
+   "startPointId": 0,
+   "endPointId": 1,
+   "name": "arc1",
+   "isDirected": false,
+   "distance": 5,
+   "time": 6,
+   "fixedCost": 0
+  },
+  {
+   "startPointId": 1,
+   "endPointId": 2,
+   "name": "arc2",
+   "isDirected": false,
+   "distance": 6,
+   "time": 6,
+   "fixedCost": 0
+  },
+  {
+   "startPointId": 2,
+   "endPointId": 3,
+   "name": "arc3",
+   "isDirected": false,
+   "distance": 4,
+   "time": 6,
+   "fixedCost": 0
+  },
+  {
+   "startPointId": 3,
+   "endPointId": 4,
+   "name": "arc4",
+   "isDirected": false,
+   "distance": 4,
+   "time": 6,
+   "fixedCost": 0
+  },
+  {
+   "startPointId": 4,
+   "endPointId": 0,
+   "name": "arc5",
+   "isDirected": false,
+   "distance": 4,
+   "time": 6,
+   "fixedCost": 0
+  }
+ ],
+ "Parameters": {
+  "timeLimit": 300,
+  "action": "solve",
+  "upperBound": 1000000,
+  "heuristicUsed": false,
+  "timeLimitHeuristic": 20,
+  "configFile": "",
+  "solverName": "CLP",
+  "printLevel": -1
+ }
+}

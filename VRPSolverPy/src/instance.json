@@ -1,0 +1,111 @@
+{
+ "Points": [
+  {
+   "id": 0,
+   "name": "D1",
+   "serviceTime": 1,
+   "TWend": 200,
+   "penaltyOrCost": 5,
+   "demandOrCapacity": 500
+  },
+  {
+   "id": 1,
+   "name": "C1",
+   "idCustomer": 1,
+   "TWend": 200,
+   "demandOrCapacity": 15
+  },
+  {
+   "id": 2,
+   "name": "C2",
+   "idCustomer": 2,
+   "TWend": 200,
+   "penaltyOrCost": 3,
+   "demandOrCapacity": 15
+  },
+  {
+   "id": 3,
+   "name": "C3",
+   "idCustomer": 3,
+   "TWend": 200,
+   "penaltyOrCost": 3,
+   "demandOrCapacity": 15
+  },
+  {
+   "id": 10,
+   "name": "C4",
+   "idCustomer": 4,
+   "TWend": 200,
+   "penaltyOrCost": 3,
+   "demandOrCapacity": 15
+  }
+ ],
+ "VehicleTypes": [
+  {
+   "id": 2,
+   "startPointId": 0,
+   "endPointId": 0,
+   "name": "V1",
+   "capacity": 100,
+   "fixedCost": 15,
+   "maxNumber": 1,
+   "TWend": 500
+  },
+  {
+   "id": 5,
+   "startPointId": 0,
+   "endPointId": 0,
+   "name": "V2",
+   "capacity": 3000,
+   "fixedCost": 15,
+   "maxNumber": 1,
+   "TWend": 500
+  }
+ ],
+ "Links": [
+  {
+   "startPointId": 0,
+   "endPointId": 1,
+   "name": "1",
+   "distance": 20,
+   "time": 4,
+   "fixedCost": 12
+  },
+  {
+   "startPointId": 1,
+   "endPointId": 2,
+   "name": "2",
+   "distance": 20,
+   "time": 4,
+   "fixedCost": 12
+  },
+  {
+   "startPointId": 2,
+   "endPointId": 3,
+   "name": "3",
+   "distance": 10,
+   "time": 4,
+   "fixedCost": 12
+  },
+  {
+   "startPointId": 3,
+   "endPointId": 10,
+   "name": "4",
+   "distance": 30,
+   "time": 4,
+   "fixedCost": 12
+  },
+  {
+   "startPointId": 10,
+   "endPointId": 0,
+   "name": "5",
+   "distance": 30,
+   "time": 4,
+   "fixedCost": 12
+  }
+ ],
+ "Parameters": {
+  "timeLimit": 300,
+  "action": "solve"
+ }
+}

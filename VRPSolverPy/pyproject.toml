@@ -1,0 +1,36 @@
+[project]
+name = "VRPSolverPy"
+version = "0.0.1"
+authors = [
+  { name="ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo", email="najib.errami@inria.fr" },
+]
+description = "VRPSolverPy is a simplified modeler solving routing problems by using Branch-Cut-and-Price approach
+on solver like CLP or CPLEX"
+long_description = file: README.md
+long_description_content_type=text/markdown
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+project_urls={
+    'Documentation': 'https://VRPSolverPy.github.io/',
+    'Source': 'https://github.com/inria-UFF/VRPSolverPy',
+    'Tracker': 'https://github.com/inria-UFF/VRPSolverPy/issues'
+},
+packages=[
+    "src",
+    "tests",
+    "demos",
+    "doc",
+    "lib.Windows",
+    "lib.Linux",
+    "lib.Darwin",
+],
+package_data={
+    "lib.Windows": ["*", "*.*"],
+    "lib.Linux": ["*", "*.*"],
+    "lib.Darwin": ["*", "*.*"]
+}
+include_package_data=True

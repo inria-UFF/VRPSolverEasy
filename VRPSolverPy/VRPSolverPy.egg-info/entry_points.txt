@@ -1,0 +1,4 @@
+
+        [console_scripts]
+        VRPSolverPyTest = VRPSolverPyTest.tests.unit_tests:VRPSolverPyTestAll
+        
