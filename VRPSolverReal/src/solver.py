@@ -434,7 +434,7 @@ class Point:
     # a setter function of penalty
     @penalty.setter
     def penalty(self, penalty):
-        if not isinstance(demand, (int,float)):
+        if not isinstance(penalty, (int,float)):
             raise PropertyError(constants.POINT.PENALTY.value,
                                 constants.INTEGER_PROPERTY)
         self._penaltyOrCost = penalty
@@ -495,7 +495,7 @@ class Point:
     # a getter function of time windows
     @property
     def timeWindows(self):
-        return (self,TWbegin,self._TWend)
+        return (self._TWbegin,self._TWend)
     
     # a TWend function of time windows
     @TWend.setter
