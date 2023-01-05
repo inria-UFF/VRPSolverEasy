@@ -1,6 +1,4 @@
-import sys
-sys.path.append('../src')
-from src import VRPSolverReal as solver
+from VRPSolverReal.src import solver
 import unittest
 
 
@@ -197,7 +195,7 @@ class test_all_class(unittest.TestCase):
         return None
     def test_Solution(self):
         return None
-class Test_all_status(unittest.TestCase):
+class test_all_status(unittest.TestCase):
     def test_optimal(self):
         return None
     def test_feasible(self):
@@ -208,7 +206,11 @@ class Test_all_status(unittest.TestCase):
         return None
 
 def VRPSolverRealTestAll():
-    unittest.main()
+    suite_all = unittest.TestSuite()
+    suite_all.addTests(unittest.TestLoader().loadTestsFromTestCase(test_all_variants))
+    suite_all.addTests(unittest.TestLoader().loadTestsFromTestCase(test_all_class))
+    suite_all.addTests(unittest.TestLoader().loadTestsFromTestCase(test_all_status))
+    unittest.TextTestRunner().run(suite_all)
 
 if __name__ == '__main__':
     VRPSolverRealTestAll()

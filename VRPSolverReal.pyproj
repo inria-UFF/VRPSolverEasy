@@ -1,0 +1,85 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>5d80578a-17a9-43af-97f1-1f8e4409c20d</ProjectGuid>
+    <ProjectHome>
+    </ProjectHome>
+    <StartupFile>VRPSolverReal\src\solver.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>VRPSolverReal</Name>
+    <RootNamespace>VRPSolverPy</RootNamespace>
+    <TestFramework>unittest</TestFramework>
+    <UnitTestPattern>unit_tests.py</UnitTestPattern>
+    <UnitTestRootDirectory>VRPSolverReal\tests\</UnitTestRootDirectory>
+    <InterpreterId>Global|PythonCore|3.6</InterpreterId>
+    <IsWindowsApplication>False</IsWindowsApplication>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="VRPSolverReal\demos\CVRPTW.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VRPSolverReal\demos\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VRPSolverReal\src\constants.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VRPSolverReal\src\solver.py" />
+    <Compile Include="VRPSolverReal\src\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VRPSolverReal\tests\unit_tests.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VRPSolverReal\tests\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VRPSolverReal\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="VRPSolverReal\demos\" />
+    <Folder Include="VRPSolverReal\lib\" />
+    <Folder Include="VRPSolverReal\lib\Windows\" />
+    <Folder Include="VRPSolverReal\doc\" />
+    <Folder Include="VRPSolverReal\" />
+    <Folder Include="VRPSolverReal\src\data\" />
+    <Folder Include="VRPSolverReal\tests\" />
+    <Folder Include="VRPSolverReal\src\" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.10" />
+    <InterpreterReference Include="Global|PythonCore|3.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env\">
+      <Id>env</Id>
+      <Version>3.10</Version>
+      <Description>env (Python 3.10 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
