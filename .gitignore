@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 /VRPSolverReal/env
 /env
+/RC101.json
+/instance.json
+/BaPTree.dot

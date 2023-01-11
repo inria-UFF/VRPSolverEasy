@@ -1,6 +1,6 @@
 # import setup function from 
 # python distribution utilities
-from setuptools import setup 
+from setuptools import setup,Extension
 import sysconfig
 
 data_path_str = sysconfig.get_path('data')
@@ -47,10 +47,20 @@ setup(
       	"VRPSolverReal/lib/Dependencies/libCoinUtils.so.0.0.0": ["local/libCoinUtils.so.0.0.0"],
         },
         include_package_data=True,
+        ext_modules= [
+            Extension(
+                'runtime_library_dirs',
+                [
+                    "VRPSolverReal/lib/Dependencies/",
+                ]
+            )
+        ],
         entry_points=(
         """
         [console_scripts]
         VRPSolverRealTest = VRPSolverReal.tests.unit_tests:VRPSolverRealTestAll
         """
     ),
+
 )
+

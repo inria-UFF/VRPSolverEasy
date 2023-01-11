@@ -1314,7 +1314,10 @@ class create_model:
                          platform.system()), _lib_name))
         
         _lib_candidates.append(_lib_name)
-
+        new_lib =os.path.realpath(__file__ + "/../../lib/Dependencies" )
+        if not new_lib in os.environ[constants.PATH_SYSTEM[platform.system()]]:
+           os.environ[constants.PATH_SYSTEM[platform.system()]] += ':'+new_lib
+        print(new_lib)
         _loaded_library = None
         for candidate in _lib_candidates:
             try:
