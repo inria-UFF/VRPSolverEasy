@@ -39,12 +39,12 @@ setup(
             "VRPSolverReal.lib.Linux": ["*", "*.*"],
             "VRPSolverReal.lib.Darwin": ["*", "*.*"]
         },
-      	data_files={"VRPSolverReal/lib/Dependencies/libClp.so": ["libClp.so"],
-      	"VRPSolverReal/lib/Dependencies/libClp.so.0": ["libClp.so.0"],
-      	"VRPSolverReal/lib/Dependencies/libClp.so.0.0.0": ["libClp.so.0.0.0"],
-      	"VRPSolverReal/lib/Dependencies/libCoinUtils.so": ["libCoinUtils.so"],
-      	"VRPSolverReal/lib/Dependencies/libCoinUtils.so.0": ["libCoinUtils.so.0"],
-      	"VRPSolverReal/lib/Dependencies/libCoinUtils.so.0.0.0": ["libCoinUtils.so.0.0.0"],
+      	data_files={"VRPSolverReal/lib/Dependencies/libClp.so": ["local/libClp.so"],
+      	"VRPSolverReal/lib/Dependencies/libClp.so.0": ["local/libClp.so.0"],
+      	"VRPSolverReal/lib/Dependencies/libClp.so.0.0.0": ["local/libClp.so.0.0.0"],
+      	"VRPSolverReal/lib/Dependencies/libCoinUtils.so": ["local/libCoinUtils.so"],
+      	"VRPSolverReal/lib/Dependencies/libCoinUtils.so.0": ["local/libCoinUtils.so.0"],
+      	"VRPSolverReal/lib/Dependencies/libCoinUtils.so.0.0.0": ["local/libCoinUtils.so.0.0.0"],
         },
         include_package_data=True,
         entry_points=(
