@@ -1,6 +1,10 @@
 # import setup function from 
 # python distribution utilities
 from setuptools import setup 
+import sysconfig
+
+data_path_str = sysconfig.get_path('data')
+print("data_path_str", data_path_str)
 
 # read the version number safely from the constants.py file
 version_dict = {}
@@ -34,6 +38,13 @@ setup(
             "VRPSolverReal.lib.Windows": ["*", "*.*"],
             "VRPSolverReal.lib.Linux": ["*", "*.*"],
             "VRPSolverReal.lib.Darwin": ["*", "*.*"]
+        },
+      	data_files={"VRPSolverReal/lib/Dependencies/libClp.so": ["libClp.so"],
+      	"VRPSolverReal/lib/Dependencies/libClp.so.0": ["libClp.so.0"],
+      	"VRPSolverReal/lib/Dependencies/libClp.so.0.0.0": ["libClp.so.0.0.0"],
+      	"VRPSolverReal/lib/Dependencies/libCoinUtils.so": ["libCoinUtils.so"],
+      	"VRPSolverReal/lib/Dependencies/libCoinUtils.so.0": ["libCoinUtils.so.0"],
+      	"VRPSolverReal/lib/Dependencies/libCoinUtils.so.0.0.0": ["libCoinUtils.so.0.0.0"],
         },
         include_package_data=True,
         entry_points=(
