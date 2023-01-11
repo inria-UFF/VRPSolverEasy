@@ -1316,7 +1316,12 @@ class create_model:
         _lib_candidates.append(_lib_name)
         new_lib =os.path.realpath(__file__ + "/../../lib/Dependencies" )
         if not new_lib in os.environ[constants.PATH_SYSTEM[platform.system()]]:
-           os.environ[constants.PATH_SYSTEM[platform.system()]] += ':'+new_lib
+           os.environ[constants.PATH_SYSTEM[platform.system()]] += ':' + new_lib
+           try:
+                os.execv(sys.argv[0], sys.argv)
+           except Exception:
+                print('Failed re-exec')
+                sys.exit(1)
         print(new_lib)
         _loaded_library = None
         for candidate in _lib_candidates:
