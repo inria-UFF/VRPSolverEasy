@@ -11,7 +11,7 @@ WINDOWS_PLATFORM = "Windows"
 LINUX_PLATFORM = "Linux"
 MAC_PLATFORM = "Darwin"
 
-PATH_SYSTEM={"Linux" : "LD_LIBRARY_PATH","Darwin" : "LIBRARY_PATH","Windows" : "PATH"}
+PATH_SYSTEM={"Linux" : "LD_LIBRARY_PATH","Darwin" : "PATH","Windows" : "PATH"}
 
 SOLVERS=["CLP","CPLEX"]
 PRINT_LEVEL_LIST=[-2,-1,0]
