@@ -1315,6 +1315,7 @@ class create_model:
         
         _lib_candidates.append(_lib_name)
         new_lib =os.path.realpath(__file__ + "/../../lib/Dependencies" )
+        print(os.environ)
         if not new_lib in os.environ[constants.PATH_SYSTEM[platform.system()]]:
            os.environ[constants.PATH_SYSTEM[platform.system()]] += ':' + new_lib
            try:
