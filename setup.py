@@ -47,14 +47,6 @@ setup(
       	"VRPSolverReal/lib/Dependencies/libCoinUtils.so.0.0.0": ["local/libCoinUtils.so.0.0.0"],
         },
         include_package_data=True,
-        ext_modules= [
-            Extension(
-                'runtime_library_dirs',
-                [
-                    "VRPSolverReal/lib/Dependencies/",
-                ]
-            )
-        ],
         entry_points=(
         """
         [console_scripts]
