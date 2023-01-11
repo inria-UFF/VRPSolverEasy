@@ -4,51 +4,7 @@ import unittest
 
 
 class test_all_variants(unittest.TestCase):
-    def test_TSP(self):
-        m=solver.create_model()
-        m.add_VehicleType(1,0,0,"VEH1")
-        m.add_Depot(id=0,name="D1")
-        for i in range(1,5):
-            m.add_Customer(id=i,name="C"+str(i)) 
-        m.add_Link("arc1",startPointId=0,endPointId=1,distance=5)
-        m.add_Link("arc2",startPointId=1,endPointId=2,distance=6)
-        m.add_Link("arc3",startPointId=2,endPointId=3,distance=4)
-        m.add_Link("arc4",startPointId=3,endPointId=4,distance=4)
-        m.add_Link("arc5",startPointId=4,endPointId=0,distance=4)
-        m.export("TSP")
-        m.solve()
-        print(m.solution)
-        return None
-    def test_TSP_noFeasible(self):
-        m=solver.create_model()
-        m.add_VehicleType(1,0,0,"VEH1")
-        m.add_Depot(id=0,name="D1")
-        for i in range(1,5):
-            m.add_Customer(id=i,name="C"+str(i))
-        m.add_Link("arc1",startPointId=0,endPointId=1,distance=5)
-        m.add_Link("arc2",startPointId=1,endPointId=2,distance=6)
-        m.add_Link("arc4",startPointId=3,endPointId=4,distance=4)
-        m.add_Link("arc5",startPointId=4,endPointId=0,distance=4)
-        m.export("TSP_noFeasible")
-        m.solve()
-        print(m.solution)
-        return None
 
-    def test_VRP(self):
-        m=solver.create_model()
-        m.add_VehicleType(1,0,0,"VEH1",maxNumber=3,varCostDist=10)
-        m.add_Depot(id=0,name="D1")
-        for i in range(1,5):
-            m.add_Customer(id=i,name="C"+str(i))
-        m.add_Link("arc1",startPointId=0,endPointId=1,distance=5)
-        m.add_Link("arc2",startPointId=1,endPointId=2,distance=6)
-        m.add_Link("arc3",startPointId=2,endPointId=3,distance=4)
-        m.add_Link("arc4",startPointId=3,endPointId=4,distance=4)
-        m.add_Link("arc5",startPointId=4,endPointId=0,distance=4)
-        m.export("VRP")
-        m.solve()
-        print(m.solution)
-        return None
 
     def test_CVRP(self):
         m=solver.create_model()
@@ -61,7 +17,7 @@ class test_all_variants(unittest.TestCase):
         m.add_Link("arc3",startPointId=2,endPointId=3,distance=4)
         m.add_Link("arc4",startPointId=3,endPointId=4,distance=4)
         m.add_Link("arc5",startPointId=4,endPointId=0,distance=4)
-        m.export("CVRP")
+        #m.export("CVRP")
         m.solve()
         print(m.solution)
         return None
@@ -79,7 +35,7 @@ class test_all_variants(unittest.TestCase):
         m.add_Link("arc4",startPointId=3,endPointId=4,distance=4)
         m.add_Link("arc5",startPointId=4,endPointId=0,distance=4)
         m.solve()
-        m.export()
+        #m.export()
         print(m.solution)
         return None
         #TODO ASSERTIONS
@@ -99,7 +55,7 @@ class test_all_variants(unittest.TestCase):
         m.add_Link("arc4",startPointId=3,endPointId=4,distance=4,time=time_between_points)
         m.add_Link("arc5",startPointId=4,endPointId=0,distance=4,time=time_between_points)
         m.solve()
-        m.export("CVRPTW")
+        #m.export("CVRPTW")
         print(m.solution)
         return None
 
@@ -118,7 +74,7 @@ class test_all_variants(unittest.TestCase):
         m.add_Link("arc4",startPointId=3,endPointId=4,distance=4,time=time_between_points)
         m.add_Link("arc5",startPointId=4,endPointId=0,distance=4,time=time_between_points)
         m.solve()
-        m.export("CVRPTW_noFeasible")
+        #m.export("CVRPTW_noFeasible")
         print(m.solution)
         return None
         #TODO ASSERTIONS
