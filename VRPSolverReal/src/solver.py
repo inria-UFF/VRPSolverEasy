@@ -1300,10 +1300,11 @@ class create_model:
            _lib_name = constants.LIBRARY_LINUX
         elif platform.system() == constants.MAC_PLATFORM:
            _lib_name = constants.LIBRARY_MAC
-           _c.LoadLibrary(new_lib + "libCoinUtils.0.dylib")
-           _c.LoadLibrary(new_lib + "libClp.0.dylib")
-           _c.LoadLibrary(new_lib + "libOsi.0.dylib")
-           _c.LoadLibrary(new_lib + "libOsiClp.0.dylib")
+           _c.cdll.LoadLibrary(new_lib + "libCoinUtils.0.dylib")
+           _c.cdll.LoadLibrary(new_lib + "libClp.0.dylib")
+           _c.cdll.LoadLibrary(new_lib + "libOsi.0.dylib")
+           _c.cdll.LoadLibrary(new_lib + "libOsiClp.0.dylib")
+           
         else: raise ModelError(constants.PLATFORM_ERROR)
         
         # Try three different locations to load the native library:
