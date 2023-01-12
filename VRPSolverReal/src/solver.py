@@ -1292,12 +1292,18 @@ class create_model:
         _lib_name = None
         _lib_candidates = []
 
+        new_lib =os.path.realpath(__file__ + "/../../lib/Dependencies/" )
+
         if platform.system() == constants.WINDOWS_PLATFORM:
            _lib_name = constants.LIBRARY_WINDOWS
         elif platform.system() == constants.LINUX_PLATFORM:
            _lib_name = constants.LIBRARY_LINUX
         elif platform.system() == constants.MAC_PLATFORM:
            _lib_name = constants.LIBRARY_MAC
+           _c.LoadLibrary(new_lib + "libCoinUtils.0.dylib")
+           _c.LoadLibrary(new_lib + "libClp.0.dylib")
+           _c.LoadLibrary(new_lib + "libOsi.0.dylib")
+           _c.LoadLibrary(new_lib + "libOsiClp.0.dylib")
         else: raise ModelError(constants.PLATFORM_ERROR)
         
         # Try three different locations to load the native library:
@@ -1314,8 +1320,9 @@ class create_model:
                          platform.system()), _lib_name))
         
         _lib_candidates.append(_lib_name)
-        new_lib =os.path.realpath(__file__ + "/../../lib/Dependencies" )
+
         print(os.environ)
+        
         if not new_lib in os.environ[constants.PATH_SYSTEM[platform.system()]]:
            os.environ[constants.PATH_SYSTEM[platform.system()]] += ':' + new_lib
            try:
