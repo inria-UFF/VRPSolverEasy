@@ -21,7 +21,7 @@ class test_all_variants(unittest.TestCase):
         m.solve()
         print(m.solution)
         return None
-        #TODO ASSERTIONS
+        #TODO ASSERTIONS STATUS and solution Value
 
     def test_CVRP_noFeasible(self):
         m=solver.create_model()
@@ -166,7 +166,9 @@ def VRPSolverRealTestAll():
     suite_all.addTests(unittest.TestLoader().loadTestsFromTestCase(test_all_variants))
     suite_all.addTests(unittest.TestLoader().loadTestsFromTestCase(test_all_class))
     suite_all.addTests(unittest.TestLoader().loadTestsFromTestCase(test_all_status))
-    unittest.TextTestRunner().run(suite_all)
+    result_test = unittest.TextTestRunner().run(suite_all)
+    if not result_test.wasSuccessful():
+        raise Exception("Tests failed")
 
 if __name__ == '__main__':
     VRPSolverRealTestAll()

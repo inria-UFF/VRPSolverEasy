@@ -1298,6 +1298,13 @@ class create_model:
            _lib_name = constants.LIBRARY_WINDOWS
         elif platform.system() == constants.LINUX_PLATFORM:
            _lib_name = constants.LIBRARY_LINUX
+           if not new_lib in os.environ[constants.PATH_SYSTEM[platform.system()]]:
+               os.environ[constants.PATH_SYSTEM[platform.system()]] += ':' + new_lib
+               try:
+                    os.execv(sys.argv[0], sys.argv)
+               except Exception:
+                    print('Failed re-exec')
+                    sys.exit(1)
         elif platform.system() == constants.MAC_PLATFORM:
            _lib_name = constants.LIBRARY_MAC
            _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.0.dylib")
@@ -1321,17 +1328,9 @@ class create_model:
                          platform.system()), _lib_name))
         
         _lib_candidates.append(_lib_name)
-
-        print(os.environ)
         
-        if not new_lib in os.environ[constants.PATH_SYSTEM[platform.system()]]:
-           os.environ[constants.PATH_SYSTEM[platform.system()]] += ':' + new_lib
-           try:
-                os.execv(sys.argv[0], sys.argv)
-           except Exception:
-                print('Failed re-exec')
-                sys.exit(1)
-        print(new_lib)
+
+
         _loaded_library = None
         for candidate in _lib_candidates:
             try:
