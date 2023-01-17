@@ -18,11 +18,11 @@ setup(
         name = 'VRPSolverReal',
         version = "0.0.1",
         author = "ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo",
-        email="najib.errami@inria.fr",
+        author_email="najib.errami@inria.fr",
         description = 'VRPSolverReal is a simplified modeler solving routing problems by using Branch-Cut-and-Price approach on solver like CLP or CPLEX',
         long_description = Description,
         long_description_content_type='text/markdown',
-        requires_python = ">=3.6",
+        python_requires = ">=3.7",
         keywords=['VRP','Branch-Cut&Price','Linear Programming','routing problems','solver','Linear Programming'],
         packages=[
             "VRPSolverReal",
