@@ -434,9 +434,9 @@ class test_all_class(unittest.TestCase):
         """The idCustomer of depot must be equal to 0. """
         m = solver.create_model()
         m.add_Depot(5, "C1")
-        m.add_Depot(9999999, "C1")
+        m.add_Depot(9999, "C1")
         self.assertEqual(0, m.points[5].idCustomer)
-        self.assertEqual(0, m.points[9999999].idCustomer)
+        self.assertEqual(0, m.points[9999].idCustomer)
 
     def test_Solution(self):
         """ test class solution after resolving a CVRPTW problem """
