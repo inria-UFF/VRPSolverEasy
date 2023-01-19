@@ -5,12 +5,12 @@
     <ProjectGuid>5d80578a-17a9-43af-97f1-1f8e4409c20d</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>VRPSolverReal\src\solver.py</StartupFile>
+    <StartupFile>VRPSolverEasy\src\solver.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>VRPSolverReal</Name>
+    <Name>VRPSolverEasy</Name>
     <RootNamespace>VRPSolverPy</RootNamespace>
     <TestFramework>unittest</TestFramework>
     <UnitTestPattern>unit_tests.py</UnitTestPattern>
@@ -27,36 +27,36 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="VRPSolverReal\demos\CVRPTW.py">
+    <Compile Include="VRPSolverEasy\demos\CVRPTW.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VRPSolverReal\demos\__init__.py">
+    <Compile Include="VRPSolverEasy\demos\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VRPSolverReal\src\constants.py">
+    <Compile Include="VRPSolverEasy\src\constants.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VRPSolverReal\src\solver.py" />
-    <Compile Include="VRPSolverReal\src\__init__.py">
+    <Compile Include="VRPSolverEasy\src\solver.py" />
+    <Compile Include="VRPSolverEasy\src\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VRPSolverReal\tests\unit_tests.py">
+    <Compile Include="VRPSolverEasy\tests\unit_tests.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VRPSolverReal\tests\__init__.py">
+    <Compile Include="VRPSolverEasy\tests\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VRPSolverReal\__init__.py" />
+    <Compile Include="VRPSolverEasy\__init__.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="VRPSolverReal\demos\" />
-    <Folder Include="VRPSolverReal\lib\" />
-    <Folder Include="VRPSolverReal\lib\Windows\" />
-    <Folder Include="VRPSolverReal\doc\" />
-    <Folder Include="VRPSolverReal\" />
-    <Folder Include="VRPSolverReal\src\data\" />
-    <Folder Include="VRPSolverReal\tests\" />
-    <Folder Include="VRPSolverReal\src\" />
+    <Folder Include="VRPSolverEasy\demos\" />
+    <Folder Include="VRPSolverEasy\lib\" />
+    <Folder Include="VRPSolverEasy\lib\Windows\" />
+    <Folder Include="VRPSolverEasy\doc\" />
+    <Folder Include="VRPSolverEasy\" />
+    <Folder Include="VRPSolverEasy\src\data\" />
+    <Folder Include="VRPSolverEasy\tests\" />
+    <Folder Include="VRPSolverEasy\src\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.10" />

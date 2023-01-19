@@ -1,6 +1,6 @@
 import ctypes as _c
 import json
-from VRPSolverReal.src import constants
+from VRPSolverEasy.src import constants
 import platform
 import os
 import sys
@@ -172,7 +172,7 @@ class VehicleType:
     """
 
     def __init__(self, id: int, startPointId: int, endPointId: int, name=str(),
-                 capacity=0, fixedCost=0, varCostDist=0, varCostTime=0,
+                 capacity=0, fixedCost=0.0, varCostDist=0.0, varCostTime=0.0,
                  maxNumber=1, twBegin=0, twEnd=0):
         self.name = name
         self.id = id
@@ -429,10 +429,9 @@ class Point:
         if id < 0:
             raise PropertyError(constants.POINT.ID.value,
                                 constants.GREATER_ZERO_PROPERTY)
-        if self._idCustomer > 0:
-            if id > 1022:
-                raise PropertyError(constants.POINT.ID.value,
-                                    constants.LESS_MAX_POINTS_PROPERTY)
+        if id > 10000:
+            raise PropertyError(constants.POINT.ID.value,
+                                constants.LESS_MAX_POINTS_ID_PROPERTY)
         self._id = id
 
     # a getter function of name
@@ -687,7 +686,7 @@ class Link:
     """
 
     def __init__(self, name=str(), isDirected=False, startPointId=0,
-                 endPointId=0, distance=0, time=0, fixedCost=0):
+                 endPointId=0, distance=0.0, time=0.0, fixedCost=0.0):
         self.name = name
         self.isDirected = isDirected
         self.startPointId = startPointId
@@ -765,6 +764,9 @@ class Link:
         if not isinstance(distance, (int, float)):
             raise PropertyError(constants.LINK.DISTANCE.value,
                                 constants.NUMBER_PROPERTY)
+        if distance < 0:
+            raise PropertyError(constants.LINK.DISTANCE.value,
+                                constants.GREATER_ZERO_PROPERTY)
         self._distance = distance
 
     # a getter function of time
@@ -778,6 +780,9 @@ class Link:
         if not isinstance(time, (int, float)):
             raise PropertyError(constants.LINK.TIME.value,
                                 constants.NUMBER_PROPERTY)
+        if time < 0:
+            raise PropertyError(constants.LINK.TIME.value,
+                                constants.GREATER_ZERO_PROPERTY)
         self._time = time
 
     # a getter function of fixedCost
@@ -1209,12 +1214,12 @@ class create_model:
             endPointId: int,
             name=str(),
             capacity=0,
-            fixedCost=0,
-            varCostDist=0,
-            varCostTime=0,
+            fixedCost=0.0,
+            varCostDist=0.0,
+            varCostTime=0.0,
             maxNumber=1,
-            twBegin=0,
-            twEnd=0):
+            twBegin=0.0,
+            twEnd=0.0):
         """Add VehicleType in dictionary self.vehicleTypes"""
         if (id in self.vehicleTypes):
             raise ModelError(constants.ADD_VEHICLE_TYPE_ERROR)
@@ -1245,9 +1250,9 @@ class create_model:
             isDirected=False,
             startPointId=0,
             endPointId=0,
-            distance=0,
-            time=0,
-            fixedCost=0):
+            distance=0.0,
+            time=0.0,
+            fixedCost=0.0):
         """Add Link in dictionary self.links"""
         if (name in self.links):
             raise ModelError(constants.ADD_LINK_ERROR)
@@ -1267,10 +1272,10 @@ class create_model:
             id,
             name=str(),
             idCustomer=0,
-            serviceTime=0,
-            penaltyOrCost=0,
-            twBegin=0,
-            twEnd=0,
+            serviceTime=0.0,
+            penaltyOrCost=0.0,
+            twBegin=0.0,
+            twEnd=0.0,
             demandOrCapacity=0,
             incompatibleVehicles=[]):
         """Add Point in dictionary self.points, if we want to add Depot
@@ -1294,10 +1299,10 @@ class create_model:
             self,
             id,
             name=str(),
-            serviceTime=0,
-            cost=0,
-            twBegin=0,
-            twEnd=0,
+            serviceTime=0.0,
+            cost=0.0,
+            twBegin=0.0,
+            twEnd=0.0,
             capacity=0,
             incompatibleVehicles=[]):
         """Add Depot in dictionary self.points"""
@@ -1318,11 +1323,11 @@ class create_model:
             self,
             id,
             name=str(),
-            idCustomer=id,
-            serviceTime=0,
-            penalty=0,
-            twBegin=0,
-            twEnd=0,
+            idCustomer=0,
+            serviceTime=0.0,
+            penalty=0.0,
+            twBegin=0.0,
+            twEnd=0.0,
             demand=0,
             incompatibleVehicles=[]):
         """Add Customer in dictionary self.points ,
@@ -1330,7 +1335,10 @@ class create_model:
         if (id in self.points):
             raise ModelError(constants.ADD_POINT_ERROR)
         else:
-            self.add_Point(id=id, name=name, idCustomer=id,
+            idCust = idCustomer
+            if idCust == 0:
+                idCust = id
+            self.add_Point(id=id, name=name, idCustomer=idCust,
                            serviceTime=serviceTime, penaltyOrCost=penalty,
                            twBegin=twBegin, twEnd=twEnd,
                            demandOrCapacity=demand,
@@ -1343,12 +1351,16 @@ class create_model:
         else:
             del self.points[id]
 
-    def setParameters(self, timeLimit=300, upperBound=1000000,
-                      heuristicUsed=False, timeLimitHeuristic=20,
-                      configFile=str(), solverName="CLP",
-                      printLevel=-1, action="solve", cplexPath=""):
+    def set_Parameters(self, timeLimit=300, upperBound=1000000,
+                       heuristicUsed=False, timeLimitHeuristic=20,
+                       configFile=str(), solverName="CLP",
+                       printLevel=-1, action="solve", cplexPath=""):
         """Set parameters of model. For more advanced parameters please
-       indicates a configuration file on configFile variable"""
+       indicates a configuration file on configFile variable.
+       solverName : [CLP,CPLEX]
+       action : [solve,enumAllFeasibleRoutes],
+       printLevel = [-2,-1,0,1,2]"""
+
         self.parameters = Parameters(
             timeLimit,
             upperBound,
@@ -1360,7 +1372,7 @@ class create_model:
             action,
             cplexPath)
 
-    def setModel(self):
+    def set_Model(self):
         """Set model in json format with all properties of model"""
         self.__map_model = json.dumps({constants.JSON_OBJECT.POINTS.value:
                                       list(self.points.values()),
@@ -1375,7 +1387,7 @@ class create_model:
                                       indent=1)
 
     def __str__(self):
-        self.setModel()
+        self.set_Model()
         return self.__map_model
 
     def __repr__(self):
@@ -1410,7 +1422,7 @@ class create_model:
             file = open(
                 pathProject +
                 os.path.normpath(
-                    "/VRPSolverReal/src/" +
+                    "/VRPSolverEasy/src/" +
                     instanceName),
                 "r")
             lines = file.readlines()
@@ -1460,7 +1472,7 @@ class create_model:
             for customer in listCustomers:
                 m.add_Customer(customer[0], idCustomer=customer[0],
                                demand=customer[3], twBegin=customer[4],
-                               twEnd=customer[6]+customer[5],
+                               twEnd=customer[6] + customer[5],
                                serviceTime=customer[6])
 
             listCustomers.append(listDepot)
@@ -1493,7 +1505,7 @@ class create_model:
            bapcod and fill the solution.
 
         Additional informations:
-            VRPSolverReal is compatible with Windows 64x,  Linux and macOS only
+            VRPSolverEasy is compatible with Windows 64x,  Linux and macOS only
         """
         _lib_bapcod = None
         _lib_name = None
@@ -1563,8 +1575,7 @@ class create_model:
 
         if _loaded_library is None:
             raise ModelError(constants.LOAD_LIB_ERROR)
-        # self.export()
-        self.setModel()
+        self.set_Model()
         input = _c.c_char_p(self.__map_model.encode('UTF-8'))
         solve = _lib_bapcod.solveModel
         solve.argtypes = [_c.c_char_p]

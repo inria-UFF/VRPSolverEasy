@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "VRPSolverReal", "VRPSolverReal.pyproj", "{5D80578A-17A9-43AF-97F1-1F8E4409C20D}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "VRPSolverEasy", "VRPSolverEasy.pyproj", "{5D80578A-17A9-43AF-97F1-1F8E4409C20D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

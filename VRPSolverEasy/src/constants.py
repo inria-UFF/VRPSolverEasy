@@ -34,6 +34,7 @@ LINK_PROPERTY = 12
 ENUM_STR_PROPERTY = 13
 ENUM_INT_PROPERTY = 14
 TUPLE_PROPERTY = 15
+LESS_MAX_POINTS_ID_PROPERTY = 16
 ERRORS_PROPERTY = {
     INVALID_PROPERTY: " is an invalid property",
     INTEGER_PROPERTY: " must be an integer",
@@ -42,6 +43,7 @@ ERRORS_PROPERTY = {
     GREATER_ZERO_PROPERTY: " must be greater or equal than 0",
     GREATER_ONE_PROPERTY: " must be greater or equal than 1",
     LESS_MAX_POINTS_PROPERTY: " must be less or equal than 1022",
+    LESS_MAX_POINTS_ID_PROPERTY: " must be less or equal than 10000",
     LIST_INTEGER_PROPERTY: " must be a list of integers",
     BOOLEAN_PROPERTY: " must be a boolean",
     VEHICLE_TYPE_PROPERTY: "The value must be a VehicleType",
