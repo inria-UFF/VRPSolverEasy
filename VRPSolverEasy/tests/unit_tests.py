@@ -1,4 +1,4 @@
-from VRPSolverReal.src import solver, constants
+from VRPSolverEasy.src import solver, constants
 import random
 import unittest
 
@@ -589,7 +589,7 @@ class test_all_Demos(unittest.TestCase):
         return None
 
 
-def VRPSolverRealTestAll():
+def VRPSolverEasyTestAll():
     suite_all = unittest.TestSuite()
     suite_all.addTests(
         unittest.TestLoader().loadTestsFromTestCase(test_all_variants))
@@ -603,4 +603,4 @@ def VRPSolverRealTestAll():
 
 
 if __name__ == '__main__':
-    VRPSolverRealTestAll()
+    VRPSolverEasyTestAll()
