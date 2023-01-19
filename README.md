@@ -2,7 +2,11 @@
 
 This project is an implementation of VRPSolver, a package allows you to resolve routing problems by using the bapCod solver,(COIN-OR) CLP and CPLEX solver.
 
-## Installation
+## Installation 
+
+![Python](https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg)
+
+`VRPSolverEasy` requires a version of python  >= 3.7
 
 There is two differents way to install `VRPSolverEasy` :
 
@@ -17,8 +21,6 @@ The second way is to following this steps:
 ```
  python setup.py install
 ```
-![Python](https://commons.wikimedia.org/wiki/File:Python-logo-notext.svg)
-`VRPSolverEasy` requires a version of python  >= 3.7
 
 ## Examples
 
