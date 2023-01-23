@@ -1527,6 +1527,7 @@ class create_model:
                     print('Failed re-exec')
                     sys.exit(1)
         elif platform.system() == constants.MAC_PLATFORM:
+            print(os.environ)
             if constants.PATH_SYSTEM[platform.system()] in os.environ:
                 os.environ[constants.PATH_SYSTEM[platform.system()]
                            ] += ':' + new_lib
