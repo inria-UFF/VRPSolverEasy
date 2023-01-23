@@ -1527,6 +1527,14 @@ class create_model:
                     print('Failed re-exec')
                     sys.exit(1)
         elif platform.system() == constants.MAC_PLATFORM:
+            if constants.PATH_SYSTEM[platform.system()] in os.environ:
+                os.environ[constants.PATH_SYSTEM[platform.system()]
+                           ] += ':' + new_lib
+                try:
+                    os.execv(sys.argv[0], sys.argv)
+                except Exception:
+                    print('Failed re-exec')
+                    sys.exit(1)
             _lib_name = constants.LIBRARY_MAC
             _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.0.dylib")
             _c.cdll.LoadLibrary(new_lib + "/libClp.0.dylib")
