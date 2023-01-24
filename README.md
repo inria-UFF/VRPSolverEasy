@@ -17,9 +17,13 @@ python -m pip install VRPSolverEasy
 The second way is to following this steps:
 
 - Download the package and extract it into a local directory
-- Move to this local directory and enter:
+- (Windows) Move to this local directory and enter :
 ```
  python setup.py install
+```
+- (MacOs and Linux):
+```
+sudo python setup.py install
 ```
 
 ## Examples
