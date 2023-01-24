@@ -22,6 +22,9 @@ setup(
         long_description_content_type='text/markdown',
         python_requires = ">=3.7",
         keywords=['VRP','Branch-Cut&Price','Linear Programming','routing problems','solver','Linear Programming'],
+        install_requires=[
+           'setuptools>=58.1.0'
+        ],
         packages=[
             "VRPSolverEasy",
             "VRPSolverEasy.src",
