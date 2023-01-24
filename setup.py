@@ -3,8 +3,6 @@
 from setuptools import setup,Extension
 import sysconfig
 
-data_path_str = sysconfig.get_path('data')
-print("data_path_str", data_path_str)
 
 # read the version number safely from the constants.py file
 version_dict = {}
