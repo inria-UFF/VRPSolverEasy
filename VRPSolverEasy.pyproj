@@ -50,6 +50,8 @@
     <Compile Include="VRPSolverEasy\__init__.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include=".github\" />
+    <Folder Include=".github\workflows\" />
     <Folder Include="VRPSolverEasy\demos\" />
     <Folder Include="VRPSolverEasy\lib\" />
     <Folder Include="VRPSolverEasy\lib\Windows\" />
@@ -75,7 +77,7 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="python-package.yml" />
+    <Content Include=".github\workflows\python-package.yml" />
     <Content Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
