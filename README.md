@@ -19,12 +19,13 @@ The second way is to following this steps:
 - Download the package and extract it into a local directory
 - (Windows) Move to this local directory and enter :
 ```
- python setup.py install
+ python pip install .
 ```
 - (MacOs and Linux):
 ```
-sudo python setup.py install
+sudo python pip install .
 ```
+If you work on ARM Mac, you must install python in x86-x64 architecture and use the same commands.
 
 ## Examples
 
