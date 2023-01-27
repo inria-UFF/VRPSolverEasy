@@ -163,13 +163,6 @@ class LinksDict(collections.MutableMapping, dict):
 
 class VehicleType:
     """Define a vehicle type with different attributes.
-
-    Additional informations:
-        max_number ---- number of vehicles available
-        var_cost_dist -- variable cost per unit of distance
-        var_cost_time -- variable cost per unit of time
-        tw_begin -- time windows begin
-        tw_end -- time windows end
     """
 
     def __init__(
@@ -200,6 +193,7 @@ class VehicleType:
     # a getter function of id
     @property
     def id(self):
+        """int : cannot be less than 1 """
         return self._id
 
     # a setter function of id
@@ -215,7 +209,7 @@ class VehicleType:
 
     @property
     def name(self):
-        """getter function of name"""
+        """str : name of vehicle type"""
         return self._name
 
     @name.setter
@@ -228,7 +222,7 @@ class VehicleType:
 
     @property
     def capacity(self):
-        """getter function of capacity"""
+        """int : capacity of vehicle type"""
         return self._capacity
 
     @capacity.setter
@@ -244,7 +238,7 @@ class VehicleType:
 
     @property
     def fixed_cost(self):
-        """getter function of fixed_cost"""
+        """float : fixed cost of using vehicle type"""
         return self._fixed_cost
 
     @fixed_cost.setter
@@ -257,7 +251,8 @@ class VehicleType:
 
     @property
     def var_cost_dist(self):
-        """getter function of var_cost_dist"""
+        """variable cost per unit of distance
+           :type var_cost_dist : float : """
         return self._var_cost_dist
 
     @var_cost_dist.setter
@@ -270,7 +265,7 @@ class VehicleType:
 
     @property
     def var_cost_time(self):
-        """getter function of var_cost_time"""
+        """variable cost per unit of time"""
         return self._var_cost_time
 
     @var_cost_time.setter
@@ -282,10 +277,9 @@ class VehicleType:
         self._var_cost_time = var_cost_time
 
     # a getter function of max_number
-
     @property
     def max_number(self):
-        """getter function of max_number"""
+        """number of vehicles available"""
         return self._max_number
 
     @max_number.setter
@@ -301,7 +295,7 @@ class VehicleType:
 
     @property
     def start_point_id(self):
-        """getter function of start_point_id"""
+        """the id of the starting point"""
         return self._start_point_id
 
     @start_point_id.setter
@@ -317,7 +311,7 @@ class VehicleType:
 
     @property
     def end_point_id(self):
-        """getter function of end_point_id"""
+        """the id of the end point"""
         return self._end_point_id
 
     @end_point_id.setter
@@ -333,7 +327,7 @@ class VehicleType:
 
     @property
     def tw_begin(self):
-        """getter function of tw_begin"""
+        """time windows begin of vehicle type"""
         return self._tw_begin
 
     @tw_begin.setter
@@ -347,7 +341,7 @@ class VehicleType:
 
     @property
     def tw_end(self):
-        """getter function of tw_end"""
+        """time windows begin of vehicle type"""
         return self._tw_end
 
     @tw_end.setter
@@ -360,7 +354,7 @@ class VehicleType:
         self._tw_end = tw_end
 
     def get_vehicle_type(self, debug=False):
-        """Get all components of a VehicleType which are differents of
+        """Get all components of a vehicle type which are differents of
         default value"""
         veh_type = {}
         veh_type[constants.VEHICLE_TYPE.ID.value] = self.id
@@ -396,17 +390,17 @@ class VehicleType:
 class Point:
     """Define a point of graph(customer or depot).
 
-    Additional informations:
-        service_time -- It can represent the time of
-            loading or unloading.
-        penalty_or_cost -- if the point is a customer
-            we can specify penalty for not visiting the customer
-        ---------------- otherwise, if the point is a depot we can
-            specify a cost to using the depot
-        tw_begin -- time windows begin
-        tw_end -- time windows end
-        incompatible_vehicles -- id of vehicles that cannot deliver
-            the customer or not accepted in a depot
+       Additional informations:
+           service_time -- It can represent the time of
+                           loading or unloading.
+           penalty_or_cost -- if the point is a customer
+                we can specify penalty for not visiting the customer
+                otherwise, if the point is a depot we can
+                specify a cost to using the depot
+           tw_begin -- time windows begin
+           tw_end -- time windows end
+           incompatible_vehicles -- id of vehicles that cannot deliver
+           the customer or not accepted in a depot
     """
 
     def __init__(self, id, name=str(), id_customer=0, penalty_or_cost=0.0,
@@ -728,7 +722,7 @@ class Link:
     """Define a link of graph.
 
     Additional informations:
-        is_directed ---- it's equal to True if we cannot return at
+        is_directed -- it's equal to True if we cannot return at
         start point with the same time and distance
     """
 
@@ -870,9 +864,6 @@ class Link:
 class Parameters:
     """Define a point of graph(customer or depot).
 
-    Additional informations:
-        time_limit(int) ---- It can represent the limit time of resolution
-        upper_bound(float) --indicates the cost we want to reach
         config_file(str) -- indicates the path of the config file for
                             more advanced settings
         solver_name(str) -- indicates the solver used during the resolution,
@@ -885,10 +876,10 @@ class Parameters:
 
     def __init__(
             self,
-            time_limit=300,
+            time_limit=300.0,
             upper_bound=1000000,
             heuristic_used=False,
-            time_limit_heuristic=20,
+            time_limit_heuristic=20.0,
             config_file=str(),
             solver_name="CLP",
             print_level=-1,
@@ -906,7 +897,7 @@ class Parameters:
 
     @property
     def time_limit(self):
-        """getter function of time_limit"""
+        """float : represents the limit time of resolution"""
         return self._time_limit
 
     @time_limit.setter
@@ -922,7 +913,7 @@ class Parameters:
 
     @property
     def upper_bound(self):
-        """getter function of upper_bound"""
+        """float : represents the cost we want to reach """
         return self._upper_bound
 
     @upper_bound.setter
@@ -937,7 +928,7 @@ class Parameters:
 
     @property
     def heuristic_used(self):
-        """getter function of heuristic_used"""
+        """bool : getter function of heuristic_used"""
         return self._heuristic_used
 
     @heuristic_used.setter
@@ -951,7 +942,7 @@ class Parameters:
 
     @property
     def time_limit_heuristic(self):
-        """getter function of time_limit_heuristic"""
+        """float : getter function of time_limit_heuristic"""
         return self._time_limit_heuristic
 
     @time_limit_heuristic.setter
@@ -969,7 +960,8 @@ class Parameters:
 
     @property
     def config_file(self):
-        """getter function of config_file"""
+        """str : indicates the path of the config file for
+                            more advanced settings"""
         return self._config_file
 
     @config_file.setter
@@ -982,7 +974,8 @@ class Parameters:
 
     @property
     def solver_name(self):
-        """getter function of solver_name"""
+        """str : indicates the solver used during the resolution,
+                            we can choose "CLP" or "CPLEX" solver"""
         return self._solver_name
 
     @solver_name.setter
@@ -999,7 +992,8 @@ class Parameters:
 
     @property
     def print_level(self):
-        """getter function of print_level"""
+        """indicates the level of print from Bapcod
+                            during the resolution, we can choose (-2,-1,0)"""
         return self._print_level
 
     @print_level.setter
@@ -1016,7 +1010,8 @@ class Parameters:
 
     @property
     def action(self):
-        """getter function of action"""
+        """str : indicates if we want to solve the problem ("solve")
+                     or enumerate all feasible routes("enumAllFeasibleRoutes")"""
         return self._action
 
     @action.setter
@@ -1033,7 +1028,7 @@ class Parameters:
 
     @property
     def cplex_path(self):
-        """getter function of cplex_path"""
+        """str : getter function of cplex_path"""
         return self._cplex_path
 
     @cplex_path.setter
@@ -1072,24 +1067,7 @@ class Parameters:
 
 
 class Statistics:
-    """Define a statistics from solution
-
-    Attributes
-    ----------
-    json_input : str
-        a formatted string to print statistics in json format
-    solution_time : float
-        the time computed by the resolution of problem
-    best_lb : float
-        the best lower bound find during the resolution
-    root_lb : float
-        the root lower bound find during the resolution
-    root_time : float
-        TODO
-    nb_branch_and_bound_nodes : float
-        the number of branch and bound nodes from tree structure.
-
-    """
+    """Define a statistics from solution"""
 
     def __init__(self, json_input=str()):
         if json_input != str():
@@ -1108,33 +1086,38 @@ class Statistics:
                 constants.STATISTICS. NB_BRANCH_AND_BOUND_NODES. value]
 
     @property
+    def json_input(self):
+        """str : formatted string to print statistics in json format"""
+        return self.__json_input
+
+    @property
     def nb_branch_and_bound_nodes(self):
-        """getter function of nb_branch_and_bound_nodes"""
+        """int : number of branch and bound nodes from tree structure."""
         return self.__nb_branch_and_bound_nodes
 
     @property
     def root_time(self):
-        """getter function of root_time"""
+        """float : getter function of root_time"""
         return self.__root_time
 
     @property
     def root_lb(self):
-        """getter function of root_lb"""
+        """float : the root lower bound find during the resolution"""
         return self.__root_lb
 
     @property
     def best_lb(self):
-        """getter function of best_lb"""
+        """float : best lower bound find during the resolution"""
         return self.__best_lb
 
     @property
     def solution_value(self):
-        """getter function of solution_value"""
+        """float : total cost of solution"""
         return self.__solution_value
 
     @property
     def solution_time(self):
-        """getter function of solution_time"""
+        """float : time computed to find the solution"""
         return self.__solution_time
 
     def __repr__(self):
@@ -1142,27 +1125,7 @@ class Statistics:
 
 
 class Route:
-    """Define a route from solution
-
-    Attributes
-    ----------
-    route : str
-        a formatted string to print out what the animal says
-    vehicle_type_id : int
-        the name of the animal
-    route_cost : list(float)
-        the sound that the animal makes
-    point_ids : list(int)
-        the number of legs the animal has (default 4)
-    point_names : list(str)
-        the number of legs the animal has (default 4)
-    cap_consumption : list(float)
-        the number of legs the animal has (default 4)
-    time_consumption : list(float)
-        the number of legs the animal has (default 4)
-    incoming_arc_names : list(str)
-        the number of legs the animal has (default 4)
-    """
+    """Define a route from solution"""
 
     def __init__(self, json_input):
         self.__route = json_input
@@ -1183,42 +1146,42 @@ class Route:
 
     @property
     def route(self):
-        """getter function of route"""
+        """str : formatted string to print route in json format"""
         return self.__route
 
     @property
     def vehicle_type_id(self):
-        """getter function of vehicle_type_id"""
+        """int : id of vehicle type making the trip"""
         return self.__vehicle_type_id
 
     @property
     def route_cost(self):
-        """getter function of route_cost"""
+        """float : cost incurred by variable and fixed costs"""
         return self.__route_cost
 
     @property
     def point_ids(self):
-        """getter function of point_ids"""
+        """list(int) : if of each point visited"""
         return self.__point_ids
 
     @property
     def point_names(self):
-        """getter function of point_names"""
+        """list(str) : names of visited points"""
         return self.__point_names
 
     @property
     def cap_consumption(self):
-        """getter function of cap_consumption"""
+        """list(float) : the loads at each point """
         return self.__cap_consumption
 
     @property
     def time_consumption(self):
-        """getter function of time_consumption"""
+        """list(float) : the time at each point"""
         return self.__time_consumption
 
     @property
     def incoming_arc_names(self):
-        """getter function of incoming_arc_names"""
+        """list(str) : the names of incoming arc"""
         return self.__incoming_arc_names
 
     def __repr__(self):
@@ -1226,47 +1189,55 @@ class Route:
 
 
 class Solution:
-    """Define a statistics from solution
-
-    Attributes
-    ----------
-    solution : str
-        a formatted string to print statistics in json format
-    routes : float
-        the time computed by the resolution of problem
-    statistics : float
-        the best lower bound find during the resolution
-    status : int
-        the root lower bound find during the resolution
-    message : float
-        TODO
-    nb_branch_and_bound_nodes : float
-        the number of branch and bound nodes from tree structure.
-
-    """
+    """Contains all elements of solution after running model.solve()."""
 
     def __init__(self, json_input=str()):
-        self.json = {}
-        self.routes = []
-        self.statistics = Statistics()
-        self.status = 0
-        self.message = str()
+        self.__json = {}
+        self.__routes = []
+        self.__statistics = Statistics()
+        self.__status = 0
+        self.__message = str()
         if json_input != str():
-            self.json = json.loads(json_input)
-            self.status = self.json["Status"]["code"]
-            self.message = self.json["Status"]["message"]
-            if self.status > 2 and self.status < 6:
-                self.statistics = Statistics(self.json["Statistics"])
-            if (self.status > 2 and self.status < 6) or self.status == 8:
-                if len(self.json["Solution"]) > 0:
-                    for route in self.json["Solution"]:
-                        self.routes.append(Route(route))
+            self.__json = json.loads(json_input)
+            self.__status = self.__json["Status"]["code"]
+            self.__message = self.__json["Status"]["message"]
+            if self.__status > 2 and self.__status < 6:
+                self.__statistics = Statistics(self.json["Statistics"])
+            if (self.__status > 2 and self.__status < 6) or self.__status == 8:
+                if len(self.__json["Solution"]) > 0:
+                    for route in self.__json["Solution"]:
+                        self.__routes.append(Route(route))
 
     def __str__(self):
         return json.dumps(self.json, indent=1)
 
     def __repr__(self):
         return repr(self.__str__())
+
+    @property
+    def json(self):
+        """str : formatted string to print statistics in json format"""
+        return self.__json
+
+    @property
+    def routes(self):
+        """list(Route) : contains the set of routes"""
+        return self.__routes
+
+    @property
+    def statistics(self):
+        """Statistics : contains the statistics of solution"""
+        return self.__statistics
+
+    @property
+    def status(self):
+        """int : indicates the status of solution"""
+        return self.__status
+
+    @property
+    def message(self):
+        """int : indicates the message associated with status"""
+        return self.__status
 
     def export(self, name="instance"):
         """Export solution for sharing or debugging model,
@@ -1276,15 +1247,7 @@ class Solution:
 
 
 class CreateModel:
-    """Define a routing model.
-
-    Additional informations:
-        json(dict) -- contains the model in json format
-        vehicle_types(dict) -- contains the set of vehicle types
-        points(dict) -- contains the set of customers and depots
-        links(dict) -- contains the set of links
-        output(str) -- defines the json output after solving the problem
-    """
+    """Define a routing model."""
 
     def __init__(self):
         self.__json = {}
@@ -1297,7 +1260,19 @@ class CreateModel:
 
     @property
     def vehicle_types(self):
-        """getter function of vehicle_types"""
+        """contains the set of vehicle types
+
+        Type:
+
+            VehicleTypesDict : dictionary contains only vehicle type
+
+        Informations:
+
+            --For academic version, with CLP it's possible to resolve the
+                problem with only one vehicle type.
+
+            -- Ids of vehicle types must be greater than one
+        """
         return self._vehicle_types
 
     @vehicle_types.setter
@@ -1310,7 +1285,14 @@ class CreateModel:
 
     @property
     def points(self):
-        """getter function of points"""
+        """contains the set of customers and depots
+
+            Type:
+                -- PointsDict : dictionary contains only points
+            Informations:
+                -- It's possible to resolve the problem until 1022 points.
+                -- For the moment, the capacity of depot is not considered
+        """
         return self._points
 
     # a setter function of points
@@ -1323,7 +1305,7 @@ class CreateModel:
 
     @property
     def links(self):
-        """getter function of links"""
+        """contains the set of links"""
         return self._links
 
     # a setter function of links
@@ -1420,9 +1402,10 @@ class CreateModel:
             tw_end=0.0,
             demand_or_capacity=0,
             incompatible_vehicles=[]):
-        """Add Point in dictionary self.points, if we want to add Depot
+        """Add Point in dictionary points, if we want to add Depot
            id_customer must be equal to 0 otherwise it cannot be superior
            to 1022 for a Customer"""
+
         if id in self.points:
             raise ModelError(constants.ADD_POINT_ERROR)
         self.points[id] = Point(
@@ -1446,7 +1429,7 @@ class CreateModel:
             tw_end=0.0,
             capacity=0,
             incompatible_vehicles=[]):
-        """Add Depot in dictionary self.points"""
+        """Add depot in dictionary points"""
         if id in self.points:
             raise ModelError(constants.ADD_POINT_ERROR)
         self.add_point(id=id, name=name, id_customer=0,
@@ -1470,8 +1453,7 @@ class CreateModel:
             tw_end=0.0,
             demand=0,
             incompatible_vehicles=[]):
-        """Add Customer in dictionary self.points ,
-           id must be between 0 and 1022 and all id must be different"""
+        """Add customer in dictionary points"""
         if id in self.points:
             raise ModelError(constants.ADD_POINT_ERROR)
         id_cust = id_customer
@@ -1511,7 +1493,7 @@ class CreateModel:
             cplex_path)
 
     def set_json(self):
-        """Set model in json format with all properties of model"""
+        """Set model in json format with all elements of model"""
         self.__json = json.dumps({constants.JSON_OBJECT.POINTS.value:
                                   list(self.points.values()),
                                   constants.JSON_OBJECT.

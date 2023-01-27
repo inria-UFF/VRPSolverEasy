@@ -111,3 +111,5 @@ import VRPSolverEasy.src.solver as solver
     print(model.solution)
 ```
 ## Documentation
+
+If you want to see the local documentation, you can go on folder `doc/build/html` and run file `index.html`.
