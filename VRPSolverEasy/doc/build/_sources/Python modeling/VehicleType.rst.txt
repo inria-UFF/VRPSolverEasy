@@ -1,0 +1,7 @@
+:mod:`src`:  solver classes
+=====================================
+ 
+.. automodule:: src.solver
+    :members:
+    :undoc-members:
+    :show-inheritance:

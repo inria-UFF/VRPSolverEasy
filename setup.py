@@ -3,7 +3,6 @@
 from setuptools import setup,Extension
 import sysconfig
 
-
 # read the version number safely from the constants.py file
 version_dict = {}
 exec(open("VRPSolverEasy/src/constants.py").read(), version_dict)
