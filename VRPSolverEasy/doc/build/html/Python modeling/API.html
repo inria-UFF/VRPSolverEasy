@@ -123,7 +123,7 @@
 <td><p>Define a routing model.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#src.solver.Point" title="src.solver.Point"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Point</span></code></a>(id[, name, id_customer, ...])</p></td>
-<td><p>Define a point of graph(customer or depot).</p></td>
+<td><p>Define a point of graph (customer or depot).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#src.solver.Customer" title="src.solver.Customer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Customer</span></code></a>(id[, name, id_customer, penalty, ...])</p></td>
 <td><p>Define a point customer of graph.</p></td>
@@ -154,25 +154,25 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="src.solver.CreateModel.add_customer">
 <span class="sig-name descname"><span class="pre">add_customer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_customer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_begin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">demand</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incompatible_vehicles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.CreateModel.add_customer" title="Permalink to this definition"></a></dt>
-<dd><p>Add customer in dictionary points</p>
+<dd><p>Add customer in dictionary <a class="reference internal" href="#src.solver.CreateModel.points" title="src.solver.CreateModel.points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.solver.CreateModel.add_depot">
 <span class="sig-name descname"><span class="pre">add_depot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_begin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incompatible_vehicles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.CreateModel.add_depot" title="Permalink to this definition"></a></dt>
-<dd><p>Add depot in dictionary points</p>
+<dd><p>Add depot in dictionary <a class="reference internal" href="#src.solver.CreateModel.points" title="src.solver.CreateModel.points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.solver.CreateModel.add_link">
 <span class="sig-name descname"><span class="pre">add_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_point_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.CreateModel.add_link" title="Permalink to this definition"></a></dt>
-<dd><p>Add Link in dictionary self.links</p>
+<dd><p>Add Link in dictionary <a class="reference internal" href="#src.solver.CreateModel.links" title="src.solver.CreateModel.links"><code class="xref py py-attr docutils literal notranslate"><span class="pre">links</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="src.solver.CreateModel.add_point">
 <span class="sig-name descname"><span class="pre">add_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_customer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penalty_or_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_begin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">demand_or_capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incompatible_vehicles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.CreateModel.add_point" title="Permalink to this definition"></a></dt>
-<dd><p>Add Point in dictionary points, if we want to add Depot
+<dd><p>Add Point in dictionary <a class="reference internal" href="#src.solver.CreateModel.points" title="src.solver.CreateModel.points"><code class="xref py py-attr docutils literal notranslate"><span class="pre">points</span></code></a>, if we want to add Depot
 id_customer must be equal to 0 otherwise it cannot be superior
 to 1022 for a Customer</p>
 </dd></dl>
@@ -180,7 +180,7 @@ to 1022 for a Customer</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="src.solver.CreateModel.add_vehicle_type">
 <span class="sig-name descname"><span class="pre">add_vehicle_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_point_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_point_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_cost_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_cost_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_begin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.CreateModel.add_vehicle_type" title="Permalink to this definition"></a></dt>
-<dd><p>Add VehicleType in dictionary self.vehicle_types</p>
+<dd><p>Add VehicleType in dictionary <a class="reference internal" href="#src.solver.CreateModel.vehicle_types" title="src.solver.CreateModel.vehicle_types"><code class="xref py py-attr docutils literal notranslate"><span class="pre">vehicle_types</span></code></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -233,8 +233,10 @@ we can specify the name of file</p>
 <dl class="simple">
 <dt>Type:</dt><dd><p>– PointsDict : dictionary contains only points</p>
 </dd>
-<dt>Informations:</dt><dd><p>– It’s possible to resolve the problem until 1022 points.
-– For the moment, the capacity of depot is not considered</p>
+<dt>Informations:</dt><dd><ul class="simple">
+<li><p>It’s possible to resolve the problem until 1022 points.</p></li>
+<li><p>For the moment, the capacity of depot is not considered</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -276,11 +278,11 @@ print_level = [-2,-1,0,1,2]</p>
 </div></blockquote>
 <p>Informations:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>–For academic version, with CLP it’s possible to resolve the</dt><dd><p>problem with only one vehicle type.</p>
-</dd>
-</dl>
-<p class="attribution">—Ids of vehicle types must be greater than one</p>
+<div><ul class="simple">
+<li><p>For academic version, with CLP it’s possible to resolve the
+problem with only one vehicle type.</p></li>
+<li><p>Ids of vehicle types must be greater than one</p></li>
+</ul>
 </div></blockquote>
 </dd></dl>
 
@@ -292,20 +294,21 @@ print_level = [-2,-1,0,1,2]</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="src.solver.Point">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.solver.</span></span><span class="sig-name descname"><span class="pre">Point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_customer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penalty_or_cost</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_begin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tw_end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">demand_or_capacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">incompatible_vehicles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.Point" title="Permalink to this definition"></a></dt>
-<dd><p>Define a point of graph(customer or depot).</p>
-<dl>
-<dt>Additional informations:</dt><dd><dl class="simple">
-<dt>service_time – It can represent the time of</dt><dd><p>loading or unloading.</p>
-</dd>
-<dt>penalty_or_cost – if the point is a customer</dt><dd><p>we can specify penalty for not visiting the customer
-otherwise, if the point is a depot we can
-specify a cost to using the depot</p>
-</dd>
-</dl>
-<p>tw_begin – time windows begin
-tw_end – time windows end
-incompatible_vehicles – id of vehicles that cannot deliver
-the customer or not accepted in a depot</p>
+<dd><p>Define a point of graph (customer or depot).</p>
+<dl class="simple">
+<dt>Additional informations:</dt><dd><ul class="simple">
+<li><p>service_time : It can represent the time of
+loading or unloading.</p></li>
+<li><p>penalty_or_cost : if the point is a customer
+we can specify penalty for not
+visiting the customer
+otherwise, if the point is a depot
+we can specify a cost to using the depot</p></li>
+<li><p>tw_begin : time windows begin</p></li>
+<li><p>tw_end : time windows end</p></li>
+<li><p>incompatible_vehicles : id of vehicles that cannot deliver
+the customer or not accepted in a depot</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
@@ -365,7 +368,7 @@ different of default value</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="src.solver.Point.id_customer">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">id_customer</span></span><a class="headerlink" href="#src.solver.Point.id_customer" title="Permalink to this definition"></a></dt>
-<dd><p>getter function of capacity</p>
+<dd><p>getter function of id customer</p>
 </dd></dl>
 
 <dl class="py property">
@@ -559,7 +562,7 @@ default value</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="src.solver.VehicleType.capacity">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">capacity</span></span><a class="headerlink" href="#src.solver.VehicleType.capacity" title="Permalink to this definition"></a></dt>
-<dd><p>int : capacity of vehicle type</p>
+<dd><p>–int : capacity of vehicle type</p>
 </dd></dl>
 
 <dl class="py property">
@@ -614,7 +617,7 @@ default value</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="src.solver.VehicleType.tw_end">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tw_end</span></span><a class="headerlink" href="#src.solver.VehicleType.tw_end" title="Permalink to this definition"></a></dt>
-<dd><p>time windows begin of vehicle type</p>
+<dd><p>time windows end of vehicle type</p>
 </dd></dl>
 
 <dl class="py property">

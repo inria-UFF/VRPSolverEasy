@@ -222,7 +222,7 @@ class VehicleType:
 
     @property
     def capacity(self):
-        """int : capacity of vehicle type"""
+        """--int : capacity of vehicle type"""
         return self._capacity
 
     @capacity.setter
@@ -341,7 +341,7 @@ class VehicleType:
 
     @property
     def tw_end(self):
-        """time windows begin of vehicle type"""
+        """time windows end of vehicle type"""
         return self._tw_end
 
     @tw_end.setter
@@ -388,19 +388,20 @@ class VehicleType:
 
 
 class Point:
-    """Define a point of graph(customer or depot).
-
-       Additional informations:
-           service_time -- It can represent the time of
-                           loading or unloading.
-           penalty_or_cost -- if the point is a customer
-                we can specify penalty for not visiting the customer
-                otherwise, if the point is a depot we can
-                specify a cost to using the depot
-           tw_begin -- time windows begin
-           tw_end -- time windows end
-           incompatible_vehicles -- id of vehicles that cannot deliver
-           the customer or not accepted in a depot
+    """Define a point of graph (customer or depot).
+       
+        Additional informations:
+           - service_time : It can represent the time of
+             loading or unloading.
+           - penalty_or_cost : if the point is a customer
+             we can specify penalty for not
+             visiting the customer
+             otherwise, if the point is a depot
+             we can specify a cost to using the depot
+           - tw_begin : time windows begin
+           - tw_end : time windows end 
+           - incompatible_vehicles : id of vehicles that cannot deliver
+             the customer or not accepted in a depot
     """
 
     def __init__(self, id, name=str(), id_customer=0, penalty_or_cost=0.0,
@@ -454,12 +455,12 @@ class Point:
 
     @property
     def id_customer(self):
-        """getter function of capacity"""
+        """getter function of id customer"""
         return self._id_customer
 
     @id_customer.setter
     def id_customer(self, id_customer):
-        """setter function of capacity"""
+        """setter function of id customer"""
         if not isinstance(id_customer, (int)):
             raise PropertyError(constants.POINT.ID_CUSTOMER.value,
                                 constants.INTEGER_PROPERTY)
@@ -871,7 +872,7 @@ class Parameters:
         print_level(int) -- indicates the level of print from Bapcod
                             during the resolution, we can choose (-2,-1,0)
         action(str) -- indicates if we want to solve the problem ("solve")
-                     or enumerate all feasible routes("enumAllFeasibleRoutes")
+                       or enumerate all feasible routes("enumAllFeasibleRoutes")
     """
 
     def __init__(
@@ -993,7 +994,7 @@ class Parameters:
     @property
     def print_level(self):
         """indicates the level of print from Bapcod
-                            during the resolution, we can choose (-2,-1,0)"""
+                            during the resolution, we can choose (-2,-1,0,1,2)"""
         return self._print_level
 
     @print_level.setter
@@ -1268,10 +1269,10 @@ class CreateModel:
 
         Informations:
 
-            --For academic version, with CLP it's possible to resolve the
-                problem with only one vehicle type.
+            - For academic version, with CLP it's possible to resolve the
+              problem with only one vehicle type.
 
-            -- Ids of vehicle types must be greater than one
+            - Ids of vehicle types must be greater than one
         """
         return self._vehicle_types
 
@@ -1290,8 +1291,8 @@ class CreateModel:
             Type:
                 -- PointsDict : dictionary contains only points
             Informations:
-                -- It's possible to resolve the problem until 1022 points.
-                -- For the moment, the capacity of depot is not considered
+                - It's possible to resolve the problem until 1022 points.
+                - For the moment, the capacity of depot is not considered
         """
         return self._points
 
@@ -1342,7 +1343,7 @@ class CreateModel:
             max_number=1,
             tw_begin=0.0,
             tw_end=0.0):
-        """Add VehicleType in dictionary self.vehicle_types"""
+        """Add VehicleType in dictionary :py:attr:`vehicle_types`"""
         if id in self.vehicle_types:
             raise ModelError(constants.ADD_VEHICLE_TYPE_ERROR)
         self.vehicle_types[id] = VehicleType(
@@ -1373,7 +1374,7 @@ class CreateModel:
             distance=0.0,
             time=0.0,
             fixed_cost=0.0):
-        """Add Link in dictionary self.links"""
+        """Add Link in dictionary :py:attr:`links`"""
         if name in self.links:
             raise ModelError(constants.ADD_LINK_ERROR)
         self.links[name] = Link(
@@ -1402,7 +1403,7 @@ class CreateModel:
             tw_end=0.0,
             demand_or_capacity=0,
             incompatible_vehicles=[]):
-        """Add Point in dictionary points, if we want to add Depot
+        """Add Point in dictionary :py:attr:`points`, if we want to add Depot
            id_customer must be equal to 0 otherwise it cannot be superior
            to 1022 for a Customer"""
 
@@ -1429,7 +1430,7 @@ class CreateModel:
             tw_end=0.0,
             capacity=0,
             incompatible_vehicles=[]):
-        """Add depot in dictionary points"""
+        """Add depot in dictionary :py:attr:`points`"""
         if id in self.points:
             raise ModelError(constants.ADD_POINT_ERROR)
         self.add_point(id=id, name=name, id_customer=0,
@@ -1453,7 +1454,7 @@ class CreateModel:
             tw_end=0.0,
             demand=0,
             incompatible_vehicles=[]):
-        """Add customer in dictionary points"""
+        """Add customer in dictionary :py:attr:`points`"""
         if id in self.points:
             raise ModelError(constants.ADD_POINT_ERROR)
         id_cust = id_customer

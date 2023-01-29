@@ -3,5 +3,5 @@ Python modeling
 .. toctree::
    :maxdepth: 1
 
-   VehicleType
-   Customer
+   API
+   Example
