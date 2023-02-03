@@ -863,16 +863,7 @@ class Link:
 
 
 class Parameters:
-    """Define a point of graph(customer or depot).
-
-        config_file(str) -- indicates the path of the config file for
-                            more advanced settings
-        solver_name(str) -- indicates the solver used during the resolution,
-                            we can choose "CLP" or "CPLEX" solver
-        print_level(int) -- indicates the level of print from Bapcod
-                            during the resolution, we can choose (-2,-1,0)
-        action(str) -- indicates if we want to solve the problem ("solve")
-                       or enumerate all feasible routes("enumAllFeasibleRoutes")
+    """Define all parameters from model
     """
 
     def __init__(
@@ -1029,7 +1020,9 @@ class Parameters:
 
     @property
     def cplex_path(self):
-        """str : getter function of cplex_path"""
+        """str : path of library cplex 22.1
+           You can specify a path if you want to use cplex and 
+           replace  bapcod-shared library by the library using cplex"""
         return self._cplex_path
 
     @cplex_path.setter
@@ -1547,6 +1540,11 @@ class CreateModel:
             _lib_name = constants.LIBRARY_WINDOWS
         elif platform.system() == constants.LINUX_PLATFORM:
             _lib_name = constants.LIBRARY_LINUX
+            _c.cdll.LoadLibrary(new_lib + "/libblas.so.3")
+            _c.cdll.LoadLibrary(new_lib + "/libz.so.1")
+            _c.cdll.LoadLibrary(new_lib + "/libbz2.so.1.0")
+            _c.cdll.LoadLibrary(new_lib + "/libquadmath.so.0")
+            _c.cdll.LoadLibrary(new_lib + "/libgfortran.so.5")
             _c.cdll.LoadLibrary(new_lib + "/libtinfo.so.6.2")
             _c.cdll.LoadLibrary(new_lib + "/libreadline.so.8.0")
             _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.so.0")
