@@ -1548,6 +1548,7 @@ class CreateModel:
         elif platform.system() == constants.LINUX_PLATFORM:
             _lib_name = constants.LIBRARY_LINUX
             _c.cdll.LoadLibrary(new_lib + "/libreadline.so.8.0")
+            _c.cdll.LoadLibrary(new_lib + "/libtinfo.so.6.2")
             _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.so.0")
             _c.cdll.LoadLibrary(new_lib + "/libClp.so.0")
         elif platform.system() == constants.MAC_PLATFORM:
