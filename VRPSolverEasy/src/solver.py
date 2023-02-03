@@ -1547,15 +1547,8 @@ class CreateModel:
             _lib_name = constants.LIBRARY_WINDOWS
         elif platform.system() == constants.LINUX_PLATFORM:
             _lib_name = constants.LIBRARY_LINUX
-            if new_lib not in os.environ[constants.PATH_SYSTEM[platform.system(
-            )]]:
-                os.environ[constants.PATH_SYSTEM[platform.system()]
-                           ] += ':' + new_lib
-                try:
-                    os.execv(sys.argv[0], sys.argv)
-                except Exception:
-                    print('Failed re-exec')
-                    sys.exit(1)
+            _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.so.0")
+            _c.cdll.LoadLibrary(new_lib + "/libClp.so.0")
         elif platform.system() == constants.MAC_PLATFORM:
             _lib_name = constants.LIBRARY_MAC
             _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.0.dylib")
