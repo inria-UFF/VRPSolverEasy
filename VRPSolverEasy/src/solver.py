@@ -1540,6 +1540,7 @@ class CreateModel:
             _lib_name = constants.LIBRARY_WINDOWS
         elif platform.system() == constants.LINUX_PLATFORM:
             _lib_name = constants.LIBRARY_LINUX
+            _c.cdll.LoadLibrary(new_lib + "/libm-2.31.so")
             _c.cdll.LoadLibrary(new_lib + "/libblas.so.3.9.0")
             _c.cdll.LoadLibrary(new_lib + "/libz.so.1.2.11")
             _c.cdll.LoadLibrary(new_lib + "/libbz2.so.1.0.4")
