@@ -1540,16 +1540,6 @@ class CreateModel:
             _lib_name = constants.LIBRARY_WINDOWS
         elif platform.system() == constants.LINUX_PLATFORM:
             _lib_name = constants.LIBRARY_LINUX
-            _c.cdll.LoadLibrary(new_lib + "/libc-2.31.so")
-            _c.cdll.LoadLibrary(new_lib + "/libm-2.31.so")
-            _c.cdll.LoadLibrary(new_lib + "/libgcc_s.so.1")
-            _c.cdll.LoadLibrary(new_lib + "/libstdc++.so.6.0.28")
-            _c.cdll.LoadLibrary(new_lib + "/libblas.so.3.9.0")
-            _c.cdll.LoadLibrary(new_lib + "/libz.so.1.2.11")
-            _c.cdll.LoadLibrary(new_lib + "/libbz2.so.1.0.4")
-            _c.cdll.LoadLibrary(new_lib + "/libquadmath.so.0.0.0")
-            _c.cdll.LoadLibrary(new_lib + "/libgfortran.so.5.0.0")
-            _c.cdll.LoadLibrary(new_lib + "/libtinfo.so.6.2")
         elif platform.system() == constants.MAC_PLATFORM:
             _lib_name = constants.LIBRARY_MAC
            # _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.0.dylib")
