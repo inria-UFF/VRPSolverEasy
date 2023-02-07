@@ -1552,10 +1552,10 @@ class CreateModel:
             _c.cdll.LoadLibrary(new_lib + "/libtinfo.so.6.2")
         elif platform.system() == constants.MAC_PLATFORM:
             _lib_name = constants.LIBRARY_MAC
-            _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.0.dylib")
-            _c.cdll.LoadLibrary(new_lib + "/libClp.0.dylib")
-            _c.cdll.LoadLibrary(new_lib + "/libOsi.0.dylib")
-            _c.cdll.LoadLibrary(new_lib + "/libOsiClp.0.dylib")
+           # _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.0.dylib")
+           # _c.cdll.LoadLibrary(new_lib + "/libClp.0.dylib")
+           # _c.cdll.LoadLibrary(new_lib + "/libOsi.0.dylib")
+           # _c.cdll.LoadLibrary(new_lib + "/libOsiClp.0.dylib")
 
         else:
             raise ModelError(constants.PLATFORM_ERROR)
