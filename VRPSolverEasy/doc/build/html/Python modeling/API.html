@@ -68,6 +68,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#src.solver.VehicleType"><code class="docutils literal notranslate"><span class="pre">VehicleType</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#parameters">Parameters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#src.solver.Parameters"><code class="docutils literal notranslate"><span class="pre">Parameters</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#solution">Solution</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#src.solver.Solution"><code class="docutils literal notranslate"><span class="pre">Solution</span></code></a></li>
 </ul>
@@ -137,10 +141,13 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#src.solver.VehicleType" title="src.solver.VehicleType"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VehicleType</span></code></a>(id, start_point_id, end_point_id)</p></td>
 <td><p>Define a vehicle type with different attributes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#src.solver.Solution" title="src.solver.Solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solution</span></code></a>([json_input])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#src.solver.Parameters" title="src.solver.Parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Parameters</span></code></a>([time_limit, upper_bound, ...])</p></td>
+<td><p>Define all parameters from model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#src.solver.Solution" title="src.solver.Solution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Solution</span></code></a>([json_input])</p></td>
 <td><p>Contains all elements of solution after running model.solve().</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#src.solver.Route" title="src.solver.Route"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Route</span></code></a>(json_input)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#src.solver.Route" title="src.solver.Route"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Route</span></code></a>(json_input)</p></td>
 <td><p>Define a route from solution</p></td>
 </tr>
 </tbody>
@@ -631,6 +638,99 @@ default value</p>
 <dt class="sig sig-object py" id="src.solver.VehicleType.var_cost_time">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">var_cost_time</span></span><a class="headerlink" href="#src.solver.VehicleType.var_cost_time" title="Permalink to this definition"></a></dt>
 <dd><p>variable cost per unit of time</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.solver.Parameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.solver.</span></span><span class="sig-name descname"><span class="pre">Parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heuristic_used</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit_heuristic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CLP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'solve'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cplex_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.Parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Define all parameters from model</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.solver.Parameters.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heuristic_used</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_limit_heuristic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CLP'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'solve'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cplex_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.Parameters.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.solver.Parameters.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.Parameters.__repr__" title="Permalink to this definition"></a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.solver.Parameters.__weakref__">
+<span class="sig-name descname"><span class="pre">__weakref__</span></span><a class="headerlink" href="#src.solver.Parameters.__weakref__" title="Permalink to this definition"></a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.solver.Parameters.action">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">action</span></span><a class="headerlink" href="#src.solver.Parameters.action" title="Permalink to this definition"></a></dt>
+<dd><p>str : indicates if we want to solve the problem (“solve”)
+or enumerate all feasible routes(“enumAllFeasibleRoutes”)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.solver.Parameters.config_file">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">config_file</span></span><a class="headerlink" href="#src.solver.Parameters.config_file" title="Permalink to this definition"></a></dt>
+<dd><p>str : indicates the path of the config file for
+more advanced settings</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.solver.Parameters.cplex_path">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cplex_path</span></span><a class="headerlink" href="#src.solver.Parameters.cplex_path" title="Permalink to this definition"></a></dt>
+<dd><p>str : path of library cplex 22.1
+You can specify a path if you want to use cplex and 
+replace  bapcod-shared library by the library using cplex</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.solver.Parameters.get_parameters">
+<span class="sig-name descname"><span class="pre">get_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.solver.Parameters.get_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Get all parameters which are different of
+default value</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.solver.Parameters.heuristic_used">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">heuristic_used</span></span><a class="headerlink" href="#src.solver.Parameters.heuristic_used" title="Permalink to this definition"></a></dt>
+<dd><p>bool : getter function of heuristic_used</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.solver.Parameters.print_level">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">print_level</span></span><a class="headerlink" href="#src.solver.Parameters.print_level" title="Permalink to this definition"></a></dt>
+<dd><p>indicates the level of print from Bapcod
+during the resolution, we can choose (-2,-1,0,1,2)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.solver.Parameters.solver_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">solver_name</span></span><a class="headerlink" href="#src.solver.Parameters.solver_name" title="Permalink to this definition"></a></dt>
+<dd><p>str : indicates the solver used during the resolution,
+we can choose “CLP” or “CPLEX” solver</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.solver.Parameters.time_limit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">time_limit</span></span><a class="headerlink" href="#src.solver.Parameters.time_limit" title="Permalink to this definition"></a></dt>
+<dd><p>float : represents the limit time of resolution</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.solver.Parameters.time_limit_heuristic">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">time_limit_heuristic</span></span><a class="headerlink" href="#src.solver.Parameters.time_limit_heuristic" title="Permalink to this definition"></a></dt>
+<dd><p>float : getter function of time_limit_heuristic</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="src.solver.Parameters.upper_bound">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upper_bound</span></span><a class="headerlink" href="#src.solver.Parameters.upper_bound" title="Permalink to this definition"></a></dt>
+<dd><p>float : represents the cost we want to reach</p>
 </dd></dl>
 
 </dd></dl>

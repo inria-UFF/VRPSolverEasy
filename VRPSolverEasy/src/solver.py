@@ -1534,7 +1534,6 @@ class CreateModel:
         _lib_name = None
         _lib_candidates = []
 
-        new_lib = os.path.realpath(__file__ + "/../../lib/Dependencies/")
 
         if platform.system() == constants.WINDOWS_PLATFORM:
             _lib_name = constants.LIBRARY_WINDOWS
@@ -1542,10 +1541,6 @@ class CreateModel:
             _lib_name = constants.LIBRARY_LINUX
         elif platform.system() == constants.MAC_PLATFORM:
             _lib_name = constants.LIBRARY_MAC
-           # _c.cdll.LoadLibrary(new_lib + "/libCoinUtils.0.dylib")
-           # _c.cdll.LoadLibrary(new_lib + "/libClp.0.dylib")
-           # _c.cdll.LoadLibrary(new_lib + "/libOsi.0.dylib")
-           # _c.cdll.LoadLibrary(new_lib + "/libOsiClp.0.dylib")
 
         else:
             raise ModelError(constants.PLATFORM_ERROR)

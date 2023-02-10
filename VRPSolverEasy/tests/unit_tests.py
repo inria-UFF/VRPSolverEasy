@@ -122,7 +122,7 @@ class TestAllVariants(unittest.TestCase):
             end_point_id=0,
             distance=dist,
             time=time_between_points)
-        model.solve()
+        model.solve()       
         model.export("cvrptw")
         cost = ((dist * cost_per_distance) +
                 (time_between_points * cost_per_time)) * nb_links

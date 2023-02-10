@@ -76,8 +76,10 @@ def solve_demo(instance_name):
     # if you have cplex 22.1 installed on your laptop you can
     # change the bapcod-shared library and specify the path like this:
     # Here there is an example on windows laptop
-    # model.set_parameters(time_limit=30,cplex_path="C:\\Program Files\\
-    # IBM\\ILOG\\CPLEX_Studio221\\cplex\\bin\\x64_win64")
+    # model.set_parameters(time_limit=30,solver_name="CPLEX",
+    # cplex_path="C:\\Program Files\\
+    # IBM\\ILOG\\CPLEX_Studio221\\cplex\\bin\\x64_win64\\cplex2210.dll")
+
 
     # solve model
     model.solve()

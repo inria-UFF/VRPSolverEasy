@@ -13,8 +13,10 @@
     Depot
     Link
     VehicleType
+    Parameters
     Solution
     Route
+
 
 CreateModel
 -----------
@@ -59,6 +61,14 @@ VehicleType
 -----------
 
 .. autoclass:: VehicleType
+    :members:
+    :member-order:
+    :special-members:
+
+Parameters
+-----------
+
+.. autoclass:: Parameters
     :members:
     :member-order:
     :special-members:
