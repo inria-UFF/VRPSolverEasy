@@ -10,7 +10,7 @@ This project is an implementation of VRPSolver, a package allows you to resolve 
 
 There is two differents way to install `VRPSolverEasy` :
 
-The first way is to install it with `pip` (it doesn't work because the package is temporarly private)  :
+The first way is to install it with `pip` 
 ```
 python -m pip install VRPSolverEasy
 ```
