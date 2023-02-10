@@ -4,8 +4,8 @@ from enum import Enum
 VERSION = "0.0.1"
 
 LIBRARY_WINDOWS = "bapcod-shared.dll"
-LIBRARY_LINUX = "bapcod-shared.so"
-LIBRARY_MAC = "bapcod-shared.dylib"
+LIBRARY_LINUX = "libbapcod-shared.so"
+LIBRARY_MAC = "libbapcod-shared.dylib"
 
 WINDOWS_PLATFORM = "Windows"
 LINUX_PLATFORM = "Linux"
