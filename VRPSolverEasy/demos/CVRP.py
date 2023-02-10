@@ -27,6 +27,7 @@ def solve_demo(instance_name):
     model.add_vehicle_type(id=vehicle_type["id"],
                            start_point_id=vehicle_type["start_point_id"],
                            end_point_id=vehicle_type["end_point_id"],
+                           max_number=vehicle_type["max_number"],
                            capacity=vehicle_type["capacity"],
                            var_cost_dist=vehicle_type["var_cost_dist"]
                            )
@@ -85,6 +86,7 @@ def read_cvrp_instances(instance_name):
                     "start_point_id": id_point,
                     "end_point_id": id_point,
                     "capacity": capacity_input,
+                    "max_number": dimension_input,
                     "var_cost_dist": 1
                     }
 
