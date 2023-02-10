@@ -33,13 +33,11 @@ setup(
             "VRPSolverEasy.lib.Windows",
             "VRPSolverEasy.lib.Linux",
             "VRPSolverEasy.lib.Darwin",
-            "VRPSolverEasy.lib.Dependencies"
         ],
         package_data={
             "VRPSolverEasy.lib.Windows": ["*", "*.*"],
             "VRPSolverEasy.lib.Linux": ["*", "*.*"],
-            "VRPSolverEasy.lib.Darwin": ["*", "*.*"],
-            "VRPSolverEasy.lib.Dependencies": ["*", "*.*"]
+            "VRPSolverEasy.lib.Darwin": ["*", "*.*"]
         },
         include_package_data=True,
         entry_points=(
