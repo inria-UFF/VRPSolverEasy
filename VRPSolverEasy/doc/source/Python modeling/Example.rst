@@ -66,11 +66,11 @@ Parameters
 
     :math:`C_k` : Capacity of vehicle :math:`k \in K`
 
-    :math:`twb_i` : Time windows begin of point i :math:`i \in N`
+    :math:`twb_i` : Time windows begin of point  :math:`i \in N`
 
-    :math:`twe_i` : Time windows end of point i :math:`i \in N`
+    :math:`twe_i` : Time windows end of point  :math:`i \in N`
 
-    :math:`s_i` : Service time at point i :math:`i \in N`
+    :math:`s_i` : Service time at point  :math:`i \in N`
 
     :math:`t_{ij}` : Travel time from i to j  :math:`(i,j) \in N`
 
