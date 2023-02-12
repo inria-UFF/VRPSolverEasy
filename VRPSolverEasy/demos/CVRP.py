@@ -48,7 +48,8 @@ def solve_demo(instance_name):
                        )
 
     # set parameters
-    model.set_parameters(time_limit=30)
+    model.set_parameters(time_limit=60)
+    # model.set_parameters(upper_bound=950)
 
     # if you have cplex 22.1 installed on your laptop you can
     # change the bapcod-shared library and specify the path like this:
@@ -114,8 +115,8 @@ def read_cvrp_instances(instance_name):
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
             dist = compute_euclidean_distance(points[i]["x"],
-                                              points[j]["x"],
                                               points[i]["y"],
+                                              points[j]["x"],
                                               points[j]["y"]
                                               )
 
