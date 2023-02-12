@@ -161,8 +161,8 @@ def read_cvrptw_instances(instance_name):
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
             dist = compute_euclidean_distance(points[i]["x"],
-                                              points[j]["x"],
                                               points[i]["y"],
+                                              points[j]["x"],
                                               points[j]["y"]
                                               )
 
