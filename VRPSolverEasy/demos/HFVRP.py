@@ -26,7 +26,7 @@ def solve_demo(instance_name):
     data = read_hfvrp_instances(instance_name)
 
     # get data
-    vehicle_types = data["vehicle_types"]
+    vehicle_types = data["VehicleTypes"]
     depot = data["Points"][0]
     customers = data["Points"][1:]
     links = data["Links"]
@@ -149,7 +149,7 @@ def read_hfvrp_instances(instance_name):
             nb_link += 1
 
     return {"Points": points,
-            "vehicle_types": vehicle_types,
+            "VehicleTypes": vehicle_types,
             "Links": links
             }
 

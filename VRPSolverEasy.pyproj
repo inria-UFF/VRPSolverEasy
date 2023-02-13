@@ -28,12 +28,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="setup.py" />
-    <Compile Include="VRPSolverEasy\demos\CVRP.py" />
+    <Compile Include="VRPSolverEasy\demos\cvrp.py" />
     <Compile Include="VRPSolverEasy\demos\cvrptw.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VRPSolverEasy\demos\example.py" />
-    <Compile Include="VRPSolverEasy\demos\HFVRP.py" />
+    <Compile Include="VRPSolverEasy\demos\hfvrp.py" />
     <Compile Include="VRPSolverEasy\demos\__init__.py">
       <SubType>Code</SubType>
     </Compile>
