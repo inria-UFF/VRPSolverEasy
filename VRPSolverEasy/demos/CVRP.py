@@ -15,7 +15,7 @@ def solve_demo(instance_name):
     data = read_cvrp_instances(instance_name)
 
     # get data
-    vehicle_type = data["vehicle_type"]
+    vehicle_type = data["VehicleTypes"]
     depot = data["Points"][0]
     customers = data["Points"][1:]
     links = data["Links"]
@@ -129,7 +129,7 @@ def read_cvrp_instances(instance_name):
             nb_link += 1
 
     return {"Points": points,
-            "vehicle_type": vehicle_type,
+            "VehicleTypes": vehicle_type,
             "Links": links
             }
 

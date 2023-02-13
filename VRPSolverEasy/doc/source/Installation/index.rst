@@ -1,4 +1,4 @@
-Installation
+Free Installation
 =========================================
 
 This is a guide to install VRPSolverEasy package.
@@ -37,17 +37,38 @@ Installation using git
    sudo python -m pip install .
 
 
-Installation with another solver
---------------------------------
+Academic Installation using CPLEX
+=========================================
  
-After this steps, if you want to use another solver, you must 
+If you want to use another solver, you must :
 
-* download library `here <https://bapcod.math.u-bordeaux.fr/>`_.
+  
+* Download Bapcod source code on its `web page <https://bapcod.math.u-bordeaux.fr/>`_. Then request the RCSP (resource constrained shortest path) compiled library from Ruslan.Sadykov@inria.fr. 
+* Please specify your OS in your request. 
+* Install Bapcod together with the RCSP library using installation instructions in the Bapcod user guide.
+* Install CPLEX
+   
+Then run the following command from the folder you have installed Bapcod.
 
-* find old library 
+.. code-block:: ruby
+
+   cmake --build build --config Release --target bapcod-shared
+
+
+This will produce shared library file in :
+
+.. code-block:: ruby
+
+   "Bapcod-path/build/Bapcod/libbapcod-shared.so" // Linux
+   "Bapcod-path/build/Bapcod/libbapcod-shared.dylib" // MacOs
+   "Bapcod-path/build/Bapcod/Release/bapcod-shared.dll" // Windows
+
+Note that if you use windows system, you have to indicates the cplex path in Parameters.
+
+* Replace the old library in the folder **lib/your-system** by the newest
   
    *  `bapcod-shared.dll` (Windows) 
-   *  `bapcod-shared.so` (Linux)
-   *  `bapcod-shared.dylib` (MacOs)
+   *  `libbapcod-shared.so` (Linux)
+   *  `libbapcod-shared.dylib` (MacOs)
 
-* replace it by the newest 
+* re-run installation using pip

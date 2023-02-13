@@ -75,7 +75,7 @@ def solve_demo(instance_name):
     model.solve()
 
     # export the result
-    # model.solution.export(instance_name.split(".")[0] + "_result")
+    model.solution.export(instance_name.split(".")[0] + "_result")
 
     return model.solution
 
@@ -105,27 +105,27 @@ def read_hfvrp_instances(instance_name):
         id = int(next(instance_iter))
         x = int(next(instance_iter))
         y = int(next(instance_iter))
-        d = int(next(instance_iter))
+        demand = int(next(instance_iter))
         points.append({"x": x,
                 "y": y,
-                "demand": d,
+                "demand": demand,
                 "id": id_point})
 
-    K = int(next(instance_iter))
+    nb_vehicles = int(next(instance_iter))
     vehicle_types = []
-    for k in range(1, K+1):
-        Q = int(next(instance_iter))
-        fixed = float(next(instance_iter))
-        factor = float(next(instance_iter))
+    for k in range(1, nb_vehicles+1):
+        capacity = int(next(instance_iter))
+        fixed_cost = float(next(instance_iter))
+        var_cost_dist = float(next(instance_iter))
         l = int(next(instance_iter))
-        u = int(next(instance_iter))
+        max_number = int(next(instance_iter))
         vehicle_type = {"id": k,  # we cannot have an id less than 1
                 "start_point_id": 0,
                 "end_point_id": 0,
-                "capacity": Q,
-                "max_number": u,
-                "fixed_cost" : fixed,
-                "var_cost_dist": factor
+                "capacity": capacity,
+                "max_number": max_number,
+                "fixed_cost" : fixed_cost,
+                "var_cost_dist": var_cost_dist
                 }
         vehicle_types.append(vehicle_type)
 
@@ -155,4 +155,5 @@ def read_hfvrp_instances(instance_name):
 
 
 if __name__ == "__main__":
-    solve_demo("toy.txt") # optimal cost is 3185.09
+    solve_demo("toy.txt") # optimal cost is 165.86
+
