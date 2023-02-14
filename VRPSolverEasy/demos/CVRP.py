@@ -1,16 +1,31 @@
 import math
 import os
 import VRPSolverEasy.src.solver as solver
-import VRPSolverEasy.demos.cvrptw as utils
 
 
+def read_instance(name):
+    path_project = os.path.abspath(os.getcwd())
+    file = open(
+        path_project +
+        os.path.normpath(
+            "/VRPSolverEasy/src/data/" +
+            name),
+        "r")
+    return [str(element) for element in file.read().split()]
 
+
+def compute_euclidean_distance(x_i, y_i, x_j, y_j):
+    """compute the euclidean distance between 2 points from graph"""
+    return math.floor(math.sqrt((x_i - x_j)**2 +
+                           (y_i - y_j)**2) + 0.5)
 
 def solve_demo(instance_name):
     """return a solution from modelisation"""
 
     # read instance
     data = read_cvrp_instances(instance_name)
+
+    print(data)
 
     # get data
     vehicle_type = data["VehicleTypes"]
@@ -63,28 +78,24 @@ def solve_demo(instance_name):
 
     return model.solution
 
-def parse_instance_cvrp(instance_name):
-    """Return a dictionary with differents elements of model"""
+def read_cvrp_instances(instance_name):
+    """Read literature instances from CVRPLIB by giving the name of instance
+    and returns dictionary containing all elements of model"""
     
-    instance_iter = iter(utils.read_instance("CVRP/" + instance_name))
-    nb_points = 0
-    instance = {"capacity":0,
-                "dimension":0,
-                "depot":{0:0},
-                "node_coord":{},
-                "demand":{}}
+    instance_iter = iter(read_instance("CVRP/" + instance_name))
+    points = []
+    id_point = 0
+    dimension_input = -1
+    capacity_input = -1
 
     while True:
         element = next(instance_iter)
         if element == "DIMENSION":
             next(instance_iter)  # pass ":"
-            nb_points = int(next(instance_iter))
-            nb_customers = nb_points - 1
-            instance["dimension"] = nb_points
+            dimension_input = int(next(instance_iter))
         elif element == "CAPACITY":
             next(instance_iter)  # pass ":"
-            vehicle_capacity = int(next(instance_iter))
-            instance["capacity"] = vehicle_capacity
+            capacity_input = int(next(instance_iter))
         elif element == "EDGE_WEIGHT_TYPE":
             next(instance_iter)  # pass ":"
             element = next(instance_iter)
@@ -93,54 +104,6 @@ def parse_instance_cvrp(instance_name):
                 is not supported (only EUC_2D)""")
         elif element == "NODE_COORD_SECTION":
             break
-
-    for n in range(nb_points):
-        point_id = int(next(instance_iter))
-        if point_id != n + 1:
-            raise Exception("Unexpected index")
-        else:
-            instance["node_coord"][point_id] = [int(next(instance_iter)),
-                                                int(next(instance_iter))]
-
-    element = next(instance_iter)
-    if element != "DEMAND_SECTION":
-        raise Exception("Expected line DEMAND_SECTION")
-
-
-    for n in range(nb_points):
-        point_id = int(next(instance_iter))
-        if point_id != n + 1:
-            raise Exception("Unexpected index")
-        instance["demand"][point_id] = int(next(instance_iter))
-
-    element = next(instance_iter)
-    if element != "DEPOT_SECTION":
-        raise Exception("Expected line DEPOT_SECTION")
-
-    depot_id = int(next(instance_iter))
-    instance["depot"][0] = depot_id
-
-    end_depot_section = int(next(instance_iter))
-    if end_depot_section != -1:
-        raise Exception("Expected only one depot.")
-
-    return instance
-
-def read_cvrp_instances(instance_name):
-    """Read literature instances from CVRPLIB by giving the name of instance
-        and returns dictionary containing all elements of model"""
-
-    # Parse formatted instances (default)
-    instance = parse_instance_cvrp(instance_name)
-
-    capacity_input = int(instance['capacity'])
-    dimension_input = int(instance['dimension'])
-
-    depot_id = int(instance['depot'][0])
-    depot_x = int(instance['node_coord'][depot_id][0])
-    depot_y = int(instance['node_coord'][depot_id][1])
-    depot_demand = int(instance['demand'][depot_id])
-    id_point = 0
 
     # Initialize vehicle type
     vehicle_type = {"id": 1,  # we cannot have an id less than 1
@@ -151,30 +114,46 @@ def read_cvrp_instances(instance_name):
                     "var_cost_dist": 1
                     }
 
-    # Initialize the points with depot
-    points = [{"x": depot_x,
-               "y": depot_y,
-               "demand": depot_demand,
-               "id": id_point
-               }]
+    # Create points
+    for n in range(dimension_input):
+        point_id = int(next(instance_iter))
+        if point_id != n + 1:
+            raise Exception("Unexpected index")
+        else:
+            x = int(next(instance_iter))
+            y = int(next(instance_iter))
+            points.append({"x": x,
+                            "y": y,
+                            "demand": -1,
+                            "id": id_point})
+            id_point += 1
 
-    # Add the customers in the list of points
-    while id_point < dimension_input-1:
-        id_point += 1
-        x = int(instance['node_coord'][id_point][0])
-        y = int(instance['node_coord'][id_point][1])
-        demand = int(instance['demand'][id_point])
-        points.append({"x": x,
-                       "y": y,
-                       "demand": demand,
-                       "id": id_point})
+    element = next(instance_iter)
+    if element != "DEMAND_SECTION":
+        raise Exception("Expected line DEMAND_SECTION")
 
-    # compute the links of graph
+    # Get the demands
+    for n in range(dimension_input):
+        point_id = int(next(instance_iter))
+        if point_id != n + 1:
+            raise Exception("Unexpected index")
+        points[n]["demand"] = int(next(instance_iter))
+
+    element = next(instance_iter)
+    if element != "DEPOT_SECTION":
+        raise Exception("Expected line DEPOT_SECTION")
+    depot_id = int(next(instance_iter))
+    
+    end_depot_section = int(next(instance_iter))
+    if end_depot_section != -1:
+        raise Exception("Expected only one depot.")
+
+    # Compute the links of graph
     links = []
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = utils.compute_euclidean_distance(points[i]["x"],
+            dist = compute_euclidean_distance(points[i]["x"],
                                               points[i]["y"],
                                               points[j]["x"],
                                               points[j]["y"]
@@ -193,6 +172,5 @@ def read_cvrp_instances(instance_name):
             "Links": links
             }
 
-
 if __name__ == "__main__":
-    solve_demo("A-n36-k5.vrp")
+    solve_demo("A-n37-k6.vrp")
