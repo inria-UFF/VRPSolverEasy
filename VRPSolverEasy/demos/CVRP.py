@@ -25,8 +25,6 @@ def solve_demo(instance_name):
     # read instance
     data = read_cvrp_instances(instance_name)
 
-    print(data)
-
     # get data
     vehicle_type = data["VehicleTypes"]
     depot = data["Points"][0]
