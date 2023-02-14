@@ -9,7 +9,7 @@ find 3 files allow you to resolve variants VRP problem.
 
 CVRPTW
 ------------------
-The file **cvrptw.py** allows you to resolve **solomon** instances in the following format : 
+The **cvrptw.py** file allows you to resolve **solomon** instances in the following format : 
 
 * The first line indicates the name of instance.
 * The fifth line gives the number of vehicles and the capacity. 
@@ -28,13 +28,13 @@ The file **cvrptw.py** allows you to resolve **solomon** instances in the follow
 
 CVRP
 ------------------
-The file **cvrp.py** allows you to resolve **augerat** instances in the following format : 
+The **cvrp.py** file allows you to resolve **augerat** instances in the following format : 
 
-* The first line indicates the name of instance.
-* The second line gives a comment about the data, for example optimal value expected.
-* The third line gives the type of instance
-* The fourth line gives the dimension of problem
-* The fifth line indicates the technical used for calculate the distance between 2 points.
+* The first line indicates the name of the instance.
+* The second line gives a comment about the data, for example, the optimal value expected.
+* The third line gives the type of instance.
+* The fourth line gives the dimension of the problem
+* The fifth line indicates the technique used for calculating the distance between 2 points.
 * the 6th line indicates the capacity of vehicle.  
 * After the keyword *NODE_COORD_SECTION*, for each point, the following informations are given :
 
@@ -52,7 +52,7 @@ After the keyword *DEPOT_SECTION*, we retrieve the index of depot.
 
 HFVRP
 ------------------
-The file **hfvrp.py** allows you to resolve **queiroga** instances in the following format : 
+The  **hfvrp.py** file allows you to resolve **queiroga** instances in the following format : 
 
 * The first line indicates the number of points.
 * After the number of points, for each point, the following informations are given :
@@ -62,10 +62,10 @@ The file **hfvrp.py** allows you to resolve **queiroga** instances in the follow
     * Y coordinate  
     * Demand
 
-* After this lines, the number of vehicle types is given and the following lines contain for each vehicle :
+* After these lines, the number of vehicle types is given and the following lines contain for each vehicle :
    
    * Capacity
    * Fixed cost 
    * Variable cost 
-   * Minimum number of vehicle 
-   * Maximum number of vehicle 
+   * Minimum number of vehicles 
+   * Maximum number of vehicles 

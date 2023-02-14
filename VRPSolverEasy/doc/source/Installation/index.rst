@@ -1,29 +1,24 @@
-Free Installation
+Installation using free solver
 =========================================
 
 This is a guide to install VRPSolverEasy package.
-If you work on *Windows*, you can run the same commands without sudo
 
 Requirements
 ------------------
 
 You must have installed version of Python >=3.7
 
-If you have an old version of package setuptools(*Linux* or *MacOs*), it's recommanded to upgrade version. you can
+If you have an old version of package setuptools, it's recommanded to upgrade version. You can
 run this command line on terminal::
 
-   sudo python -m pip install --upgrade setuptools
+   python -m pip install --upgrade setuptools
 
 
 
 Installation using pip
 ----------------------
 
-you can run this command line (*Linux* or *MacOs*)::
-
-   sudo python -m pip install VRPSolverEasy
-
-*Windows*::
+You can run this command line::
 
    python -m pip install VRPSolverEasy
 
@@ -67,8 +62,9 @@ Note that if you use windows system, you have to indicates the cplex path in Par
 
 * Replace the old library in the folder **lib/your-system** by the newest
   
-   *  `bapcod-shared.dll` (Windows) 
    *  `libbapcod-shared.so` (Linux)
    *  `libbapcod-shared.dylib` (MacOs)
+   *  `bapcod-shared.dll` (Windows) 
+
 
 * re-run installation using pip

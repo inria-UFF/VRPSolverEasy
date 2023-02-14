@@ -1,22 +1,7 @@
 import math
 import os
 import VRPSolverEasy.src.solver as solver
-
-
-def read_instance(name):
-    path_project = os.path.abspath(os.getcwd())
-    file = open(
-        path_project +
-        os.path.normpath(
-            "/VRPSolverEasy/src/data/" +
-            name),
-        "r")
-    return [str(element) for element in file.read().split()]
-
-
-def compute_euclidean_distance(x_i, y_i, x_j, y_j):
-    """compute the euclidean distance between 2 points from graph"""
-    return math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2)
+import VRPSolverEasy.demos.cvrptw as utils
 
 
 def solve_demo(instance_name):
@@ -83,7 +68,7 @@ def solve_demo(instance_name):
 def read_hfvrp_instances(instance_name):
     """Read literature instances of HFVRP by giving the name of instance
         and returns dictionary containing all elements of model"""
-    instance_iter = iter(read_instance("HFVRP/" + instance_name))
+    instance_iter = iter(utils.read_instance("HFVRP/" + instance_name))
 
     n = int(next(instance_iter))
 
@@ -134,7 +119,7 @@ def read_hfvrp_instances(instance_name):
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = compute_euclidean_distance(points[i]["x"],
+            dist = utils.compute_euclidean_distance(points[i]["x"],
                                               points[i]["y"],
                                               points[j]["x"],
                                               points[j]["y"]
