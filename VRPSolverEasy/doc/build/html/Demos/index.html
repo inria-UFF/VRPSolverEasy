@@ -41,9 +41,13 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../Installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Installation/index.html">Installation using free solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Installation/index.html#academic-installation-using-cplex">Academic Installation using CPLEX</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Python%20modeling/index.html">Python modeling</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Demos</a><ul class="simple">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Demos</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cvrptw">CVRPTW</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cvrp">CVRP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hfvrp">HFVRP</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../Results/index.html">Results</a></li>
@@ -77,6 +81,86 @@
 <h1>Demos<a class="headerlink" href="#demos" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 </div>
+<p>If you want to use literature instances for testing the solver, you can
+find 3 files allow you to resolve variants VRP problem.</p>
+<section id="cvrptw">
+<h2>CVRPTW<a class="headerlink" href="#cvrptw" title="Permalink to this heading"></a></h2>
+<p>The <strong>cvrptw.py</strong> file allows you to resolve <strong>solomon</strong> instances in the following format :</p>
+<ul>
+<li><p>The first line indicates the name of instance.</p></li>
+<li><p>The fifth line gives the number of vehicles and the capacity.</p></li>
+<li><p>From the 10th line, we have the following informations for each point of graph.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Index of point (0 correspond to the depot)</p></li>
+<li><p>X coordinate</p></li>
+<li><p>Y coordinate</p></li>
+<li><p>Demand</p></li>
+<li><p>Time windows begin</p></li>
+<li><p>Time windows End</p></li>
+<li><p>Service Time</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="cvrp">
+<h2>CVRP<a class="headerlink" href="#cvrp" title="Permalink to this heading"></a></h2>
+<p>The <strong>cvrp.py</strong> file allows you to resolve <strong>augerat</strong> instances in the following format :</p>
+<ul>
+<li><p>The first line indicates the name of the instance.</p></li>
+<li><p>The second line gives a comment about the data, for example, the optimal value expected.</p></li>
+<li><p>The third line gives the type of instance.</p></li>
+<li><p>The fourth line gives the dimension of the problem</p></li>
+<li><p>The fifth line indicates the technique used for calculating the distance between 2 points.</p></li>
+<li><p>the 6th line indicates the capacity of vehicle.</p></li>
+<li><p>After the keyword <em>NODE_COORD_SECTION</em>, for each point, the following informations are given :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Index of point</p></li>
+<li><p>X coordinate</p></li>
+<li><p>Y coordinate</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>After the keyword <em>DEMAND_SECTION</em>, for each point the following informations are given :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Index of point</p></li>
+<li><p>Demand</p></li>
+</ul>
+</div></blockquote>
+<p>After the keyword <em>DEPOT_SECTION</em>, we retrieve the index of depot.</p>
+</section>
+<section id="hfvrp">
+<h2>HFVRP<a class="headerlink" href="#hfvrp" title="Permalink to this heading"></a></h2>
+<p>The  <strong>hfvrp.py</strong> file allows you to resolve <strong>queiroga</strong> instances in the following format :</p>
+<ul>
+<li><p>The first line indicates the number of points.</p></li>
+<li><p>After the number of points, for each point, the following informations are given :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Index of point</p></li>
+<li><p>X coordinate</p></li>
+<li><p>Y coordinate</p></li>
+<li><p>Demand</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>After these lines, the number of vehicle types is given and the following lines contain for each vehicle :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Capacity</p></li>
+<li><p>Fixed cost</p></li>
+<li><p>Variable cost</p></li>
+<li><p>Minimum number of vehicles</p></li>
+<li><p>Maximum number of vehicles</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
 </section>
 
 

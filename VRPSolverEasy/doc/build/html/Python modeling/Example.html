@@ -42,7 +42,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../Installation/index.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Installation/index.html">Installation using free solver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Installation/index.html#academic-installation-using-cplex">Academic Installation using CPLEX</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Python modeling</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="API.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">src</span></code>:  solver API</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Example</a><ul>
@@ -95,10 +96,10 @@
 <section id="data">
 <h2>Data<a class="headerlink" href="#data" title="Permalink to this heading"></a></h2>
 <img alt="../_images/data.jpg" src="../_images/data.jpg" />
-<p>In this example, the objective is to minimize the total cost of route
-such that each customers is served within their time windows and the total demand handled by each truck does not exceed its capacity.
-The distance between points distances were calculated using the Euclidean norm and the time
-between points correspond to the distance.</p>
+<p>In this example, the objective is to minimize the total cost of a route
+such that each customer is served within their time windows and the total demand handled by each truck does not exceed its capacity.
+The distance between points were calculated using the Euclidean norm and the time
+between points corresponds to the distance.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="c1"># data</span>
  <span class="n">cost_per_time</span> <span class="o">=</span> <span class="mi">10</span>
  <span class="n">cost_per_distance</span> <span class="o">=</span> <span class="mi">10</span>
@@ -164,14 +165,14 @@ between points correspond to the distance.</p>
 <p><span class="math notranslate nohighlight">\(\sum \limits_{j \in N\backslash\{0,n+1\} }  x_{0jk} = 1 \hspace{1cm} \forall k \in K\)</span></p>
 <p><span class="math notranslate nohighlight">\(\sum \limits_{i \in N\backslash\{0,n+1\} }  x_{i,n+1,k} = 1 \hspace{1cm} \forall k \in K\)</span></p>
 <p><span class="math notranslate nohighlight">\(\sum \limits_{k \in K\ } \sum \limits_{j \in \xi^{+}_i\ }  x_{ijk} = 1 \hspace{1cm} \forall i \in N\)</span></p>
-<p><span class="math notranslate nohighlight">\(\sum \limits_{k \in K\ } \sum \limits_{i \in \xi^{-}_j\ }  x_{ijk} = 1 \hspace{1cm} \forall i \in N\)</span></p>
-<p><span class="math notranslate nohighlight">\(\sum \limits_{j \in \xi^{+}_i\ }  x_{ijk} - \sum \limits_{j \in \xi^{-}_j } x_{ijk} = 0 \hspace{1cm} \forall i \in N,\forall k \in K\)</span></p>
+<p><span class="math notranslate nohighlight">\(\sum \limits_{k \in K\ } \sum \limits_{j \in \xi^{-}_i\ }  x_{jik} = 1 \hspace{1cm} \forall i \in N\)</span></p>
+<p><span class="math notranslate nohighlight">\(\sum \limits_{j \in \xi^{+}_i\ }  x_{ijk} - \sum \limits_{j \in \xi^{-}_i } x_{jik} = 0 \hspace{1cm} \forall i \in N,\forall k \in K\)</span></p>
 <p><span class="math notranslate nohighlight">\(\sum \limits_{(i,j) \in E\ }  d_{i} \times x_{ijk} \leq C_{k} \hspace{1cm} \forall k \in K\)</span></p>
-<p><span class="math notranslate nohighlight">\(w_{jk}-w_{ik}-s_{i}-t_{ij} + M(1-x_{ijk}) \geq 0 \hspace{1cm} \forall (i,j) \in E , k \in K\)</span></p>
-<p><span class="math notranslate nohighlight">\(w_{ik}  \geq twb_{i}\hspace{1cm} \forall i \in N,\forall k \in K\)</span></p>
-<p><span class="math notranslate nohighlight">\(w_{ik} + s_{i}  \leq twe_{i}\hspace{1cm} \forall i \in N,\forall k \in K\)</span></p>
-<p><span class="math notranslate nohighlight">\(x_{ijk} \in \{0,1\} \forall (i,j) \in E,\forall k \in K\)</span></p>
-<p><span class="math notranslate nohighlight">\(w_{ik} \in \mathbb{R} \hspace{1cm} \forall i \in N,\forall k \in K\)</span></p>
+<p><span class="math notranslate nohighlight">\(a_{jk}-a_{ik}-s_{i}-t_{ij} + M(1-x_{ijk}) \geq 0 \hspace{1cm} \forall (i,j) \in E , k \in K\)</span></p>
+<p><span class="math notranslate nohighlight">\(a_{ik}  \geq twb_{i}\hspace{1cm} \forall i \in N,\forall k \in K\)</span></p>
+<p><span class="math notranslate nohighlight">\(a_{ik} + s_{i}  \leq twe_{i}\hspace{1cm} \forall i \in N,\forall k \in K\)</span></p>
+<p><span class="math notranslate nohighlight">\(x_{ijk} \in \{0,1\}  \hspace{1cm} \forall (i,j) \in E,\forall k \in K\)</span></p>
+<p><span class="math notranslate nohighlight">\(a_{ik} \in \mathbb{R} \hspace{1cm} \forall i \in N,\forall k \in K\)</span></p>
 </div></blockquote>
 </section>
 </section>

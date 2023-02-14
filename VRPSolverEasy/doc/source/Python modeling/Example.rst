@@ -10,10 +10,10 @@ Data
 
 
 
-In this example, the objective is to minimize the total cost of route 
-such that each customers is served within their time windows and the total demand handled by each truck does not exceed its capacity.
-The distance between points distances were calculated using the Euclidean norm and the time 
-between points correspond to the distance.
+In this example, the objective is to minimize the total cost of a route 
+such that each customer is served within their time windows and the total demand handled by each truck does not exceed its capacity.
+The distance between points were calculated using the Euclidean norm and the time 
+between points corresponds to the distance.
 
 .. code-block:: python
    :emphasize-lines: 4,5
@@ -97,21 +97,21 @@ Model
     
     :math:`\sum \limits_{k \in K\ } \sum \limits_{j \in \xi^{+}_i\ }  x_{ijk} = 1 \hspace{1cm} \forall i \in N`
 
-    :math:`\sum \limits_{k \in K\ } \sum \limits_{i \in \xi^{-}_j\ }  x_{ijk} = 1 \hspace{1cm} \forall i \in N`
+    :math:`\sum \limits_{k \in K\ } \sum \limits_{j \in \xi^{-}_i\ }  x_{jik} = 1 \hspace{1cm} \forall i \in N`
 
-    :math:`\sum \limits_{j \in \xi^{+}_i\ }  x_{ijk} - \sum \limits_{j \in \xi^{-}_j } x_{ijk} = 0 \hspace{1cm} \forall i \in N,\forall k \in K`
+    :math:`\sum \limits_{j \in \xi^{+}_i\ }  x_{ijk} - \sum \limits_{j \in \xi^{-}_i } x_{jik} = 0 \hspace{1cm} \forall i \in N,\forall k \in K`
 
     :math:`\sum \limits_{(i,j) \in E\ }  d_{i} \times x_{ijk} \leq C_{k} \hspace{1cm} \forall k \in K`
 
-    :math:`w_{jk}-w_{ik}-s_{i}-t_{ij} + M(1-x_{ijk}) \geq 0 \hspace{1cm} \forall (i,j) \in E , k \in K`
+    :math:`a_{jk}-a_{ik}-s_{i}-t_{ij} + M(1-x_{ijk}) \geq 0 \hspace{1cm} \forall (i,j) \in E , k \in K`
 
-    :math:`w_{ik}  \geq twb_{i}\hspace{1cm} \forall i \in N,\forall k \in K`
+    :math:`a_{ik}  \geq twb_{i}\hspace{1cm} \forall i \in N,\forall k \in K`
 
-    :math:`w_{ik} + s_{i}  \leq twe_{i}\hspace{1cm} \forall i \in N,\forall k \in K`
+    :math:`a_{ik} + s_{i}  \leq twe_{i}\hspace{1cm} \forall i \in N,\forall k \in K`
 
-    :math:`x_{ijk} \in \{0,1\} \forall (i,j) \in E,\forall k \in K`
+    :math:`x_{ijk} \in \{0,1\}  \hspace{1cm} \forall (i,j) \in E,\forall k \in K`
 
-    :math:`w_{ik} \in \mathbb{R} \hspace{1cm} \forall i \in N,\forall k \in K`
+    :math:`a_{ik} \in \mathbb{R} \hspace{1cm} \forall i \in N,\forall k \in K`
 
 
 Model VRPSolverEasy
