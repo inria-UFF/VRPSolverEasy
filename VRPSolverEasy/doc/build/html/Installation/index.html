@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; VRPSolverEasy 0.0.1 documentation</title>
+  <title>Installation using free solver &mdash; VRPSolverEasy 0.0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -41,13 +41,13 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation using free solver</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-using-pip">Installation using pip</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation-using-git">Installation using git</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation-with-another-solver">Installation with another solver</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#academic-installation-using-cplex">Academic Installation using CPLEX</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Python%20modeling/index.html">Python modeling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Demos/index.html">Demos</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Results/index.html">Results</a></li>
@@ -67,7 +67,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Installation</li>
+      <li class="breadcrumb-item active">Installation using free solver</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Installation/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -77,26 +77,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
-<p>This is a guide to install VRPSolverEasy package.
-If you work on <em>Windows</em>, you can run the same commands without sudo</p>
+  <section id="installation-using-free-solver">
+<h1>Installation using free solver<a class="headerlink" href="#installation-using-free-solver" title="Permalink to this heading"></a></h1>
+<p>This is a guide to install VRPSolverEasy package.</p>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
 <p>You must have installed version of Python &gt;=3.7</p>
-<p>If you have an old version of package setuptools(<em>Linux</em> or <em>MacOs</em>), it’s recommanded to upgrade version. you can
+<p>If you have an old version of package setuptools, it’s recommanded to upgrade version. You can
 run this command line on terminal:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">setuptools</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">setuptools</span>
 </pre></div>
 </div>
 </section>
 <section id="installation-using-pip">
 <h2>Installation using pip<a class="headerlink" href="#installation-using-pip" title="Permalink to this heading"></a></h2>
-<p>you can run this command line (<em>Linux</em> or <em>MacOs</em>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">VRPSolverEasy</span>
-</pre></div>
-</div>
-<p><em>Windows</em>:</p>
+<p>You can run this command line:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">VRPSolverEasy</span>
 </pre></div>
 </div>
@@ -112,23 +107,39 @@ run this command line on terminal:</p>
 </li>
 </ul>
 </section>
-<section id="installation-with-another-solver">
-<h2>Installation with another solver<a class="headerlink" href="#installation-with-another-solver" title="Permalink to this heading"></a></h2>
-<p>After this steps, if you want to use another solver, you must</p>
+</section>
+<section id="academic-installation-using-cplex">
+<h1>Academic Installation using CPLEX<a class="headerlink" href="#academic-installation-using-cplex" title="Permalink to this heading"></a></h1>
+<p>If you want to use another solver, you must :</p>
+<ul class="simple">
+<li><p>Download Bapcod source code on its <a class="reference external" href="https://bapcod.math.u-bordeaux.fr/">web page</a>. Then request the RCSP (resource constrained shortest path) compiled library from <a class="reference external" href="mailto:Ruslan&#46;Sadykov&#37;&#52;&#48;inria&#46;fr">Ruslan<span>&#46;</span>Sadykov<span>&#64;</span>inria<span>&#46;</span>fr</a>.</p></li>
+<li><p>Please specify your OS in your request.</p></li>
+<li><p>Install Bapcod together with the RCSP library using installation instructions in the Bapcod user guide.</p></li>
+<li><p>Install CPLEX</p></li>
+</ul>
+<p>Then run the following command from the folder you have installed Bapcod.</p>
+<div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span><span class="n">cmake</span><span class="w"> </span><span class="o">--</span><span class="n">build</span><span class="w"> </span><span class="n">build</span><span class="w"> </span><span class="o">--</span><span class="n">config</span><span class="w"> </span><span class="no">Release</span><span class="w"> </span><span class="o">--</span><span class="n">target</span><span class="w"> </span><span class="n">bapcod</span><span class="o">-</span><span class="n">shared</span>
+</pre></div>
+</div>
+<p>This will produce shared library file in :</p>
+<div class="highlight-ruby notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;Bapcod-path/build/Bapcod/libbapcod-shared.so&quot;</span><span class="w"> </span><span class="sr">//</span><span class="w"> </span><span class="no">Linux</span>
+<span class="s2">&quot;Bapcod-path/build/Bapcod/libbapcod-shared.dylib&quot;</span><span class="w"> </span><span class="sr">//</span><span class="w"> </span><span class="no">MacOs</span>
+<span class="s2">&quot;Bapcod-path/build/Bapcod/Release/bapcod-shared.dll&quot;</span><span class="w"> </span><span class="sr">//</span><span class="w"> </span><span class="no">Windows</span>
+</pre></div>
+</div>
+<p>Note that if you use windows system, you have to indicates the cplex path in Parameters.</p>
 <ul>
-<li><p>download library <a class="reference external" href="https://bapcod.math.u-bordeaux.fr/">here</a>.</p></li>
-<li><p>find old library</p>
+<li><p>Replace the old library in the folder <strong>lib/your-system</strong> by the newest</p>
 <blockquote>
 <div><ul class="simple">
+<li><p><cite>libbapcod-shared.so</cite> (Linux)</p></li>
+<li><p><cite>libbapcod-shared.dylib</cite> (MacOs)</p></li>
 <li><p><cite>bapcod-shared.dll</cite> (Windows)</p></li>
-<li><p><cite>bapcod-shared.so</cite> (Linux)</p></li>
-<li><p><cite>bapcod-shared.dylib</cite> (MacOs)</p></li>
 </ul>
 </div></blockquote>
 </li>
-<li><p>replace it by the newest</p></li>
+<li><p>re-run installation using pip</p></li>
 </ul>
-</section>
 </section>
 
 

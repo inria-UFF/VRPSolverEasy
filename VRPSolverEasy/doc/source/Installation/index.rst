@@ -1,7 +1,12 @@
-Installation using free solver
+Installation 
 =========================================
 
 This is a guide to install VRPSolverEasy package.
+
+Installation of free version
+=========================================
+
+Free version uses third-party COIN-OR CLP linear programming solver which is included in VRPSolverEasy.
 
 Requirements
 ------------------
@@ -32,18 +37,20 @@ Installation using git
    sudo python -m pip install .
 
 
-Academic Installation using CPLEX
+Installation of academic version 
 =========================================
- 
-If you want to use another solver, you must :
 
-  
-* Download Bapcod source code on its `web page <https://bapcod.math.u-bordeaux.fr/>`_. Then request the RCSP (resource constrained shortest path) compiled library from Ruslan.Sadykov@inria.fr. 
-* Please specify your OS in your request. 
-* Install Bapcod together with the RCSP library using installation instructions in the Bapcod user guide.
-* Install CPLEX
-   
-Then run the following command from the folder you have installed Bapcod.
+Academic version of VRPSolverEasy has better performance and comes with the possibility to use built-in heuristic.
+This version uses commercial CPLEX mixed integer programming solver which can be obtained for free for academic purposes.
+
+To install this version, you must :
+
+#. Clone VRPSolverEasy in your local machine
+#. Install CPLEX
+#. Download Bapcod source code on its `web page <https://bapcod.math.u-bordeaux.fr/>`_. 
+#. Install Bapcod using installation instructions in the Bapcod user guide.
+#. Compile bapcod-shared library using this command :
+
 
 .. code-block:: ruby
 
@@ -58,13 +65,17 @@ This will produce shared library file in :
    "Bapcod-path/build/Bapcod/libbapcod-shared.dylib" // MacOs
    "Bapcod-path/build/Bapcod/Release/bapcod-shared.dll" // Windows
 
-Note that if you use windows system, you have to indicates the cplex path in Parameters.
-
-* Replace the old library in the folder **lib/your-system** by the newest
+* Replace the old library inside the VRPSolverEasy folder **lib/your-system** by the newly produced one
   
    *  `libbapcod-shared.so` (Linux)
    *  `libbapcod-shared.dylib` (MacOs)
    *  `bapcod-shared.dll` (Windows) 
 
 
-* re-run installation using pip
+* re-install VRPSolverEasy using the command ::
+  
+      python -m pip install .
+  
+
+- Make sure that you have changed `solver_name` in `Parameters` if you want to use CPLEX.
+- Note that if you use windows system, you have to indicates the cplex path in Parameters.
