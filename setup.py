@@ -13,7 +13,7 @@ Description = open(readme_name).read()
 # Calling the setup function
 setup(
         name = 'VRPSolverEasy',
-        version = "0.0.1",
+        version = VERSION,
         author = "ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo QUEIROGA Eduardo",
         author_email="najib.errami@inria.fr",
         description = 'VRPSolverEasy is a simplified modeler solving routing problems by using Branch-Cut-and-Price approach on solver like CLP or CPLEX',
@@ -29,7 +29,6 @@ setup(
             "VRPSolverEasy.src",
             "VRPSolverEasy.tests",
             "VRPSolverEasy.demos",
-            "VRPSolverEasy.doc",
             "VRPSolverEasy.lib.Windows",
             "VRPSolverEasy.lib.Linux",
             "VRPSolverEasy.lib.Darwin",
