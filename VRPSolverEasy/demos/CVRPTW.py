@@ -6,25 +6,26 @@ import os
 from VRPSolverEasy.src import solver
 
 
-def read_instance(name):
+def read_instance(name : str):
+    """ Read an instance in the folder data from a given name """
     path_project = os.path.abspath(os.getcwd())
-    file = open(
+    with open (
         path_project +
         os.path.normpath(
             "/VRPSolverEasy/demos/data/" +
             name),
-        "r")
-    return [str(element) for element in file.read().split()]
+        "r",encoding="UTF-8") as file:
+        return [str(element) for element in file.read().split()]
 
 
 def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
-    """compute the euclidean distance between 2 points from graph"""
+    """Compute the euclidean distance between 2 points from graph"""
     return round(math.sqrt((x_i - x_j)**2 +
                            (y_i - y_j)**2), number_digit)
 
 
 def solve_demo(instance_name):
-    """return a solution from modelisation"""
+    """Return a solution from modelisation"""
 
     # read instance
     data = read_cvrptw_instances(instance_name)
@@ -144,14 +145,14 @@ def read_cvrptw_instances(instance_name):
         value = next(instance_iter, None)
         if value is None:
             break
-        x = int(next(instance_iter))
-        y = int(next(instance_iter))
+        x_coord = int(next(instance_iter))
+        y_coord = int(next(instance_iter))
         demand = int(next(instance_iter))
         tw_begin = int(next(instance_iter))
         tw_end = int(next(instance_iter))
         service_time = int(next(instance_iter))
-        points.append({"x": x,
-                       "y": y,
+        points.append({"x": x_coord,
+                       "y": y_coord,
                        "demand": demand,
                        "tw_begin": tw_begin,
                        "tw_end": tw_end + service_time,
@@ -163,8 +164,8 @@ def read_cvrptw_instances(instance_name):
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = compute_euclidean_distance(points[i]["x"],
-                                              points[i]["y"],
+            dist = compute_euclidean_distance(point["x"],
+                                              point["y"],
                                               points[j]["x"],
                                               points[j]["y"]
                                               )
