@@ -1,23 +1,8 @@
 import math
 import os
 import VRPSolverEasy.src.solver as solver
+import VRPSolverEasy.demos.cvrptw as utils
 
-
-def read_instance(name):
-    path_project = os.path.abspath(os.getcwd())
-    file = open(
-        path_project +
-        os.path.normpath(
-            "/VRPSolverEasy/src/data/" +
-            name),
-        "r")
-    return [str(element) for element in file.read().split()]
-
-
-def compute_euclidean_distance(x_i, y_i, x_j, y_j):
-    """compute the euclidean distance between 2 points from graph"""
-    return math.floor(math.sqrt((x_i - x_j)**2 +
-                           (y_i - y_j)**2) + 0.5)
 
 def solve_demo(instance_name):
     """return a solution from modelisation"""
@@ -80,7 +65,7 @@ def read_cvrp_instances(instance_name):
     """Read literature instances from CVRPLIB by giving the name of instance
     and returns dictionary containing all elements of model"""
     
-    instance_iter = iter(read_instance("CVRP/" + instance_name))
+    instance_iter = iter(utils.read_instance("CVRP/" + instance_name))
     points = []
     id_point = 0
     dimension_input = -1
@@ -151,11 +136,12 @@ def read_cvrp_instances(instance_name):
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = compute_euclidean_distance(points[i]["x"],
-                                              points[i]["y"],
-                                              points[j]["x"],
-                                              points[j]["y"]
-                                              )
+            dist = utils.compute_euclidean_distance(points[i]["x"],
+                                                    points[i]["y"],
+                                                    points[j]["x"],
+                                                    points[j]["y"],
+                                                    0)
+                                              
 
             links.append({"name": "L" + str(nb_link),
                           "start_point_id": point["id"],

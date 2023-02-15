@@ -8,16 +8,16 @@ def read_instance(name):
     file = open(
         path_project +
         os.path.normpath(
-            "/VRPSolverEasy/src/data/" +
+            "/VRPSolverEasy/demos/data/" +
             name),
         "r")
     return [str(element) for element in file.read().split()]
 
 
-def compute_euclidean_distance(x_i, y_i, x_j, y_j):
+def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
     """compute the euclidean distance between 2 points from graph"""
     return round(math.sqrt((x_i - x_j)**2 +
-                           (y_i - y_j)**2), 3)
+                           (y_i - y_j)**2), number_digit)
 
 
 def solve_demo(instance_name):
