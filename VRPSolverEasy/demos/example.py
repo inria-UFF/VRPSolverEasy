@@ -1,5 +1,7 @@
+""" This module allows to solve a simple example of routing problem """
+
 import math
-import VRPSolverEasy.src.solver as solver
+from VRPSolverEasy.src import solver
 
 
 def compute_euclidean_distance(x_i, y_i, x_j, y_j):
@@ -60,7 +62,7 @@ def run_example():
 
     # Add links
     coordinates_values = list(coordinates.values())
-    enumerate = 1
+    enum = 1
     for i in range(0, 7):
         for j in range(i + 1, 7):
             dist = compute_euclidean_distance(coordinates_values[i][0],
@@ -68,12 +70,12 @@ def run_example():
                                               coordinates_values[i][1],
                                               coordinates_values[j][1])
             model.add_link(
-                "arc" + str(enumerate),
+                "arc" + str(enum),
                 start_point_id=i,
                 end_point_id=j,
                 distance=dist,
                 time=dist)
-            enumerate += 1
+            enum += 1
 
     # solver model
     model.solve()
