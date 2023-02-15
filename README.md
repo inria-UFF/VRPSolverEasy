@@ -112,4 +112,4 @@ import VRPSolverEasy.src.solver as solver
 ```
 ## Documentation
 
-If you want to see the local documentation, you can go on folder `doc/build/html` and run file `index.html`.
+If you want to know more about the documentation, you can go on https://vrpsolvereasy.readthedocs.io/en/latest/. 

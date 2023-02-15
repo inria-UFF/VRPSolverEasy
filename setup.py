@@ -16,6 +16,7 @@ setup(
         version = VERSION,
         author = "ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo QUEIROGA Eduardo",
         author_email="najib.errami@inria.fr",
+        url="https://vrpsolvereasy.readthedocs.io/en/latest/",
         description = 'VRPSolverEasy is a simplified modeler solving routing problems by using Branch-Cut-and-Price approach on solver like CLP or CPLEX',
         long_description = Description,
         long_description_content_type='text/markdown',
