@@ -1,6 +1,7 @@
-import math
-import os
-import VRPSolverEasy.src.solver as solver
+""" This module allows to solve Queiroga instances of
+Heterogeneous Fleet Vehicle Routing Problem """
+
+from VRPSolverEasy.src import solver
 import VRPSolverEasy.demos.cvrptw as utils
 
 
@@ -70,9 +71,9 @@ def read_hfvrp_instances(instance_name):
         and returns dictionary containing all elements of model"""
     instance_iter = iter(utils.read_instance("HFVRP/" + instance_name))
 
-    n = int(next(instance_iter))
+    nb_points = int(next(instance_iter))
 
-    depot_id = int(next(instance_iter))
+    next(instance_iter) # pass id depot (always 0)
     depot_x = int(next(instance_iter))
     depot_y = int(next(instance_iter))
     depot_demand = int(next(instance_iter))
@@ -85,14 +86,14 @@ def read_hfvrp_instances(instance_name):
                "id": id_point
                }]
 
-    for i in range(n):
+    for i in range(nb_points):
         id_point += 1
-        id = int(next(instance_iter))
-        x = int(next(instance_iter))
-        y = int(next(instance_iter))
+        next(instance_iter) # pass id point (take index)
+        x_coord = int(next(instance_iter))
+        y_coord = int(next(instance_iter))
         demand = int(next(instance_iter))
-        points.append({"x": x,
-                "y": y,
+        points.append({"x": x_coord,
+                "y": y_coord,
                 "demand": demand,
                 "id": id_point})
 
@@ -102,7 +103,7 @@ def read_hfvrp_instances(instance_name):
         capacity = int(next(instance_iter))
         fixed_cost = float(next(instance_iter))
         var_cost_dist = float(next(instance_iter))
-        l = int(next(instance_iter))
+        next(instance_iter) # pass min number
         max_number = int(next(instance_iter))
         vehicle_type = {"id": k,  # we cannot have an id less than 1
                 "start_point_id": 0,
@@ -119,8 +120,8 @@ def read_hfvrp_instances(instance_name):
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = utils.compute_euclidean_distance(points[i]["x"],
-                                              points[i]["y"],
+            dist = utils.compute_euclidean_distance(point["x"],
+                                              point["y"],
                                               points[j]["x"],
                                               points[j]["y"]
                                               )
@@ -138,7 +139,5 @@ def read_hfvrp_instances(instance_name):
             "Links": links
             }
 
-
 if __name__ == "__main__":
     solve_demo("toy.txt") # optimal cost is 165.86
-

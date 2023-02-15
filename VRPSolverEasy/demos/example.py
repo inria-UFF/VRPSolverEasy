@@ -1,5 +1,7 @@
+""" This module allows to solve a simple example of routing problem """
+
 import math
-import VRPSolverEasy.src.solver as solver
+from VRPSolverEasy.src import solver
 
 
 def compute_euclidean_distance(x_i, y_i, x_j, y_j):

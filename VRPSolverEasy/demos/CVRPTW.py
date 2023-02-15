@@ -1,6 +1,9 @@
+""" This module allows to solve Solomon instances of
+Capacitated Vehicle Routing Problem with Time Windows. """
+
 import math
 import os
-import VRPSolverEasy.src.solver as solver
+from VRPSolverEasy.src import solver
 
 
 def read_instance(name):

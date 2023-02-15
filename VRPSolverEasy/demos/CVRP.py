@@ -1,6 +1,7 @@
-import math
-import os
-import VRPSolverEasy.src.solver as solver
+""" This module allows to solve Augerat et al. instances of
+Capacitated Vehicle Routing Problem """
+
+from VRPSolverEasy.src import solver
 import VRPSolverEasy.demos.cvrptw as utils
 
 
@@ -63,8 +64,8 @@ def solve_demo(instance_name):
 
 def read_cvrp_instances(instance_name):
     """Read literature instances from CVRPLIB by giving the name of instance
-    and returns dictionary containing all elements of model"""
-    
+       and returns dictionary containing all elements of model"""
+
     instance_iter = iter(utils.read_instance("CVRP/" + instance_name))
     points = []
     id_point = 0
@@ -83,7 +84,7 @@ def read_cvrp_instances(instance_name):
             next(instance_iter)  # pass ":"
             element = next(instance_iter)
             if element != "EUC_2D":
-                raise Exception("EDGE_WEIGHT_TYPE : " + element + """ 
+                raise Exception("EDGE_WEIGHT_TYPE : " + element + """
                 is not supported (only EUC_2D)""")
         elif element == "NODE_COORD_SECTION":
             break
@@ -98,35 +99,35 @@ def read_cvrp_instances(instance_name):
                     }
 
     # Create points
-    for n in range(dimension_input):
+    for current_id in range(dimension_input):
         point_id = int(next(instance_iter))
-        if point_id != n + 1:
+        if point_id != current_id + 1:
             raise Exception("Unexpected index")
-        else:
-            x = int(next(instance_iter))
-            y = int(next(instance_iter))
-            points.append({"x": x,
-                            "y": y,
-                            "demand": -1,
-                            "id": id_point})
-            id_point += 1
+        x_coord = int(next(instance_iter))
+        y_coord = int(next(instance_iter))
+        points.append({"x": x_coord,
+                        "y": y_coord,
+                        "demand": -1,
+                        "id": id_point})
+        id_point += 1
+
 
     element = next(instance_iter)
     if element != "DEMAND_SECTION":
         raise Exception("Expected line DEMAND_SECTION")
 
     # Get the demands
-    for n in range(dimension_input):
+    for current_id in range(dimension_input):
         point_id = int(next(instance_iter))
-        if point_id != n + 1:
+        if point_id != current_id + 1:
             raise Exception("Unexpected index")
-        points[n]["demand"] = int(next(instance_iter))
+        points[current_id]["demand"] = int(next(instance_iter))
 
     element = next(instance_iter)
     if element != "DEPOT_SECTION":
         raise Exception("Expected line DEPOT_SECTION")
-    depot_id = int(next(instance_iter))
-    
+    next(instance_iter) # pass id depot
+
     end_depot_section = int(next(instance_iter))
     if end_depot_section != -1:
         raise Exception("Expected only one depot.")
@@ -136,13 +137,11 @@ def read_cvrp_instances(instance_name):
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = utils.compute_euclidean_distance(points[i]["x"],
-                                                    points[i]["y"],
+            dist = utils.compute_euclidean_distance(point["x"],
+                                                    point["y"],
                                                     points[j]["x"],
                                                     points[j]["y"],
                                                     0)
-                                              
-
             links.append({"name": "L" + str(nb_link),
                           "start_point_id": point["id"],
                           "end_point_id": points[j]["id"],
