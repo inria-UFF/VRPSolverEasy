@@ -42,7 +42,7 @@ class ModelError(Exception):
         super().__init__(self.message)
 
 
-class VehicleTypesDict(collections.MutableMapping, dict):
+class VehicleTypesDict(dict,collections.MutableMapping):
     """Dictionary of vehicle types
 
     key (int): Id of vehicle type
@@ -81,7 +81,7 @@ class VehicleTypesDict(collections.MutableMapping, dict):
                     for value in dict.values(self))
 
 
-class PointsDict(collections.MutableMapping, dict):
+class PointsDict(dict,collections.MutableMapping):
     """Dictionary of points ( depots and customers)
 
     key (int): Id of point
@@ -123,7 +123,7 @@ class PointsDict(collections.MutableMapping, dict):
         return list(value.get_point(debug) for value in dict.values(self))
 
 
-class LinksDict(collections.MutableMapping, dict):
+class LinksDict(dict,collections.MutableMapping):
     """Dictionary of links
 
     key (str): name of link
