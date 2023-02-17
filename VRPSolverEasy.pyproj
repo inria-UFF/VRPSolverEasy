@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".github\workflows\python-package.yml" />
+    <Content Include=".readthedocs.yaml" />
     <Content Include="README.md" />
     <Content Include="VRPSolverEasy\doc\build\doctrees\Demos\index.doctree" />
     <Content Include="VRPSolverEasy\doc\build\doctrees\environment.pickle" />

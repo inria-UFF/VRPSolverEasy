@@ -9,7 +9,7 @@
 project = 'VRPSolverEasy'
 copyright = '2023, ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo QUEIROGA Eduardo'
 author = 'ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo QUEIROGA Eduardo'
-release = '0.0.1'
+release = '0.0.2'
 
 import sys, os
 
@@ -23,7 +23,7 @@ extensions = ["sphinx.ext.autodoc",
               "sphinx.ext.mathjax",
               'sphinx.ext.autosummary']
 
-templates_path = ['_templates']
+templates_path = []
 exclude_patterns = []
 
 
@@ -32,4 +32,4 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
+html_static_path = []

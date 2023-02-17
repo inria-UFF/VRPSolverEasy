@@ -2,7 +2,7 @@
 Heterogeneous Fleet Vehicle Routing Problem """
 
 from VRPSolverEasy.src import solver
-import VRPSolverEasy.demos.cvrptw as utils
+import VRPSolverEasy.demos.CVRPTW as utils
 
 
 def solve_demo(instance_name):
