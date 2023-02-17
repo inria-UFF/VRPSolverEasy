@@ -3,19 +3,22 @@ Capacitated Vehicle Routing Problem """
 
 from VRPSolverEasy.src import solver
 import VRPSolverEasy.demos.CVRPTW as utils
+from ortools.constraint_solver import routing_enums_pb2
+from ortools.constraint_solver import pywrapcp
 
 
-def solve_demo(instance_name):
+def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False):
     """return a solution from modelisation"""
 
     # read instance
-    data = read_cvrp_instances(instance_name)
+    data = read_cvrp_instances(instance_name, ext_heuristic)
 
     # get data
     vehicle_type = data["VehicleTypes"]
     depot = data["Points"][0]
     customers = data["Points"][1:]
     links = data["Links"]
+    upper_bound = data["UB"]
 
     # modelisation of problem
     model = solver.CreateModel()
@@ -28,6 +31,7 @@ def solve_demo(instance_name):
                            capacity=vehicle_type["capacity"],
                            var_cost_dist=vehicle_type["var_cost_dist"]
                            )
+
     # add depot
     model.add_depot(id=depot["id"])
 
@@ -46,7 +50,12 @@ def solve_demo(instance_name):
 
     # set parameters
     model.set_parameters(time_limit=60)
+    #print(upper_bound)
     # model.set_parameters(upper_bound=950)
+    
+    if ext_heuristic:
+        model.parameters.upper_bound = upper_bound
+    model.parameters.solver_name = solver_name
 
     # if you have cplex 22.1 installed on your laptop you can
     # change the bapcod-shared library and specify the path like this:
@@ -57,12 +66,19 @@ def solve_demo(instance_name):
     # solve model
     model.solve()
 
+    
+    with open("CVRP_result.txt", "a") as f:
+        f.write(str([instance_name,solver_name,ext_heuristic,model.solution.statistics.solution_value,
+        model.solution.statistics.solution_time,
+        model.solution.statistics.best_lb]))
+                    
+
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
 
     return model.solution
 
-def read_cvrp_instances(instance_name):
+def read_cvrp_instances(instance_name,ext_heuristic=False):
     """Read literature instances from CVRPLIB by giving the name of instance
        and returns dictionary containing all elements of model"""
 
@@ -71,6 +87,8 @@ def read_cvrp_instances(instance_name):
     id_point = 0
     dimension_input = -1
     capacity_input = -1
+    # Instantiate the data problem.
+    data = {}
 
     while True:
         element = next(instance_iter)
@@ -98,6 +116,17 @@ def read_cvrp_instances(instance_name):
                     "var_cost_dist": 1
                     }
 
+
+    vehicles = []
+    index = 0
+    for i in range(dimension_input):
+        vehicles.append(capacity_input)
+
+
+    data['vehicle_capacities'] = vehicles
+    data['num_vehicles'] = dimension_input
+    data['depot'] = 0
+
     # Create points
     for current_id in range(dimension_input):
         point_id = int(next(instance_iter))
@@ -115,13 +144,17 @@ def read_cvrp_instances(instance_name):
     element = next(instance_iter)
     if element != "DEMAND_SECTION":
         raise Exception("Expected line DEMAND_SECTION")
-
+    jobs = []
     # Get the demands
     for current_id in range(dimension_input):
         point_id = int(next(instance_iter))
         if point_id != current_id + 1:
             raise Exception("Unexpected index")
-        points[current_id]["demand"] = int(next(instance_iter))
+        demand = int(next(instance_iter))
+        points[current_id]["demand"] = demand
+        jobs.append(demand)
+    
+    data['demands'] = jobs
 
     element = next(instance_iter)
     if element != "DEPOT_SECTION":
@@ -135,6 +168,7 @@ def read_cvrp_instances(instance_name):
     # Compute the links of graph
     links = []
     nb_link = 0
+    matrix = [[0 for i in range((len(points)))] for i in range(len(points))]
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
             dist = utils.compute_euclidean_distance(point["x"],
@@ -148,12 +182,115 @@ def read_cvrp_instances(instance_name):
                           "distance": dist
                           })
 
+            matrix[i][j] = dist
+            matrix[j][i] = dist
+
             nb_link += 1
+    
+    data['distance_matrix'] = matrix
+
+    upper_bound = 0
+    if ext_heuristic:
+        upper_bound = solve_ext_heuristic(data)
 
     return {"Points": points,
             "VehicleTypes": vehicle_type,
-            "Links": links
+            "Links": links,
+            "UB": upper_bound
             }
 
+
+def print_solution(data, manager, routing, solution):
+    """Prints solution on console."""
+    print(f'Objective: {solution.ObjectiveValue()}')
+    total_distance = 0
+    total_load = 0
+    for vehicle_id in range(data['num_vehicles']):
+        index = routing.Start(vehicle_id)
+        plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
+        route_distance = 0
+        route_load = 0
+        while not routing.IsEnd(index):
+            node_index = manager.IndexToNode(index)
+            route_load += data['demands'][node_index]
+            plan_output += ' {0} Load({1}) -> '.format(node_index, route_load)
+            previous_index = index
+            index = solution.Value(routing.NextVar(index))
+            route_distance += routing.GetArcCostForVehicle(
+                previous_index, index, vehicle_id)
+        plan_output += ' {0} Load({1})\n'.format(manager.IndexToNode(index),
+                                                 route_load)
+        plan_output += 'Distance of the route: {}m\n'.format(route_distance)
+        plan_output += 'Load of the route: {}\n'.format(route_load)
+        print(plan_output)
+        total_distance += route_distance
+        total_load += route_load
+    print('Total distance of all routes: {}m'.format(total_distance))
+    print('Total load of all routes: {}'.format(total_load))
+
+
+
+def solve_ext_heuristic(data):
+
+    """Solve the CVRP problem."""
+    
+
+    # Create the routing index manager.
+    manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
+                                           data['num_vehicles'], data['depot'])
+
+    # Create Routing Model.
+    routing = pywrapcp.RoutingModel(manager)
+
+
+    # Create and register a transit callback.
+    def distance_callback(from_index, to_index):
+        """Returns the distance between the two nodes."""
+        # Convert from routing variable Index to distance matrix NodeIndex.
+        from_node = manager.IndexToNode(from_index)
+        to_node = manager.IndexToNode(to_index)
+        return data['distance_matrix'][from_node][to_node]
+
+    transit_callback_index = routing.RegisterTransitCallback(distance_callback)
+
+    # Define cost of each arc.
+    routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+
+
+    # Add Capacity constraint.
+    def demand_callback(from_index):
+        """Returns the demand of the node."""
+        # Convert from routing variable Index to demands NodeIndex.
+        from_node = manager.IndexToNode(from_index)
+        return data['demands'][from_node]
+
+    demand_callback_index = routing.RegisterUnaryTransitCallback(
+        demand_callback)
+    routing.AddDimensionWithVehicleCapacity(
+        demand_callback_index,
+        0,  # null capacity slack
+        data['vehicle_capacities'],  # vehicle maximum capacities
+        True,  # start cumul to zero
+        'Capacity')
+
+    # Setting first solution heuristic.
+    search_parameters = pywrapcp.DefaultRoutingSearchParameters()
+    search_parameters.first_solution_strategy = (
+        routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
+    search_parameters.local_search_metaheuristic = (
+        routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
+    search_parameters.time_limit.FromSeconds(5)
+
+    # Solve the problem.
+    solution = routing.SolveWithParameters(search_parameters)
+
+    # Print solution on console.
+    if solution:
+        print_solution(data, manager, routing, solution)
+        return solution.ObjectiveValue()
+    
+    return 0
+
+
 if __name__ == "__main__":
-    solve_demo("A-n37-k6.vrp")
+    solve_demo("A-n37-k6.vrp","CLP",ext_heuristic=True)
