@@ -14,6 +14,7 @@ release = '0.0.2'
 import sys, os
 
 #find module solver-----------------------------------------------------------
+sys.path.insert(0, os.path.abspath("../"))
 sys.path.insert(0, os.path.abspath("../VRPSolverEasy"))
 
 # -- General configuration ---------------------------------------------------
