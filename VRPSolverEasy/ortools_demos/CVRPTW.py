@@ -105,7 +105,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False):
         f.write("\n")
 
     # export the result
-    # model.solution.export(instance_name.split(".")[0] + "_result")
+    model.solution.export(instance_name.split(".")[0] + "_result")
 
     return model.solution
 
@@ -192,7 +192,8 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
                        "service_time": service_time,
                        "id": id_point})
         demands.append(demand)
-        time_windows.append((tw_begin,tw_end + service_time))
+        time_windows.append((tw_begin 
+                             ,tw_end))
         service_times.append(service_time)
 
     data['demands'] = demands
@@ -224,7 +225,7 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
             nb_link += 1
 
     data['distance_matrix'] = matrix 
-    data['time_matrix'] = matrix        
+    data['time_matrix'] = matrix_time        
     upper_bound = 0
 
     if ext_heuristic:
@@ -241,19 +242,33 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
 
 def compute_cost_solution(data,manager, routing, solution):
     """Prints solution on console."""
-    print(f'Objective: {solution.ObjectiveValue()}')
+    
     time_dimension = routing.GetDimensionOrDie('Time')
     total_time = 0
+    total_cost = 0
+    arc = (0,0)
     for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
+        index_route = 0
+        arc = (0,0)
         while not routing.IsEnd(index):
             time_var = time_dimension.CumulVar(index)
             plan_output += '{0} Time({1},{2}) -> '.format(
                 manager.IndexToNode(index), solution.Min(time_var),
                 solution.Max(time_var))
+            id = manager.IndexToNode(index)
             index = solution.Value(routing.NextVar(index))
+            if(index_route > 0):
+                arc =(arc[1],id)
+                total_cost += data["distance_matrix"][arc[0]][arc[1]]
+            index_route += 1
+
+
+        total_cost += data["distance_matrix"][arc[1]][0]
         time_var = time_dimension.CumulVar(index)
+        begin = solution.Min(time_var)
+        end = solution.Max(time_var)
         plan_output += '{0} Time({1},{2})\n'.format(manager.IndexToNode(index),
                                                     solution.Min(time_var),
                                                     solution.Max(time_var))
@@ -262,7 +277,7 @@ def compute_cost_solution(data,manager, routing, solution):
         print(plan_output)
         total_time += solution.Min(time_var)
     print('Total time of all routes: {}min'.format(total_time))
-    return total_time + solution.ObjectiveValue()
+    return total_cost * 2 + 1
 
 def solve_ext_heuristic(data):
 
@@ -345,10 +360,6 @@ def solve_ext_heuristic(data):
             data['time_windows'][depot_idx][1])
 
 
-
-
-
-
     # Instantiate route start and end times to produce feasible times.
     for i in range(data['num_vehicles']):
         routing.AddVariableMinimizedByFinalizer(
@@ -362,7 +373,7 @@ def solve_ext_heuristic(data):
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
-    search_parameters.time_limit.FromSeconds(5)
+    search_parameters.time_limit.FromSeconds(10)
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
@@ -377,5 +388,5 @@ def solve_ext_heuristic(data):
     return 0
 
 if __name__ == "__main__":
-    solve_demo("R101.txt","CLP",True)
+    solve_demo("C101.txt","CLP",True)
     
