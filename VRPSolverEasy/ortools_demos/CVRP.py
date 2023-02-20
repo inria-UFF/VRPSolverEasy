@@ -2,12 +2,26 @@
 Capacitated Vehicle Routing Problem """
 
 from VRPSolverEasy.src import solver
-import VRPSolverEasy.demos.CVRPTW as utils
+import os,sys,getopt
+import math
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
+def read_instance(name : str):
+    """ Read an instance in the folder data from a given name """
+    path_project = os.path.abspath(os.getcwd())
+    with open (name,
+        "r",encoding="UTF-8" )as file:
+        elements = [str(element) for element in file.read().split()]
+    file.close()
+    return elements
 
-def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False):
+def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
+    """Compute the euclidean distance between 2 points from graph"""
+    return round(math.sqrt((x_i - x_j)**2 +
+                           (y_i - y_j)**2), number_digit)
+
+def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolution=30):
     """return a solution from modelisation"""
 
     # read instance
@@ -67,10 +81,37 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False):
     model.solve()
 
     
-    with open("CVRP_result.txt", "a") as f:
-        f.write(str([instance_name,solver_name,ext_heuristic,model.solution.statistics.solution_value,
-        model.solution.statistics.solution_time,
-        model.solution.statistics.best_lb]))
+    if(os.path.isfile("CVRP_Results.txt")):
+        with open("CVRP_Results.txt", "a") as f:
+            f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
+            instance_name.split(".")[0],solver_name,ext_heuristic,
+            model.solution.statistics.solution_value,
+            model.solution.statistics.solution_time,
+            model.solution.statistics.best_lb,
+            model.solution.statistics.root_lb,
+            model.solution.statistics.root_time,
+            model.solution.statistics.nb_branch_and_bound_nodes
+            ))
+    else:
+        with open("CVRP_Results.txt", "a") as f:
+           f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
+            "instance_name","solver_name","ext_heuristic",
+            "solution_value",
+            "solution_time",
+            "best_lb",
+            "root_lb",
+            "root_time",
+            "nb_branch_and_bound_nodes"
+            ))
+           f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
+            instance_name.split(".")[0],solver_name,ext_heuristic,
+            model.solution.statistics.solution_value,
+            model.solution.statistics.solution_time,
+            model.solution.statistics.best_lb,
+            model.solution.statistics.root_lb,
+            model.solution.statistics.root_time,
+            model.solution.statistics.nb_branch_and_bound_nodes
+            ))
                     
 
     # export the result
@@ -82,7 +123,7 @@ def read_cvrp_instances(instance_name,ext_heuristic=False):
     """Read literature instances from CVRPLIB by giving the name of instance
        and returns dictionary containing all elements of model"""
 
-    instance_iter = iter(utils.read_instance("CVRP/" + instance_name))
+    instance_iter = iter(read_instance(instance_name))
     points = []
     id_point = 0
     dimension_input = -1
@@ -171,7 +212,7 @@ def read_cvrp_instances(instance_name,ext_heuristic=False):
     matrix = [[0 for i in range((len(points)))] for i in range(len(points))]
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = utils.compute_euclidean_distance(point["x"],
+            dist = compute_euclidean_distance(point["x"],
                                                     point["y"],
                                                     points[j]["x"],
                                                     points[j]["y"],
@@ -284,13 +325,34 @@ def solve_ext_heuristic(data):
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
 
-    # Print solution on console.
     if solution:
-        print_solution(data, manager, routing, solution)
-        return solution.ObjectiveValue()
+        # print_solution(data, manager, routing, solution)
+        return solution.ObjectiveValue() + 0.1
     
-    return 0
+    return 100000
 
+def main(argv):
+   instance = ''
+   type_problem = ''
+   solver_name = ''
+   heuristic_used = False
+   time_resolution = 30
+   opts, args = getopt.getopt(argv,"i:t:s:h:e:")
+   
+   for opt, arg in opts:
+      if opt in ["-i"]:
+         instance = arg
+      elif opt == "-t":
+         type_problem = arg
+      elif opt == "-s":
+         solver_name = arg
+      elif opt == "-h":
+         heuristic_used = arg == "yes"
+      elif opt == "-e":
+         time_resolution = time
+
+   solve_demo(instance,solver_name,heuristic_used,time_resolution)
 
 if __name__ == "__main__":
-    solve_demo("A-n37-k6.vrp","CLP",ext_heuristic=True)
+    main(sys.argv[1:])
+    #solve_demo("A-n37-k6.vrp","CLP",ext_heuristic=True)

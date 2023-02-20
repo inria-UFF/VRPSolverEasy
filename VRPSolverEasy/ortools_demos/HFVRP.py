@@ -71,10 +71,37 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False):
     # solve model
     model.solve()
 
-    with open("HFVRP_result.txt", "a") as f:
-        f.write(str([instance_name,solver_name,ext_heuristic,model.solution.statistics.solution_value,
-        model.solution.statistics.solution_time,
-        model.solution.statistics.best_lb]))
+    if(os.path.isfile("HFVRP_Results.txt")):
+        with open(instance_name, "a") as f:
+            f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
+            instance_name,solver_name,ext_heuristic,
+            model.solution.statistics.solution_value,
+            model.solution.statistics.solution_time,
+            model.solution.statistics.best_lb,
+            model.solution.statistics.root_lb,
+            model.solution.statistics.root_time,
+            model.solution.statistics.nb_branch_and_bound_nodes
+            ))
+    else:
+        with open("HFVRP_Results.txt", "a") as f:
+           f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
+            "instance_name","solver_name","ext_heuristic",
+            "solution_value",
+            "solution_time",
+            "best_lb",
+            "root_lb",
+            "root_time",
+            "nb_branch_and_bound_nodes"
+            ))
+           f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
+            instance_name,solver_name,ext_heuristic,
+            model.solution.statistics.solution_value,
+            model.solution.statistics.solution_time,
+            model.solution.statistics.best_lb,
+            model.solution.statistics.root_lb,
+            model.solution.statistics.root_time,
+            model.solution.statistics.nb_branch_and_bound_nodes
+            ))
 
     # export the result
     model.solution.export()

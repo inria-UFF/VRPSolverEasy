@@ -5,7 +5,7 @@
     <ProjectGuid>5d80578a-17a9-43af-97f1-1f8e4409c20d</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>VRPSolverEasy\ortools_demos\CVRPTW.py</StartupFile>
+    <StartupFile>VRPSolverEasy\plafrim_exp\prepare_experiments.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -44,6 +44,9 @@
     <Compile Include="VRPSolverEasy\ortools_demos\CVRP.py" />
     <Compile Include="VRPSolverEasy\ortools_demos\CVRPTW.py" />
     <Compile Include="VRPSolverEasy\ortools_demos\HFVRP.py" />
+    <Compile Include="VRPSolverEasy\plafrim_exp\prepare_experiments.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VRPSolverEasy\src\constants.py">
       <SubType>Code</SubType>
     </Compile>
@@ -105,6 +108,7 @@
     <Folder Include="VRPSolverEasy\lib\Windows\" />
     <Folder Include="VRPSolverEasy\doc\" />
     <Folder Include="VRPSolverEasy\" />
+    <Folder Include="VRPSolverEasy\plafrim_exp\" />
     <Folder Include="VRPSolverEasy\ortools_demos\" />
     <Folder Include="VRPSolverEasy\ortools_demos\data\" />
     <Folder Include="VRPSolverEasy\ortools_demos\data\CVRPTW\" />
