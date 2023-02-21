@@ -102,6 +102,26 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
     path_instance_name = instance_name.split(".")[0]
     name_instance = path_instance_name.split("\\")[
         len(path_instance_name.split("\\"))-1]
+
+    print('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
+            "instance_name","solver_name","ext_heuristic",
+            "solution_value",
+            "solution_time",
+            "best_lb",
+            "root_lb",
+            "root_time",
+            "nb_branch_and_bound_nodes"
+            ), end='')
+    print('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
+        name_instance,solver_name,ext_heuristic,
+        model.statistics.solution_value,
+        model.statistics.solution_time,
+        model.statistics.best_lb,
+        model.statistics.root_lb,
+        model.statistics.root_time,
+        model.statistics.nb_branch_and_bound_nodes
+        ))
+
     if(os.path.isfile("CVRPTW_Results.txt")):
         with open("CVRPTW_Results.txt", "a") as f:
             f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
