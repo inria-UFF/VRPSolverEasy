@@ -357,4 +357,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-    #solve_demo("A-n37-k6.vrp","CLP",ext_heuristic=True)

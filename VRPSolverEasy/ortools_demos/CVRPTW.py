@@ -435,5 +435,4 @@ def main(argv):
    solve_demo(instance,solver_name,heuristic_used,time_resolution)
 if __name__ == "__main__":
     main(sys.argv[1:])
-    #solve_demo("RC101.txt","CLP",True,30)
     
