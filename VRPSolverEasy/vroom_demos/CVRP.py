@@ -69,9 +69,9 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False):
 
     
     with open("CVRP_result.txt", "a") as f:
-        f.write(str([instance_name,solver_name,ext_heuristic,model.solution.statistics.solution_value,
-        model.solution.statistics.solution_time,
-        model.solution.statistics.best_lb]))
+        f.write(str([instance_name,solver_name,ext_heuristic,model.statistics.solution_value,
+        model.statistics.solution_time,
+        model.statistics.best_lb]))
                     
 
     # export the result

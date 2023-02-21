@@ -1064,6 +1064,12 @@ class Statistics:
     """Define a statistics from solution"""
 
     def __init__(self, json_input=str()):
+        self.__solution_time = 0
+        self.__solution_value = 0
+        self.__best_lb = 0
+        self.__root_lb = 0
+        self.__root_time = 0
+        self.__nb_branch_and_bound_nodes = 0
         if json_input != str():
             self.__json_input = json_input
             self.__solution_time = json_input[constants.STATISTICS.
@@ -1188,15 +1194,12 @@ class Solution:
     def __init__(self, json_input=str()):
         self.__json = {}
         self.__routes = []
-        self.__statistics = Statistics()
         self.__status = 0
         self.__message = str()
         if json_input != str():
             self.__json = json.loads(json_input)
             self.__status = self.__json["Status"]["code"]
             self.__message = self.__json["Status"]["message"]
-            if self.__status > 2 and self.__status < 6:
-                self.__statistics = Statistics(self.json["Statistics"])
             if (self.__status > 2 and self.__status < 6) or self.__status == 8:
                 if len(self.__json["Solution"]) > 0:
                     for route in self.__json["Solution"]:
@@ -1217,11 +1220,6 @@ class Solution:
     def routes(self):
         """list(Route) : contains the set of routes"""
         return self.__routes
-
-    @property
-    def statistics(self):
-        """Statistics : contains the statistics of solution"""
-        return self.__statistics
 
     @property
     def status(self):
@@ -1251,6 +1249,7 @@ class CreateModel:
         self.parameters = Parameters()
         self.__output = str()
         self.solution = Solution()
+        self.statistics = Statistics()
 
     @property
     def vehicle_types(self):
@@ -1597,6 +1596,8 @@ class CreateModel:
             output = solve(input)
             self.__output = (_c.c_char_p.from_buffer(output)).value
             self.solution = Solution(self.__output)
+            if self.solution.status > 2 and self.solution.status < 6:
+                self.statistics = Statistics(self.solution.json["Statistics"])
             free_memory(output)
         except BaseException:
             raise ModelError(constants.BAPCOD_ERROR)

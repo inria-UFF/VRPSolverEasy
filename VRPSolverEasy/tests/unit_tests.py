@@ -34,7 +34,7 @@ class TestAllVariants(unittest.TestCase):
         cost = dist * cost_per_distance * nb_links
         self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.solution.status)
         self.assertAlmostEqual(
-            cost, model.solution.statistics.solution_value, places=5)
+            cost, model.statistics.solution_value, places=5)
 
     def test_cvrp_no_feasible(self):
         """test model in there is only resource of capacity
@@ -128,7 +128,7 @@ class TestAllVariants(unittest.TestCase):
                 (time_between_points * cost_per_time)) * nb_links
         self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.solution.status)
         self.assertAlmostEqual(
-            cost, model.solution.statistics.solution_value, places=5)
+            cost, model.statistics.solution_value, places=5)
         print(model.solution)
 
     def test_cvrptw_nofeasible_on_time(self):
@@ -515,7 +515,7 @@ class TestAllClass(unittest.TestCase):
 
         # test solution value
         self.assertAlmostEqual(
-            cost, model.solution.statistics.solution_value, places=5)
+            cost, model.statistics.solution_value, places=5)
 
         # test ids
         self.assertIn(model.solution.routes[0].point_ids, [[0, 1, 2, 3, 4, 0],

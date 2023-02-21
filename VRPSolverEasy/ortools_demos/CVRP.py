@@ -85,12 +85,12 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
         with open("CVRP_Results.txt", "a") as f:
             f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
             instance_name.split(".")[0],solver_name,ext_heuristic,
-            model.solution.statistics.solution_value,
-            model.solution.statistics.solution_time,
-            model.solution.statistics.best_lb,
-            model.solution.statistics.root_lb,
-            model.solution.statistics.root_time,
-            model.solution.statistics.nb_branch_and_bound_nodes
+            model.statistics.solution_value,
+            model.statistics.solution_time,
+            model.statistics.best_lb,
+            model.statistics.root_lb,
+            model.statistics.root_time,
+            model.statistics.nb_branch_and_bound_nodes
             ))
     else:
         with open("CVRP_Results.txt", "a") as f:
@@ -105,12 +105,12 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
             ))
            f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
             instance_name.split(".")[0],solver_name,ext_heuristic,
-            model.solution.statistics.solution_value,
-            model.solution.statistics.solution_time,
-            model.solution.statistics.best_lb,
-            model.solution.statistics.root_lb,
-            model.solution.statistics.root_time,
-            model.solution.statistics.nb_branch_and_bound_nodes
+            model.statistics.solution_value,
+            model.statistics.solution_time,
+            model.statistics.best_lb,
+            model.statistics.root_lb,
+            model.statistics.root_time,
+            model.statistics.nb_branch_and_bound_nodes
             ))
                     
 
