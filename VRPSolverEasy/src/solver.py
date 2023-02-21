@@ -1064,6 +1064,12 @@ class Statistics:
     """Define a statistics from solution"""
 
     def __init__(self, json_input=str()):
+        self.__solution_time = 0
+        self.__solution_value = 0
+        self.__best_lb = 0
+        self.__root_lb = 0
+        self.__root_time = 0
+        self.__nb_branch_and_bound_nodes = 0
         if json_input != str():
             self.__json_input = json_input
             self.__solution_time = json_input[constants.STATISTICS.
