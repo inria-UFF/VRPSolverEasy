@@ -39,7 +39,7 @@ def generate_sh_files(argv):
                                         time,
                                         heuristic)
                         with open("jobs/"+instance_name, "w") as f:
-                            f.write(""" python {0}.py -i {1} -s {2} -h {3} -t{4} \n""".format(
+                            f.write(""" python3 {0}.py -i {1} -s {2} -h {3} -t{4} \n""".format(
                             path_demos,
                             os.path.normpath(path_data + "/" + name_file),
                             solver,

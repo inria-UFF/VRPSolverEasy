@@ -349,7 +349,7 @@ def main(argv):
       elif opt == "-h":
          heuristic_used = arg == "yes"
       elif opt == "-e":
-         time_resolution = time
+         time_resolution = arg
 
    solve_demo(instance,solver_name,heuristic_used,time_resolution)
 
