@@ -81,8 +81,8 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
     model.solve()
 
     path_instance_name = instance_name.split(".")[0]
-    name_instance = path_instance_name.split("/")[
-        len(path_instance_name.split("/"))-1]
+    name_instance = path_instance_name.split("\\")[
+        len(path_instance_name.split("\\"))-1]
     if(os.path.isfile("CVRP_Results.txt")):
         with open("CVRP_Results.txt", "a") as f:
             f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
