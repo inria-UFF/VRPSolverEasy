@@ -1596,7 +1596,7 @@ class CreateModel:
             output = solve(input)
             self.__output = (_c.c_char_p.from_buffer(output)).value
             self.solution = Solution(self.__output)
-            if self.solution.status > -2 and self.solution.status < 4:
+            if self.solution.status > -2 and self.solution.status < 6:
                 self.statistics = Statistics(self.solution.json["Statistics"])
             free_memory(output)
         except BaseException:

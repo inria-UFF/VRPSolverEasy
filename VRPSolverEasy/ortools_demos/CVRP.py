@@ -198,8 +198,8 @@ def read_cvrp_instances(instance_name,ext_heuristic=False):
         point_id = int(next(instance_iter))
         if point_id != current_id + 1:
             raise Exception("Unexpected index")
-        x_coord = int(next(instance_iter))
-        y_coord = int(next(instance_iter))
+        x_coord = float(next(instance_iter))
+        y_coord = float(next(instance_iter))
         points.append({"x": x_coord,
                         "y": y_coord,
                         "demand": -1,

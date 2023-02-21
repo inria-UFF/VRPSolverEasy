@@ -184,8 +184,8 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
     for i in range(13):
         next(instance_iter)
 
-    depot_x = int(next(instance_iter))
-    depot_y = int(next(instance_iter))
+    depot_x = float(next(instance_iter))
+    depot_y = float(next(instance_iter))
     depot_demand = int(next(instance_iter))
     depot_tw_begin = int(next(instance_iter))
     depot_tw_end = int(next(instance_iter))
@@ -236,8 +236,8 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
         value = next(instance_iter, None)
         if value is None:
             break
-        x_coord = int(next(instance_iter))
-        y_coord = int(next(instance_iter))
+        x_coord = float(next(instance_iter))
+        y_coord = float(next(instance_iter))
         demand = int(next(instance_iter))
         tw_begin = int(next(instance_iter))
         tw_end = int(next(instance_iter))
