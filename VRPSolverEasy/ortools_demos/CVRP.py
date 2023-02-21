@@ -63,7 +63,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
                        )
 
     # set parameters
-    model.set_parameters(time_limit=60)
+    model.set_parameters(time_limit=3600)
     #print(upper_bound)
     # model.set_parameters(upper_bound=950)
     
