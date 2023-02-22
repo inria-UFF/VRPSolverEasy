@@ -70,6 +70,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
     if ext_heuristic:
         model.parameters.upper_bound = upper_bound
     model.parameters.solver_name = solver_name
+    model.parameters.print_level = 2
 
     # if you have cplex 22.1 installed on your laptop you can
     # change the bapcod-shared library and specify the path like this:
