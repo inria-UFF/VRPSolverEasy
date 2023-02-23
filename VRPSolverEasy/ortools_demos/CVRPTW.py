@@ -88,7 +88,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
         model.parameters.upper_bound = upper_bound
     
     model.parameters.solver_name = solver_name
-    model.parameters.print_level = 2
+    model.parameters.print_level = 0
 
     # if you have cplex 22.1 installed on your laptop you can
     # change the bapcod-shared library and specify the path like this:
@@ -125,6 +125,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
         model.solution.status
         ))
 
+    """
     if(os.path.isfile("CVRPTW_Results.txt")):
         with open("CVRPTW_Results.txt", "a") as f:
             f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
@@ -161,7 +162,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
             model.solution.status
             ))
            f.close()
-        
+    """    
 
     # export the result
     model.solution.export(instance_name.split(".")[0] + "_result")
