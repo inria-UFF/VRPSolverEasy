@@ -352,8 +352,7 @@ def solve_ext_heuristic(data,time_resolution_heuristic=30):
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
-    print("HERE")
-    print(time_resolution_heuristic)
+
     search_parameters.time_limit.FromSeconds(time_resolution_heuristic)
 
     # Solve the problem.
@@ -391,5 +390,5 @@ def main(argv):
 
 if __name__ == "__main__":
     #main(sys.argv[1:])
-    solve_demo("C:\\Users\\Najib\\source\\repos\\VRPSolverPy\\VRPSolverEasy\\demos\\data\\HFVRP\\c50_13fsmd.txt","CLP",True,60,30)
+    solve_demo("C:\\Users\\Najib\\source\\repos\\VRPSolverPy\\VRPSolverEasy\\demos\\data\\HFVRP\\c50_13fsmf.txt","CLP",True,60,30)
     
