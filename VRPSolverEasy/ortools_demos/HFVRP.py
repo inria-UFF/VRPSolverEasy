@@ -27,11 +27,13 @@ def compute_one_decimal_floor_euclidean_distance(x_i, y_i, x_j, y_j):
     """Compute the euclidean distance between 2 points from graph"""
     return math.floor(math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2) * 10) / 10
 
-def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolution=30):
+def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
+               time_resolution=30,
+               time_resolution_heuristic=30):
     """return a solution from modelisation"""
 
     # read instance
-    data = read_hfvrp_instances(instance_name,ext_heuristic)
+    data = read_hfvrp_instances(instance_name,ext_heuristic,time_resolution_heuristic)
 
     # get data
     vehicle_types = data["VehicleTypes"]
@@ -78,7 +80,9 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
         model.parameters.upper_bound = upper_bound
     
     model.parameters.solver_name = solver_name
-
+    #if(solver_name == "CPLEX"):
+        #model.parameters.heuristic_used = True   TODO
+        #model.parameters.time_limit_heuristic = 5 TODO
     
 
     # if you have cplex 22.1 installed on your laptop you can ab i, and x
@@ -157,7 +161,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
     return model.solution
 
 
-def read_hfvrp_instances(instance_name,ext_heuristic=False):
+def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuristic=30):
     """Read literature instances of HFVRP by giving the name of instance
         and returns dictionary containing all elements of model"""
     instance_iter = iter(read_instance(instance_name))
@@ -189,7 +193,6 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False):
                 "y": y_coord,
                 "demand": demand,
                 "id": id_point})
-        total_demand += demand
         jobs.append(demand)
     
     data["demands"] = jobs
@@ -256,7 +259,7 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False):
 
     upper_bound = 0
     if ext_heuristic:
-        upper_bound = solve_ext_heuristic(data)
+        upper_bound = solve_ext_heuristic(data,time_resolution_heuristic)
 
     return {"Points": points,
             "VehicleTypes": vehicle_types,
@@ -293,7 +296,7 @@ def print_solution(data, manager, routing, solution):
 
 
 
-def solve_ext_heuristic(data):
+def solve_ext_heuristic(data,time_resolution_heuristic=30):
 
 
 
@@ -349,7 +352,9 @@ def solve_ext_heuristic(data):
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
-    search_parameters.time_limit.FromSeconds(30)
+    print("HERE")
+    print(time_resolution_heuristic)
+    search_parameters.time_limit.FromSeconds(time_resolution_heuristic)
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
@@ -365,7 +370,8 @@ def main(argv):
    solver_name = ''
    heuristic_used = False
    time_resolution = 30
-   opts, args = getopt.getopt(argv,"i:t:s:h:e:")
+   time_resolution_heuristic = 30
+   opts, args = getopt.getopt(argv,"i:t:s:h:e:f:")
    
    for opt, arg in opts:
       if opt in ["-i"]:
@@ -378,10 +384,12 @@ def main(argv):
          heuristic_used = arg == "yes"
       elif opt == "-e":
          time_resolution = float(arg)
+      elif opt == "-f":
+         time_resolution_heuristic = int(arg)
 
-   solve_demo(instance,solver_name,heuristic_used,time_resolution)
+   solve_demo(instance,solver_name,heuristic_used,time_resolution,time_resolution_heuristic)
 
 if __name__ == "__main__":
     #main(sys.argv[1:])
-    solve_demo("C:\\Users\\Najib\\source\\repos\\VRPSolverPy\\VRPSolverEasy\\demos\\data\\HFVRP\\c50_13hd.txt","CLP",True,60)
+    solve_demo("C:\\Users\\Najib\\source\\repos\\VRPSolverPy\\VRPSolverEasy\\demos\\data\\HFVRP\\c50_13fsmd.txt","CLP",True,60,30)
     
