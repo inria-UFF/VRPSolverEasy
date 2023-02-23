@@ -23,11 +23,17 @@ def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
     return round(math.sqrt((x_i - x_j)**2 +
                            (y_i - y_j)**2), number_digit)
 
-def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolution=30):
+def compute_one_decimal_floor_euclidean_distance(x_i, y_i, x_j, y_j):
+    """Compute the euclidean distance between 2 points from graph"""
+    return math.floor(math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2) * 10) / 10
+
+def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
+               time_resolution=30,
+               time_resolution_heuristic=30):
     """return a solution from modelisation"""
 
     # read instance
-    data = read_hfvrp_instances(instance_name,ext_heuristic)
+    data = read_hfvrp_instances(instance_name,ext_heuristic,time_resolution_heuristic)
 
     # get data
     vehicle_types = data["VehicleTypes"]
@@ -74,7 +80,9 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
         model.parameters.upper_bound = upper_bound
     
     model.parameters.solver_name = solver_name
-
+    #if(solver_name == "CPLEX"):
+        #model.parameters.heuristic_used = True   TODO
+        #model.parameters.time_limit_heuristic = 5 TODO
     
 
     # if you have cplex 22.1 installed on your laptop you can ab i, and x
@@ -86,47 +94,74 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
 
 
     # solve model
+    model.export()
     model.solve()
 
-    if(os.path.isfile("HFVRP_Results.txt")):
-        with open(instance_name, "a") as f:
-            f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
-            instance_name,solver_name,ext_heuristic,
-            model.statistics.solution_value,
-            model.statistics.solution_time,
-            model.statistics.best_lb,
-            model.statistics.root_lb,
-            model.statistics.root_time,
-            model.statistics.nb_branch_and_bound_nodes
-            ))
-    else:
-        with open("HFVRP_Results.txt", "a") as f:
-           f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
+    path_instance_name = instance_name.split(".")[0]
+    name_instance = path_instance_name.split("\\")[
+        len(path_instance_name.split("\\"))-1]
+    print('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
             "instance_name","solver_name","ext_heuristic",
             "solution_value",
             "solution_time",
             "best_lb",
             "root_lb",
             "root_time",
-            "nb_branch_and_bound_nodes"
-            ))
-           f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8}\n'.format(
-            instance_name,solver_name,ext_heuristic,
+            "nb_branch_and_bound_nodes",
+            "status"
+            ), end='')
+    print('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
+        name_instance,solver_name,ext_heuristic,
+        model.statistics.solution_value,
+        model.statistics.solution_time,
+        model.statistics.best_lb,
+        model.statistics.root_lb,
+        model.statistics.root_time,
+        model.statistics.nb_branch_and_bound_nodes,
+        model.solution.status
+        ))
+    if(os.path.isfile("HFVRP_Results.txt")):
+        with open("HFVRP_Results.txt", "a") as f:
+            f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
+            name_instance,solver_name,ext_heuristic,
             model.statistics.solution_value,
             model.statistics.solution_time,
             model.statistics.best_lb,
             model.statistics.root_lb,
             model.statistics.root_time,
-            model.statistics.nb_branch_and_bound_nodes
+            model.statistics.nb_branch_and_bound_nodes,
+            model.solution.status
+            ))
+    else:
+        with open("HFVRP_Results.txt", "a") as f:
+           f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
+            "instance_name","solver_name","ext_heuristic",
+            "solution_value",
+            "solution_time",
+            "best_lb",
+            "root_lb",
+            "root_time",
+            "nb_branch_and_bound_nodes",
+            "status"
+            ))
+           f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
+            name_instance,solver_name,ext_heuristic,
+            model.statistics.solution_value,
+            model.statistics.solution_time,
+            model.statistics.best_lb,
+            model.statistics.root_lb,
+            model.statistics.root_time,
+            model.statistics.nb_branch_and_bound_nodes,
+            model.solution.status
             ))
 
     # export the result
     model.solution.export()
-
+    print(model.parameters.upper_bound)
     return model.solution
 
 
-def read_hfvrp_instances(instance_name,ext_heuristic=False):
+def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuristic=30):
     """Read literature instances of HFVRP by giving the name of instance
         and returns dictionary containing all elements of model"""
     instance_iter = iter(read_instance(instance_name))
@@ -158,10 +193,10 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False):
                 "y": y_coord,
                 "demand": demand,
                 "id": id_point})
-
         jobs.append(demand)
-        data["demands"] = jobs
-
+    
+    data["demands"] = jobs
+    
     nb_vehicles = int(next(instance_iter))
     vehicle_types = []
     index = 0
@@ -181,12 +216,12 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False):
                 "capacity": capacity,
                 "max_number": max_number,
                 "fixed_cost" : fixed_cost,
-                "var_cost_dist": var_cost_dist
+                "var_cost_dist": var_cost_dist * 10
                 }
         vehicle_types.append(vehicle_type)
         for i in range(max_number):
             vehicles_capacities.append(capacity)
-            vehicles_var_costs.append(var_cost_dist)
+            vehicles_var_costs.append(var_cost_dist  * 10)
             vehicles_fixed_costs.append(fixed_cost)
             index += 1
      
@@ -203,7 +238,7 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False):
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = utils.compute_euclidean_distance(point["x"],
+            dist = compute_one_decimal_floor_euclidean_distance(point["x"],
                                               point["y"],
                                               points[j]["x"],
                                               points[j]["y"]
@@ -212,11 +247,11 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False):
             links.append({"name": "L" + str(nb_link),
                           "start_point_id": point["id"],
                           "end_point_id": points[j]["id"],
-                          "distance": dist
+                          "distance": dist * 10
                           })
 
-            matrix[i][j] = dist
-            matrix[j][i] = dist
+            matrix[i][j] = dist * 10
+            matrix[j][i] = dist * 10 
 
             nb_link += 1
 
@@ -224,7 +259,7 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False):
 
     upper_bound = 0
     if ext_heuristic:
-        upper_bound = solve_ext_heuristic(data)
+        upper_bound = solve_ext_heuristic(data,time_resolution_heuristic)
 
     return {"Points": points,
             "VehicleTypes": vehicle_types,
@@ -261,7 +296,7 @@ def print_solution(data, manager, routing, solution):
 
 
 
-def solve_ext_heuristic(data):
+def solve_ext_heuristic(data,time_resolution_heuristic=30):
 
 
 
@@ -279,8 +314,7 @@ def solve_ext_heuristic(data):
         # Convert from routing variable Index to distance matrix NodeIndex.
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
-        return data['distance_matrix'][from_node][to_node
-                   ] * data['var_costs'][id_vehicle]
+        return data['distance_matrix'][from_node][to_node]  * data['var_costs'][id_vehicle] 
 
     transit_callback_index = [ routing.RegisterTransitCallback(
                             partial(distance_callback,id_vehicle = i),
@@ -318,7 +352,8 @@ def solve_ext_heuristic(data):
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
-    search_parameters.time_limit.FromSeconds(1)
+
+    search_parameters.time_limit.FromSeconds(time_resolution_heuristic)
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
@@ -326,7 +361,7 @@ def solve_ext_heuristic(data):
         print_solution(data,manager,routing,solution)
         return solution.ObjectiveValue() + 0.1
     
-    return 100000
+    return 1000000
 
 def main(argv):
    instance = ''
@@ -334,7 +369,8 @@ def main(argv):
    solver_name = ''
    heuristic_used = False
    time_resolution = 30
-   opts, args = getopt.getopt(argv,"i:t:s:h:e:")
+   time_resolution_heuristic = 30
+   opts, args = getopt.getopt(argv,"i:t:s:h:e:f:")
    
    for opt, arg in opts:
       if opt in ["-i"]:
@@ -347,10 +383,12 @@ def main(argv):
          heuristic_used = arg == "yes"
       elif opt == "-e":
          time_resolution = float(arg)
+      elif opt == "-f":
+         time_resolution_heuristic = int(arg)
 
-   solve_demo(instance,solver_name,heuristic_used,time_resolution)
+   solve_demo(instance,solver_name,heuristic_used,time_resolution,time_resolution_heuristic)
 
 if __name__ == "__main__":
     #main(sys.argv[1:])
-    solve_demo("C:\\Users\\Najib\\source\\repos\\VRPSolverPy\\VRPSolverEasy\\demos\\data\\HFVRP\\toy.txt","CLP","no",30)
+    solve_demo("C:\\Users\\Najib\\source\\repos\\VRPSolverPy\\VRPSolverEasy\\demos\\data\\HFVRP\\c50_13fsmf.txt","CLP",True,60,30)
     
