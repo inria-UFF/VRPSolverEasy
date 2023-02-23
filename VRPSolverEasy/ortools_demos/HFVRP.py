@@ -357,7 +357,7 @@ def solve_ext_heuristic(data):
         print_solution(data,manager,routing,solution)
         return solution.ObjectiveValue() + 0.1
     
-    return 100000
+    return 1000000
 
 def main(argv):
    instance = ''
