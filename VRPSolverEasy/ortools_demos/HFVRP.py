@@ -71,7 +71,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
                        distance=link["distance"])
 
     # set parameters
-    model.set_parameters(time_limit=time_resolution)
+    model.set_parameters(time_limit=time_resolution, heuristic_used=True)
     # model.set_parameters(upper_bound=3185.2)
 
     #print(upper_bound) debug mode

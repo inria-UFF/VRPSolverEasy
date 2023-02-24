@@ -63,7 +63,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
                        )
 
     # set parameters
-    model.set_parameters(time_limit=time_resolution)
+    model.set_parameters(time_limit=time_resolution, heuristic_used=True)
     #print(upper_bound)
     # model.set_parameters(upper_bound=950)
     
@@ -104,6 +104,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
         model.statistics.nb_branch_and_bound_nodes,
         model.solution.status
         ))
+    """
     if(os.path.isfile("CVRP_Results.txt")):
         with open("CVRP_Results.txt", "a") as f:
             f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
@@ -138,7 +139,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
             model.statistics.nb_branch_and_bound_nodes,
             model.solution.status
             ))
-                    
+    """                
 
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
