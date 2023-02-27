@@ -128,6 +128,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".github\workflows\python-package.yml" />
+    <Content Include=".readthedocs.yaml" />
     <Content Include="README.md" />
     <Content Include="VRPSolverEasy\demos\data\CVRPTW\C101.txt" />
     <Content Include="VRPSolverEasy\demos\data\CVRPTW\C201.txt" />

@@ -9,11 +9,12 @@
 project = 'VRPSolverEasy'
 copyright = '2023, ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo QUEIROGA Eduardo'
 author = 'ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo QUEIROGA Eduardo'
-release = '0.0.1'
+release = '0.0.2'
 
 import sys, os
 
 #find module solver-----------------------------------------------------------
+sys.path.insert(0, os.path.abspath("../"))
 sys.path.insert(0, os.path.abspath("../VRPSolverEasy"))
 
 # -- General configuration ---------------------------------------------------
@@ -23,7 +24,7 @@ extensions = ["sphinx.ext.autodoc",
               "sphinx.ext.mathjax",
               'sphinx.ext.autosummary']
 
-templates_path = ['_templates']
+templates_path = []
 exclude_patterns = []
 
 
@@ -32,4 +33,4 @@ exclude_patterns = []
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
+html_static_path = []
