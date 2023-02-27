@@ -113,3 +113,16 @@ import VRPSolverEasy.src.solver as solver
 ## Documentation
 
 If you want to know more about the documentation, you can go on https://vrpsolvereasy.readthedocs.io/en/latest/. 
+
+### Build Documentation
+
+You can also build the documentation locally by following this instructions from the source folder :
+
+```
+cd docs
+python -m pip install -r requirements.txt
+cd ..
+make html
+```
+
+The HTML pages will be in the folder build\html.
