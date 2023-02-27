@@ -91,7 +91,7 @@ def solve_demo(instance_name):
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
 
-    return model.solution
+    return model.statistics.solution_value
 
 
 def read_cvrptw_instances(instance_name):
