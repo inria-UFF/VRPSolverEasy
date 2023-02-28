@@ -347,7 +347,7 @@ def solve_ext_heuristic(data):
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
-    search_parameters.time_limit.FromSeconds(5)
+    search_parameters.time_limit.FromSeconds(len(data['demands']))
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
