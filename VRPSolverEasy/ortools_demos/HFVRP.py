@@ -215,19 +215,19 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
                 "end_point_id": 0,
                 "capacity": capacity,
                 "max_number": max_number,
-                "fixed_cost" : fixed_cost,
+                "fixed_cost" : fixed_cost * 10,
                 "var_cost_dist": var_cost_dist * 10
                 }
         vehicle_types.append(vehicle_type)
         for i in range(max_number):
             vehicles_capacities.append(capacity)
             vehicles_var_costs.append(var_cost_dist  * 10)
-            vehicles_fixed_costs.append(fixed_cost)
+            vehicles_fixed_costs.append(fixed_cost * 10 )
             index += 1
      
     data['vehicle_capacities'] = vehicles_capacities
     data['var_costs'] = vehicles_var_costs
-    data['fixed_costs'] = vehicles_fixed_costs
+    data['fixed_costs'] = vehicles_fixed_costs 
     data['num_vehicles'] = index
     data['depot'] = 0
     
@@ -238,20 +238,20 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = compute_one_decimal_floor_euclidean_distance(point["x"],
+            dist = compute_euclidean_distance(point["x"],
                                               point["y"],
                                               points[j]["x"],
-                                              points[j]["y"]
+                                              points[j]["y"],0
                                               )
 
             links.append({"name": "L" + str(nb_link),
                           "start_point_id": point["id"],
                           "end_point_id": points[j]["id"],
-                          "distance": dist * 10
+                          "distance": dist 
                           })
 
-            matrix[i][j] = dist * 10
-            matrix[j][i] = dist * 10 
+            matrix[i][j] = dist 
+            matrix[j][i] = dist 
 
             nb_link += 1
 
@@ -390,5 +390,5 @@ def main(argv):
 
 if __name__ == "__main__":
     #main(sys.argv[1:])
-    solve_demo("C:\\Users\\Najib\\source\\repos\\VRPSolverPy\\VRPSolverEasy\\demos\\data\\HFVRP\\c50_13fsmf.txt","CLP",True,60,30)
+    solve_demo("C:\\Users\\Najib\\source\\repos\\VRPSolverPy\\VRPSolverEasy\\demos\\data\\HFVRP\\c50_13fsmd.txt","CLP",True,30,1)
     

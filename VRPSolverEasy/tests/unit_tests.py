@@ -1,6 +1,7 @@
 import random
 import unittest
 from VRPSolverEasy.src import solver, constants
+from VRPSolverEasy.demos import CVRPTW,CVRP,HFVRP
 
 class TestAllVariants(unittest.TestCase):
 
@@ -607,16 +608,46 @@ class TestAllClass(unittest.TestCase):
 
 
 class TestAllDemos(unittest.TestCase):
-    def test_cvrp_solomon(self):
-        # TODO Add here link with cvrp demo
+    def test_cvrp_demos_an32k5(self):
+        """test demo A-n32-k5 in augerat format"""
+        objective_value = CVRP.solve_demo("A-n32-k5.vrp")
+        self.assertAlmostEqual(
+            784, objective_value, places=0)
         return None
 
-    def test_hfvrp(self):
-        # TODO Add here link with HFVRP demo
+    def test_cvrp_demos_bn31k5(self):
+        """test demo B-n31-k5 in augerat format"""
+        objective_value = CVRP.solve_demo("B-n31-k5.vrp")
+        self.assertAlmostEqual(
+            672, objective_value, places=1)
         return None
 
-    def test_infeasible(self):
-        # TODO Add here link with HFVRP demo
+    def test_cvrptw_demos_c101(self):
+        """test demo C101 in solomon format"""
+        objective_value = CVRPTW.solve_demo("C101.txt")
+        self.assertAlmostEqual(
+            1657.9, objective_value, places=1)
+        return None
+
+    def test_cvrptw_demos_r101(self):
+        """test demo R101 in solomon format"""
+        objective_value = CVRPTW.solve_demo("R101.txt")
+        self.assertAlmostEqual(
+            3285.75, objective_value, places=1)
+        return None
+
+    def test_hfvrp_c50_13fsmd(self):
+        """test demo c50_13fsmd in queiroga format"""
+        objective_value = HFVRP.solve_demo("c50_13fsmd.txt")
+        self.assertAlmostEqual(
+           1491.85, objective_value, places=1)
+        return None
+
+    def test_hfvrp_c50_16fsmd(self):
+        """test demo c50_16fsmd in queiroga format"""
+        objective_value = HFVRP.solve_demo("c50_16fsmd.txt")
+        self.assertAlmostEqual(
+            1131, objective_value, places=1)
         return None
 
 

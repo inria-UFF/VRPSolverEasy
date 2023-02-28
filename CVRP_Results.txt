@@ -1,2 +1,0 @@
-instance_name solver_name ext_heuristic solution_value solution_time best_lb root_lb root_time nb_branch_and_bound_nodes
-A-n12-k3 CPLEX False 0 0 0 0 0 0

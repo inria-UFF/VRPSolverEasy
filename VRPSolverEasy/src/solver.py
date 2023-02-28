@@ -1200,7 +1200,7 @@ class Solution:
             self.__json = json.loads(json_input)
             self.__status = self.__json["Status"]["code"]
             self.__message = self.__json["Status"]["message"]
-            if (self.__status > 2 and self.__status < 6) or self.__status == 8:
+            if (self.__status > -1 and self.__status < 4) or self.__status == 8:
                 if len(self.__json["Solution"]) > 0:
                     for route in self.__json["Solution"]:
                         self.__routes.append(Route(route))

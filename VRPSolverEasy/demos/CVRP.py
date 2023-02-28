@@ -1,9 +1,25 @@
 """ This module allows to solve Augerat et al. instances of
 Capacitated Vehicle Routing Problem """
 
+import os,math
 from VRPSolverEasy.src import solver
-import VRPSolverEasy.demos.CVRPTW as utils
 
+
+def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
+    """Compute the euclidean distance between 2 points from graph"""
+    return round(math.sqrt((x_i - x_j)**2 +
+                           (y_i - y_j)**2), number_digit)
+
+def read_instance(name : str):
+    """ Read an instance in the folder data from a given name """
+    path_project = os.path.abspath(os.getcwd())
+    with open (
+        path_project +
+        os.path.normpath(
+            "/VRPSolverEasy/demos/data/" +
+            name),
+        "r",encoding="UTF-8") as file:
+        return [str(element) for element in file.read().split()]
 
 def solve_demo(instance_name):
     """return a solution from modelisation"""
@@ -60,13 +76,13 @@ def solve_demo(instance_name):
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
 
-    return model.solution
+    return model.statistics.solution_value
 
 def read_cvrp_instances(instance_name):
     """Read literature instances from CVRPLIB by giving the name of instance
        and returns dictionary containing all elements of model"""
 
-    instance_iter = iter(utils.read_instance("CVRP/" + instance_name))
+    instance_iter = iter(read_instance("CVRP/" + instance_name))
     points = []
     id_point = 0
     dimension_input = -1
@@ -137,7 +153,7 @@ def read_cvrp_instances(instance_name):
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = utils.compute_euclidean_distance(point["x"],
+            dist = compute_euclidean_distance(point["x"],
                                                     point["y"],
                                                     points[j]["x"],
                                                     points[j]["y"],
