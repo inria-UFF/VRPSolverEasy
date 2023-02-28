@@ -165,7 +165,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
     """    
 
     # export the result
-    model.solution.export(instance_name.split(".")[0] + "_result")
+    #model.solution.export(instance_name.split(".")[0] + "_result")
 
     return model.solution
 
