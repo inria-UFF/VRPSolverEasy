@@ -12,7 +12,7 @@ def generate_sh_files(argv):
         elif opt == "-p":
             path_project = os.path.abspath(arg)
 
-    type_problem = ["CVRPTW","CVRP"]
+    type_problem = ["CVRPTW","CVRP","HFVRP"]
     solver_names = ["CLP","CPLEX"]
     time_limits = [time_resolution]
     heuristic_used = ["yes","no"]

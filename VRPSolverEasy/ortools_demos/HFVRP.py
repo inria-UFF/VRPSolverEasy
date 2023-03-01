@@ -18,10 +18,9 @@ def read_instance(name : str):
     file.close()
     return elements
 
-def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
+def compute_euclidean_distance(x_i, y_i, x_j, y_j):
     """Compute the euclidean distance between 2 points from graph"""
-    return round(math.sqrt((x_i - x_j)**2 +
-                           (y_i - y_j)**2), number_digit)
+    return math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2)
 
 def compute_one_decimal_floor_euclidean_distance(x_i, y_i, x_j, y_j):
     """Compute the euclidean distance between 2 points from graph"""
@@ -94,7 +93,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
 
 
     # solve model
-    model.export()
+    #model.export()
     model.solve()
 
     path_instance_name = instance_name.split(".")[0]
@@ -120,6 +119,8 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
         model.statistics.nb_branch_and_bound_nodes,
         model.solution.status
         ))
+
+    """
     if(os.path.isfile("HFVRP_Results.txt")):
         with open("HFVRP_Results.txt", "a") as f:
             f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
@@ -155,9 +156,10 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
             model.solution.status
             ))
 
+    """
     # export the result
-    model.solution.export()
-    print(model.parameters.upper_bound)
+    #model.solution.export()
+    #print(model.parameters.upper_bound)
     return model.solution
 
 
@@ -215,14 +217,14 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
                 "end_point_id": 0,
                 "capacity": capacity,
                 "max_number": max_number,
-                "fixed_cost" : fixed_cost * 10,
-                "var_cost_dist": var_cost_dist * 10
+                "fixed_cost" : fixed_cost,
+                "var_cost_dist": var_cost_dist
                 }
         vehicle_types.append(vehicle_type)
         for i in range(max_number):
             vehicles_capacities.append(capacity)
-            vehicles_var_costs.append(var_cost_dist  * 10)
-            vehicles_fixed_costs.append(fixed_cost * 10 )
+            vehicles_var_costs.append(var_cost_dist)
+            vehicles_fixed_costs.append(fixed_cost)
             index += 1
      
     data['vehicle_capacities'] = vehicles_capacities
@@ -231,7 +233,6 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
     data['num_vehicles'] = index
     data['depot'] = 0
     
-
     # compute the links of graph
     links = []
     matrix = [[0 for i in range((len(points)))] for i in range(len(points))]
@@ -241,8 +242,7 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
             dist = compute_euclidean_distance(point["x"],
                                               point["y"],
                                               points[j]["x"],
-                                              points[j]["y"],0
-                                              )
+                                              points[j]["y"])
 
             links.append({"name": "L" + str(nb_link),
                           "start_point_id": point["id"],
@@ -266,6 +266,7 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
             "Links": links,
             "UB": upper_bound
             }
+
 def print_solution(data, manager, routing, solution):
     """Prints solution on console."""
     print(f'Objective: {solution.ObjectiveValue()}')
@@ -291,14 +292,11 @@ def print_solution(data, manager, routing, solution):
         print(plan_output)
         total_distance += route_distance
         total_load += route_load
-    print('Total distance of all routes: {}m'.format(total_distance))
+    print('Total distance of all routes: {}m'.format(total_distance/1000))
     print('Total load of all routes: {}'.format(total_load))
 
 
-
 def solve_ext_heuristic(data,time_resolution_heuristic=30):
-
-
 
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -307,14 +305,13 @@ def solve_ext_heuristic(data,time_resolution_heuristic=30):
     # Create Routing Model.
     routing = pywrapcp.RoutingModel(manager)
 
-
     # Create and register a transit callback.
     def distance_callback(from_index, to_index, id_vehicle):
         """Returns the distance between the two nodes."""
         # Convert from routing variable Index to distance matrix NodeIndex.
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
-        return data['distance_matrix'][from_node][to_node]  * data['var_costs'][id_vehicle] 
+        return round(1000 * (data['distance_matrix'][from_node][to_node] * data['var_costs'][id_vehicle]))
 
     transit_callback_index = [ routing.RegisterTransitCallback(
                             partial(distance_callback,id_vehicle = i),
@@ -325,7 +322,6 @@ def solve_ext_heuristic(data,time_resolution_heuristic=30):
 
     # Define cost of each arc.
     #routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
-
 
     # Add Capacity constraint.
     def demand_callback(from_index):
@@ -344,7 +340,7 @@ def solve_ext_heuristic(data,time_resolution_heuristic=30):
         'Capacity')
     
     for i,cost in enumerate(data['fixed_costs']):
-        routing.SetFixedCostOfVehicle(int(cost),i)
+        routing.SetFixedCostOfVehicle(int(1000 * cost),i)
 
     # Setting first solution heuristic
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
@@ -353,13 +349,13 @@ def solve_ext_heuristic(data,time_resolution_heuristic=30):
     search_parameters.local_search_metaheuristic = (
         routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
 
-    search_parameters.time_limit.FromSeconds(time_resolution_heuristic)
+    search_parameters.time_limit.FromSeconds(len(data['demands']))
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
     if solution : 
-        print_solution(data,manager,routing,solution)
-        return solution.ObjectiveValue() + 0.1
+        # print_solution(data,manager,routing,solution)
+        return solution.ObjectiveValue()/1000 + 0.1
     
     return 1000000
 
@@ -389,6 +385,5 @@ def main(argv):
    solve_demo(instance,solver_name,heuristic_used,time_resolution,time_resolution_heuristic)
 
 if __name__ == "__main__":
-    #main(sys.argv[1:])
-    solve_demo("C:\\Users\\Najib\\source\\repos\\VRPSolverPy\\VRPSolverEasy\\demos\\data\\HFVRP\\c50_13fsmd.txt","CLP",True,30,1)
+    main(sys.argv[1:])
     
