@@ -81,6 +81,29 @@ Solution
     :member-order:
     :special-members:
 
+
+
+.. list-table:: solution.status
+   :widths: 25 25 
+   :header-rows: 1
+
+   * - Status
+     - numerical value
+   * - :data:`INFEASIBLE` 
+     - -2
+   * - :data:`INTERRUPTED_BY_ERROR`
+     - -1
+   * - :data:`OPTIMAL_SOL_FOUND` 
+     - 0 
+   * - :data:`BETTER_SOL_FOUND`
+     - 1 
+   * - :data:`BETTER_SOL_DOES_NOT_EXISTS` 
+     - 2
+   * - :data:`BETTER_SOL_NOT_FOUND` 
+     - 3    
+       
+  
+
 Route
 -----------
 
@@ -88,3 +111,7 @@ Route
     :members:
     :member-order:
     :special-members:
+
+
+
+
