@@ -77,6 +77,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
 
     if ext_heuristic:
         model.parameters.upper_bound = upper_bound
+    model.parameters.print_level = 0
     
     model.parameters.solver_name = solver_name
     #if(solver_name == "CPLEX"):
