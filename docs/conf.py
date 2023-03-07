@@ -22,7 +22,11 @@ sys.path.insert(0, os.path.abspath("../VRPSolverEasy"))
 
 extensions = ["sphinx.ext.autodoc",
               "sphinx.ext.mathjax",
-              'sphinx.ext.autosummary']
+              'sphinx.ext.autosummary',
+              'sphinxcontrib.bibtex']
+
+
+bibtex_bibfiles = ['Bibliography/refs.bib']
 
 templates_path = []
 exclude_patterns = []

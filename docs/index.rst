@@ -6,12 +6,14 @@
 Welcome to VRPSolverEasy's documentation!
 =========================================
 
+
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    Installation/index
    Python modeling/index
-   Mathematical modeling/index
    Demos/index
-
+   Bibliography/index

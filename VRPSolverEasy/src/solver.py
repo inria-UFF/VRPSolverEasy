@@ -1183,9 +1183,34 @@ class Route:
     def incoming_arc_names(self):
         """list(str) : the names of incoming arc"""
         return self.__incoming_arc_names
+    
+    def __str__(self):
+        route_str = ""
+        time_is_used = sum(self.__time_consumption) > 0
+        capacity_is_used = sum(self.__cap_consumption) > 0
+        if (len(self.__point_ids))>0 :
+            id_veh = self.__vehicle_type_id
+            route_str += 'Route for vehicle  ' + str(id_veh) + ':\n'
+            route_str += ' ID :' + str(self.__point_ids[0])
+            for i in range (1,len(self.__point_ids)):
+                route_str +=' --> ' + str(self.__point_ids[i]) 
+            
+            if (time_is_used):
+                route_str += '\n'
+                route_str += ' Time end :' + str(self.__time_consumption[0])
+                for i in range (1,len(self.__time_consumption)):
+                    route_str += ' --> ' + str(self.__time_consumption[i]) 
+            
+            if(capacity_is_used):
+                route_str += '\n'
+                route_str += ' Load :' + str(self.__cap_consumption[0])
+                for i in range (1,len(self.__cap_consumption)):
+                    route_str += ' --> ' + str(self.__cap_consumption[i]) 
+            route_str += "\nTotal cost : " + str(self.__route_cost) + '\n \n'
+        return route_str
 
     def __repr__(self):
-        return repr(self.__route)
+        return repr(self.__str__())
 
 
 class Solution:
@@ -1206,7 +1231,11 @@ class Solution:
                         self.__routes.append(Route(route))
 
     def __str__(self):
-        return json.dumps(self.json, indent=1)
+        #return json.dumps(self.json, indent=1)
+        route_str =""
+        for route in self.__routes:
+            route_str += str(route)
+        return route_str
 
     def __repr__(self):
         return repr(self.__str__())

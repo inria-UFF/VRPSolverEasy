@@ -1,7 +1,7 @@
 """ This module allows to solve Augerat et al. instances of
 Capacitated Vehicle Routing Problem """
 
-import os,math
+import os, math, sys, getopt
 from VRPSolverEasy.src import solver
 
 
@@ -10,22 +10,46 @@ def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
     return round(math.sqrt((x_i - x_j)**2 +
                            (y_i - y_j)**2), number_digit)
 
-def read_instance(name : str):
+def read_instance(name : str,folder_data="/data/"):
     """ Read an instance in the folder data from a given name """
-    path_project = os.path.abspath(os.getcwd())
+    path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__)))
+    if(folder_data != "/data/"):
+        path_project = ""
+
     with open (
         path_project +
         os.path.normpath(
-            "/VRPSolverEasy/demos/data/" +
+            folder_data +
             name),
         "r",encoding="UTF-8") as file:
         return [str(element) for element in file.read().split()]
 
-def solve_demo(instance_name):
+def solve_demo(instance_name,folder_data="/data/",
+               time_resolution=30,
+               solver_name_input="CLP",
+               solver_path=""):
     """return a solution from modelisation"""
 
+    #read parameters given in command line
+    type_instance = "CVRP/"     
+    if len(sys.argv) > 1:
+        print(instance_name)
+        opts, args = getopt.getopt(instance_name,"i:t:s:p:")
+        for opt, arg in opts:
+            if opt in ["-i"]:
+                instance_name = arg
+                folder_data = ""
+                type_instance = ""
+            if opt in ["-t"]:
+                time_resolution = float(arg)
+            if opt in ["-s"]:
+                solver_name_input = arg
+            if opt in ["-p"]:
+                solver_path = arg 
+
     # read instance
-    data = read_cvrp_instances(instance_name)
+    data = read_cvrp_instances(instance_name,folder_data,type_instance)
 
     # get data
     vehicle_type = data["VehicleTypes"]
@@ -61,14 +85,14 @@ def solve_demo(instance_name):
                        )
 
     # set parameters
-    model.set_parameters(time_limit=60)
-    # model.set_parameters(upper_bound=950)
+    model.set_parameters(time_limit=time_resolution,
+                         solver_name=solver_name_input)
+    
 
-    # if you have cplex 22.1 installed on your laptop you can
-    # change the bapcod-shared library and specify the path like this:
-    # Here there is an example on windows laptop
-    # model.set_parameters(time_limit=30,solver_name="CPLEX",cplex_path="C:\\Program Files\\
-    # IBM\\ILOG\\CPLEX_Studio221\\cplex\\bin\\x64_win64")
+    ''' If you have cplex 22.1 installed on your laptop windows you have to specify
+        solver path'''
+    if (solver_name_input == "CPLEX" and solver_path != "" ):
+        model.parameters.cplex_path=solver_path
 
     # solve model
     model.solve()
@@ -78,11 +102,11 @@ def solve_demo(instance_name):
 
     return model.statistics.solution_value
 
-def read_cvrp_instances(instance_name):
+def read_cvrp_instances(instance_name, name_folder,type_instance):
     """Read literature instances from CVRPLIB by giving the name of instance
        and returns dictionary containing all elements of model"""
 
-    instance_iter = iter(read_instance("CVRP/" + instance_name))
+    instance_iter = iter(read_instance(type_instance + instance_name,name_folder))
     points = []
     id_point = 0
     dimension_input = -1
@@ -172,4 +196,12 @@ def read_cvrp_instances(instance_name):
             }
 
 if __name__ == "__main__":
-    solve_demo("A-n37-k6.vrp")
+    if(len(sys.argv)>1):
+        solve_demo(sys.argv[1:])
+    else:
+        print("""Please indicates the path of your instance like this : \n 
+       python -m VRPSolverEasy.demos.CVRP -i INSTANCE_PATH/NAME_INSTANCE \n
+       -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
+       """)
+       #uncomments for use the file without command line
+       # solve_demo("A-n36-k5.vrp")
