@@ -61,7 +61,7 @@ def solve_demo(instance_name,folder_data="/data/",
     links = data["Links"]
 
     # modelisation of problem
-    model = solver.CreateModel()
+    model = solver.Model()
 
     # add vehicle type
     model.add_vehicle_type(id=vehicle_type["id"],

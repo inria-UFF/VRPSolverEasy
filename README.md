@@ -60,7 +60,7 @@ import VRPSolverEasy.src.solver as solver
     demands = [0, 500, 300, 600, 658, 741, 436]
 
     # Initialisation
-    model = solver.CreateModel()
+    model = solver.Model()
 
     # Add vehicle type
     model.add_vehicle_type(

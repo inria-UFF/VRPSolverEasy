@@ -11,7 +11,7 @@ class TestAllVariants(unittest.TestCase):
         dist = 5
         cost_per_distance = 10
         nb_links = 5
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -40,7 +40,7 @@ class TestAllVariants(unittest.TestCase):
     def test_cvrp_no_feasible(self):
         """test model in there is only resource of capacity
         with no feasible solution"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -71,7 +71,7 @@ class TestAllVariants(unittest.TestCase):
         cost_per_distance = 10
         dist = 5
         nb_links = 5
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -134,7 +134,7 @@ class TestAllVariants(unittest.TestCase):
 
     def test_cvrptw_nofeasible_on_time(self):
         """test model it's infeasible on time"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -194,13 +194,13 @@ class TestAllVariants(unittest.TestCase):
 
     def test_solve_without_all(self):
         """raise an error if we have any components in the model"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(Exception):
             model.solve()
 
     def test_solve_without_points_links(self):
         """raise an error if we have only vehicle types in the model"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(Exception):
             model.add_vehicle_type(
                 1,
@@ -215,7 +215,7 @@ class TestAllVariants(unittest.TestCase):
 
     def test_solve_without_links(self):
         """raise an error if we have any links"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(Exception):
             model.add_vehicle_type(
                 1,
@@ -231,7 +231,7 @@ class TestAllVariants(unittest.TestCase):
 
     def test_solve_without_points(self):
         """raise an error if we have any links"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(Exception):
             model.add_vehicle_type(
                 1,
@@ -254,7 +254,7 @@ class TestAllVariants(unittest.TestCase):
 #    def test_solve_without_customers(self):
 #TODO FIXME when we have an unknown point it generates an error in c++
 #        """raise an error if we have a unknown points in links"""
-#        model = solver.CreateModel()
+#        model = solver.Model()
 #        model.add_vehicle_type(
 #            1,
 #            0,
@@ -280,7 +280,7 @@ class TestAllClass(unittest.TestCase):
 
     def test_vehicle_type_with_wrong_properties(self):
         """raise an error the properties of vehicle types are not respected"""
-        model = solver.CreateModel()
+        model = solver.Model()
         # check three non-optional parameters
         with self.assertRaises(Exception):
             model.add_vehicle_type(1, 2)
@@ -308,32 +308,32 @@ class TestAllClass(unittest.TestCase):
 
     def test_add_in_dict_vehicle_types(self):
         """ we must have a new vehicle type in dict vehicle_types after add"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(id=5, start_point_id=3, end_point_id=2)
         self.assertIn(5, model.vehicle_types)
 
     def test_delete_in_dict_vehicle_types(self):
         """ the old vehicle type must be removed from dict after delete"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(id=5, start_point_id=3, end_point_id=2)
         model.delete_vehicle_type(5)
         self.assertNotIn(5, model.vehicle_types)
 
     def test_add_vehicle_types_without_function(self):
         """ we can set vehicle types by using directly the dictionary """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.vehicle_types[1] = solver.VehicleType(1, 2, 3)
         self.assertIn(1, model.vehicle_types)
 
     def test_add_bad_vehicle_types(self):
         """ raise an error if the setting of vehicle_type is not correct"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(solver.PropertyError):
             model.vehicle_types[1] = 5
 
     def test_point_with_wrong_properties(self):
         """raise an error the properties of point are not respected"""
-        model = solver.CreateModel()
+        model = solver.Model()
 
         # check id non optional parameter
         with self.assertRaises(Exception):
@@ -361,32 +361,32 @@ class TestAllClass(unittest.TestCase):
 
     def test_add_in_dict_point(self):
         """ we must have a new point in dict points after add"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_point(id=5)
         self.assertIn(5, model.points)
 
     def test_dict_points_for_delete(self):
         """ the old point must be removed from dict after delete"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(id=5, start_point_id=3, end_point_id=2)
         model.delete_vehicle_type(5)
         self.assertNotIn(5, model.vehicle_types)
 
     def test_add_points_without_function(self):
         """ we can set point by using directly the dictionary """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.points[1] = solver.Point(1)
         self.assertIn(1, model.points)
 
     def test_add_bad_point(self):
         """ raise an error if the setting of point is not correct"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(solver.PropertyError):
             model.vehicle_types[1] = {1: 5}
 
     def test_link_with_wrong_properties(self):
         """ raise error if the user gives bad type of variables """
-        model = solver.CreateModel()
+        model = solver.Model()
 
         # check is_directed
         with self.assertRaises(Exception):
@@ -414,32 +414,32 @@ class TestAllClass(unittest.TestCase):
 
     def test_add_customer(self):
         """ dict of points must be contain new customer """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_customer(5, "C1")
         self.assertIn(5, model.points)
 
     def test_id_customer(self):
         """ if any id_customer is given, id_customer mus be equal to id """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_customer(5, "C1")
         self.assertEqual(5, model.points[5].id_customer)
 
     def test_id_customer_with_id_too_bigger(self):
         """ raise an error if id_customer is not given by user and id >1022 """
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(solver.PropertyError):
             model.add_customer(1025, "C1")
 
     def test_id_customer_with_id_different(self):
         """ assert id_customer is different of id if it's
             given by the user """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_customer(1025, "C1", id_customer=5)
         self.assertEqual(model.points[1025].id_customer, 5)
 
     def test_add_depot(self):
         """The id_customer of depot must be equal to 0. """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_depot(5, "C1")
         model.add_depot(9999, "C1")
         self.assertEqual(0, model.points[5].id_customer)
@@ -451,7 +451,7 @@ class TestAllClass(unittest.TestCase):
         time_max = 15
         cost_per_distance = 10
         cost_per_time = 10
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -549,7 +549,7 @@ class TestAllClass(unittest.TestCase):
         cost_per_time = 10
         cost_per_distance = 10
         dist = 5
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,

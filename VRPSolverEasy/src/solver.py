@@ -623,17 +623,17 @@ class Point:
         return self._incompatible_vehicles
 
     @incompatible_vehicles.setter
-    def incompatible_vehicles(self, incompatible_vehicles):
+    def incompatible_vehicles(self, incompatible_vehicles_in):
         """setter function of incompatible_vehicles"""
-        if not isinstance(incompatible_vehicles, (list)):
+        if not isinstance(incompatible_vehicles_in, (list)):
             raise PropertyError(constants.POINT.INCOMPATIBLE_VEHICLES.value,
                                 constants.LIST_INTEGER_PROPERTY)
-        if len(incompatible_vehicles) > 0:
-            if not all(isinstance(x, int) for x in incompatible_vehicles):
+        if len(incompatible_vehicles_in) > 0:
+            if not all(isinstance(x, int) for x in incompatible_vehicles_in):
                 raise PropertyError(
                     constants.POINT.INCOMPATIBLE_VEHICLES.value,
                     constants.LIST_INTEGER_PROPERTY)
-        self._incompatible_vehicles = incompatible_vehicles
+        self._incompatible_vehicles = incompatible_vehicles_in
 
     def get_point(self, debug=False):
         """Get all components of a Point which are
@@ -1267,7 +1267,7 @@ class Solution:
             outfile.write(json.dumps(self.json, indent=1))
 
 
-class CreateModel:
+class Model:
     """Define a routing model."""
 
     def __init__(self):
@@ -1514,6 +1514,28 @@ class CreateModel:
             action,
             cplex_path)
 
+
+    def check_depots(self):
+        """update model if there is defined depots not used by vehicles"""
+
+        depots_ids_defined = set()
+        for id in self.points:
+            if (self.points[id].id_customer == 0):
+                depots_ids_defined.add(id) 
+
+        
+        ids_vehicles_types = list(self.vehicle_types.keys())
+        for id_veh in ids_vehicles_types:
+            depots_ids_used = set()
+            depots_ids_used.add(self.vehicle_types[id_veh].start_point_id)
+            depots_ids_used.add(self.vehicle_types[id_veh].end_point_id)
+            depot_not_used = depots_ids_defined.difference(depots_ids_used)
+            for id_depot in depot_not_used:
+                values = self.points[id_depot].incompatible_vehicles + [id_veh]
+                self.points[id_depot].incompatible_vehicles = list(set(values))
+        
+
+
     def set_json(self):
         """Set model in json format with all elements of model"""
         self.__json = json.dumps({constants.JSON_OBJECT.POINTS.value:
@@ -1535,9 +1557,14 @@ class CreateModel:
     def __repr__(self):
         return self.__str__()
 
-    def export(self, name="instance"):
+    def export(self, name="instance",all_elements=False):
         """Export model for debugging model,
            we can specify the name of file"""
+
+        #add preprocessing elements in model
+        if (all_elements):
+            self.check_depots()
+
         model = json.dumps({constants.JSON_OBJECT.POINTS.
                             value: list(self.points.values(True)),
                             constants.JSON_OBJECT.VEHICLE_TYPES.value:
@@ -1612,6 +1639,7 @@ class CreateModel:
 
         if _loaded_library is None:
             raise ModelError(constants.LOAD_LIB_ERROR)
+        self.check_depots()
         self.set_json()
         input = _c.c_char_p(self.__json.encode('UTF-8'))
         solve = _lib_bapcod.solveModel

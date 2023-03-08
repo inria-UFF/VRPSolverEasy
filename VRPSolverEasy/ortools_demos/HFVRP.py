@@ -42,7 +42,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
     upper_bound = data["UB"]
 
     # modelisation of problem
-    model = solver.CreateModel()
+    model = solver.Model()
 
     for vehicle_type in vehicle_types:
         # add vehicle type

@@ -1,5 +1,5 @@
-""" This module allows to solve Queiroga instances of
-Heterogeneous Fleet Vehicle Routing Problem """
+""" This module allows to solve Cordeau’s instances of
+Multi Depot Vehicle Routing Problem """
 
 import os, math, sys , getopt
 from VRPSolverEasy.src import solver
@@ -31,7 +31,7 @@ def solve_demo(instance_name,folder_data="/data/",
     """return a solution from modelisation"""
 
     #read parameters given in command line
-    type_instance = "HFVRP/"     
+    type_instance = "MDVRP/"     
     if len(sys.argv) > 1:
         print(instance_name)
         opts, args = getopt.getopt(instance_name,"i:t:s:p:")
@@ -48,12 +48,13 @@ def solve_demo(instance_name,folder_data="/data/",
                 solver_path = arg 
     
     # read instance
-    data = read_hfvrp_instances(instance_name,folder_data,type_instance)
+    data = read_mdvrp_instances(instance_name,folder_data,type_instance)
 
     # get data
     vehicle_types = data["VehicleTypes"]
-    depot = data["Points"][0]
-    customers = data["Points"][1:]
+    nb_cust = data["NumberOfCustomers"]
+    depots = data["Points"][nb_cust:]
+    customers = data["Points"][:nb_cust]
     links = data["Links"]
     
     # modelisation of problem
@@ -66,11 +67,11 @@ def solve_demo(instance_name,folder_data="/data/",
                             end_point_id=vehicle_type["end_point_id"],
                             capacity=vehicle_type["capacity"],
                             max_number=vehicle_type["max_number"],
-                            fixed_cost=vehicle_type["fixed_cost"],
                             var_cost_dist=vehicle_type["var_cost_dist"]
                             )
-    # add depot
-    model.add_depot(id=depot["id"])
+    # add depots
+    for depot in depots:
+        model.add_depot(id=depot["id"])
 
     # add all customers
     for customer in customers:
@@ -98,6 +99,8 @@ def solve_demo(instance_name,folder_data="/data/",
     # solve model
     model.solve()
 
+    print(model.solution)
+
     # export the result
     #model.solution.export(instance_name.split(".")[0] + "_result")
 
@@ -105,54 +108,67 @@ def solve_demo(instance_name,folder_data="/data/",
     return model.statistics.solution_value
 
 
-def read_hfvrp_instances(instance_name, name_folder,type_instance):
-    """Read literature instances of HFVRP by giving the name of instance
+def read_mdvrp_instances(instance_name, name_folder,type_instance):
+    """Read literature instances of MDVRP by giving the name of instance
         and returns dictionary containing all elements of model"""
     instance_iter = iter(read_instance(type_instance + instance_name,name_folder))
 
-    nb_points = int(next(instance_iter))
-
-    next(instance_iter) # pass id depot (always 0)
-    depot_x = int(next(instance_iter))
-    depot_y = int(next(instance_iter))
-    depot_demand = int(next(instance_iter))
-    id_point = 0
-
-    # Initialize the points with depot
-    points = [{"x": depot_x,
-               "y": depot_y,
-               "demand": depot_demand,
-               "id": id_point
-               }]
-
-    for i in range(nb_points):
-        id_point += 1
-        next(instance_iter) # pass id point (take index)
-        x_coord = int(next(instance_iter))
-        y_coord = int(next(instance_iter))
-        demand = int(next(instance_iter))
-        points.append({"x": x_coord,
-                "y": y_coord,
-                "demand": demand,
-                "id": id_point})
+    #pass type instance
+    next(instance_iter)
 
     nb_vehicles = int(next(instance_iter))
+    nb_customers = int(next(instance_iter))
+    nb_depots = int(next(instance_iter))
+
+    capacities = []
+    for i in range(nb_depots):
+        #pass max duration
+        next(instance_iter)
+        capacities.append(int(next(instance_iter))) 
+    
+    points = []
+    for i in range(nb_customers):
+        cust_id = int(next(instance_iter))
+        cust_x = int(next(instance_iter))
+        cust_y = int(next(instance_iter))
+        #pass duration
+        next(instance_iter)
+
+        cust_demand = int(next(instance_iter))
+
+        for i in range(6):
+            next(instance_iter)
+
+        # Initialize the points with customers
+        points.append({"x": cust_x,
+                       "y": cust_y,
+                       "demand": cust_demand,
+                       "id": cust_id
+                      })
+
+    #add depots and vehicle types
     vehicle_types = []
-    for k in range(1, nb_vehicles+1):
-        capacity = int(next(instance_iter))
-        fixed_cost = float(next(instance_iter))
-        var_cost_dist = float(next(instance_iter))
-        next(instance_iter) # pass min number
-        max_number = int(next(instance_iter))
-        vehicle_type = {"id": k,  # we cannot have an id less than 1
-                "start_point_id": 0,
-                "end_point_id": 0,
-                "capacity": capacity,
-                "max_number": max_number,
-                "fixed_cost" : fixed_cost,
-                "var_cost_dist": var_cost_dist
-                }
+    for i in range(nb_depots):
+        depot_id = int(next(instance_iter))
+        cust_x = int(next(instance_iter))
+        cust_y = int(next(instance_iter))
+
+        points.append({"x": cust_x,
+                       "y": cust_y,
+                       "demand": 0,
+                       "id": depot_id})
+
+        vehicle_type = {"id": i+1,  # we cannot have an id less than 1
+                        "start_point_id": depot_id,
+                        "end_point_id": depot_id,
+                        "capacity": capacities[i],
+                        "max_number": nb_vehicles,
+                        "var_cost_dist": 1
+                        }
         vehicle_types.append(vehicle_type)
+        for i in range(4):
+            next(instance_iter)
+    
 
     # compute the links of graph
     links = []
@@ -175,7 +191,8 @@ def read_hfvrp_instances(instance_name, name_folder,type_instance):
 
     return {"Points": points,
             "VehicleTypes": vehicle_types,
-            "Links": links
+            "Links": links,
+            "NumberOfCustomers":nb_customers
             }
 
 
@@ -184,9 +201,8 @@ if __name__ == "__main__":
         solve_demo(sys.argv[1:])
     else:
         print("""Please indicates the path of your instance like this : \n 
-       python -m VRPSolverEasy.demos.HFVRP -i INSTANCE_PATH/NAME_INSTANCE \n
+       python -m VRPSolverEasy.demos.MDVRP -i INSTANCE_PATH/NAME_INSTANCE \n
        -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
        """)
        #uncomments for use the file without command line
-       # solve_demo("c50_13fsmd.txt")
-       
+        solve_demo("p02")

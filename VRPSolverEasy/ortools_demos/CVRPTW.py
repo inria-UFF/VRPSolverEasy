@@ -44,7 +44,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
 
     
     # modelisation of problem
-    model = solver.CreateModel()
+    model = solver.Model()
 
     # add vehicle type
     model.add_vehicle_type(id=vehicle_type["id"],

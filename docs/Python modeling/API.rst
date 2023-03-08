@@ -7,7 +7,7 @@
 .. currentmodule:: src.solver
 
 .. autosummary::
-    CreateModel
+    Model
     Point
     Customer
     Depot
@@ -18,10 +18,10 @@
     Route
 
 
-CreateModel
+Model
 -----------
 
-.. autoclass:: CreateModel
+.. autoclass:: Model
     :members:
     :member-order:
 
