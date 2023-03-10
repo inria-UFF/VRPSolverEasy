@@ -4,6 +4,24 @@ Multi Depot Vehicle Routing Problem """
 import os, math, sys , getopt
 from VRPSolverEasy.src import solver
 
+class DataMdvrp:
+    """Contains all data for MDVRP problem
+    """
+    def __init__(
+            self,   
+            nb_customers: int,
+            nb_depots: int,
+            vehicle_capacity: int,
+            cust_demands=None,
+            cust_coordinates=None,
+            depot_coordinates=None):
+        self.nb_customers = nb_customers
+        self.nb_depots = nb_depots
+        self.vehicle_capacity = vehicle_capacity
+        self.cust_demands = cust_demands
+        self.cust_coordinates = cust_coordinates
+        self.depot_coordinates = depot_coordinates
+
 def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
     """Compute the euclidean distance between 2 points from graph"""
     return round(math.sqrt((x_i - x_j)**2 +
@@ -49,41 +67,71 @@ def solve_demo(instance_name,folder_data="/data/",
     
     # read instance
     data = read_mdvrp_instances(instance_name,folder_data,type_instance)
-
-    # get data
-    vehicle_types = data["VehicleTypes"]
-    nb_cust = data["NumberOfCustomers"]
-    depots = data["Points"][nb_cust:]
-    customers = data["Points"][:nb_cust]
-    links = data["Links"]
     
     # modelisation of problem
     model = solver.Model()
 
-    for vehicle_type in vehicle_types:
-        # add vehicle type
-        model.add_vehicle_type(id=vehicle_type["id"],
-                            start_point_id=vehicle_type["start_point_id"],
-                            end_point_id=vehicle_type["end_point_id"],
-                            capacity=vehicle_type["capacity"],
-                            max_number=vehicle_type["max_number"],
-                            var_cost_dist=vehicle_type["var_cost_dist"]
-                            )
+     # add vehicle types
+    for i in range (data.nb_depots):      
+        model.add_vehicle_type(id=i+1,
+                               start_point_id=i,
+                               end_point_id=i,
+                               capacity=data.vehicle_capacity,
+                               max_number=data.nb_customers,
+                               var_cost_dist=1
+                               )
     # add depots
-    for depot in depots:
-        model.add_depot(id=depot["id"])
+    for i in range (data.nb_depots):      
+        model.add_depot(id=i)
+    
 
     # add all customers
-    for customer in customers:
-        model.add_customer(id=customer["id"],
-                           demand=customer["demand"]
+    for i in range(data.nb_customers):
+        model.add_customer(id=i+data.nb_depots+1, 
+                           demand=data.cust_demands[i]
                            )
-    # add all links
+
+    links = []
+    nb_link = 0
+
+    # Compute the links between depots and other points
+    for depot_id in range(data.nb_depots):
+        for i in range(len(data.cust_coordinates)):
+            dist = compute_euclidean_distance(data.cust_coordinates[i][0],
+                                              data.cust_coordinates[i][1],
+                                              data.depot_coordinates[depot_id][0],
+                                              data.depot_coordinates[depot_id][1])
+
+            links.append({"name": "L" + str(nb_link),
+                            "start_point_id": depot_id,
+                            "end_point_id": i+data.nb_depots+1,
+                            "distance": dist
+                            })
+            nb_link += 1
+
+    # Compute the links between points
+    for i in range(len(data.cust_coordinates)):
+        for j in range(i + 1,len(data.cust_coordinates)):
+            dist = compute_euclidean_distance(data.cust_coordinates[i][0],
+                                              data.cust_coordinates[i][1],
+                                              data.cust_coordinates[j][0],
+                                              data.cust_coordinates[j][1])
+
+            links.append({"name": "L" + str(nb_link),
+                          "start_point_id": i+data.nb_depots+1,
+                          "end_point_id": j+data.nb_depots+1,
+                          "distance": dist
+                          })
+
+            nb_link += 1
+
+    # add all links in the model
     for link in links:
         model.add_link(name=link["name"],
                        start_point_id=link["start_point_id"],
                        end_point_id=link["end_point_id"],
-                       distance=link["distance"])
+                       distance=link["distance"]
+                       )
 
     # set parameters
     model.set_parameters(time_limit=time_resolution,
@@ -94,17 +142,13 @@ def solve_demo(instance_name,folder_data="/data/",
         solver path'''
     if (solver_name_input == "CPLEX" and solver_path != "" ):
         model.parameters.cplex_path=solver_path
-
-
+  
     # solve model
     model.solve()
 
-    print(model.solution)
-
     # export the result
-    #model.solution.export(instance_name.split(".")[0] + "_result")
+    # model.solution.export(instance_name.split(".")[0] + "_result")
 
-    
     return model.statistics.solution_value
 
 
@@ -116,93 +160,59 @@ def read_mdvrp_instances(instance_name, name_folder,type_instance):
     #pass type instance
     next(instance_iter)
 
-    nb_vehicles = int(next(instance_iter))
+    next(instance_iter)
+
     nb_customers = int(next(instance_iter))
     nb_depots = int(next(instance_iter))
 
-    capacities = []
+    vehicle_capacities = []
     for i in range(nb_depots):
         #pass max duration
         next(instance_iter)
-        capacities.append(int(next(instance_iter))) 
-    
-    points = []
+        vehicle_capacities.append(int(next(instance_iter))) 
+
+    cust_demands = []
+    cust_coordinates = []
     for i in range(nb_customers):
-        cust_id = int(next(instance_iter))
+        next(instance_iter)
         cust_x = int(next(instance_iter))
         cust_y = int(next(instance_iter))
+        cust_coordinates.append([cust_x,cust_y])
         #pass duration
         next(instance_iter)
 
         cust_demand = int(next(instance_iter))
-
+        cust_demands.append(cust_demand)
         for i in range(6):
             next(instance_iter)
 
-        # Initialize the points with customers
-        points.append({"x": cust_x,
-                       "y": cust_y,
-                       "demand": cust_demand,
-                       "id": cust_id
-                      })
-
+    depot_coordinates = []
     #add depots and vehicle types
-    vehicle_types = []
     for i in range(nb_depots):
-        depot_id = int(next(instance_iter))
+        next(instance_iter)
         cust_x = int(next(instance_iter))
         cust_y = int(next(instance_iter))
+        depot_coordinates.append([cust_x,cust_y])
 
-        points.append({"x": cust_x,
-                       "y": cust_y,
-                       "demand": 0,
-                       "id": depot_id})
-
-        vehicle_type = {"id": i+1,  # we cannot have an id less than 1
-                        "start_point_id": depot_id,
-                        "end_point_id": depot_id,
-                        "capacity": capacities[i],
-                        "max_number": nb_vehicles,
-                        "var_cost_dist": 1
-                        }
-        vehicle_types.append(vehicle_type)
         for i in range(4):
             next(instance_iter)
-    
 
-    # compute the links of graph
-    links = []
-    nb_link = 0
-    for i, point in enumerate(points):
-        for j in range(i + 1, len(points)):
-            dist = compute_euclidean_distance(point["x"],
-                                              point["y"],
-                                              points[j]["x"],
-                                              points[j]["y"]
-                                              )
-
-            links.append({"name": "L" + str(nb_link),
-                          "start_point_id": point["id"],
-                          "end_point_id": points[j]["id"],
-                          "distance": dist
-                          })
-
-            nb_link += 1
-
-    return {"Points": points,
-            "VehicleTypes": vehicle_types,
-            "Links": links,
-            "NumberOfCustomers":nb_customers
-            }
+    return DataMdvrp(nb_customers,
+                     nb_depots,
+                     vehicle_capacities[0],
+                     cust_demands,
+                     cust_coordinates,
+                     depot_coordinates
+                     )
 
 
 if __name__ == "__main__":
     if(len(sys.argv)>1):
         solve_demo(sys.argv[1:])
     else:
-        print("""Please indicates the path of your instance like this : \n 
-       python -m VRPSolverEasy.demos.MDVRP -i INSTANCE_PATH/NAME_INSTANCE \n
+        print("""Please indicates the parameters of your model like this : \n 
+       python MDVRP.py -i INSTANCE_PATH/NAME_INSTANCE \n
        -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
        """)
        #uncomments for use the file without command line
-        solve_demo("p02")
+       # solve_demo("p02")

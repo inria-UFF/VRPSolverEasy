@@ -1,7 +1,8 @@
 import random
 import unittest
+import os
 from VRPSolverEasy.src import solver, constants
-from VRPSolverEasy.demos import CVRPTW,CVRP,HFVRP
+from VRPSolverEasy.demos import CVRPTW,CVRP,HFVRP,MDVRP
 
 class TestAllVariants(unittest.TestCase):
 
@@ -251,29 +252,28 @@ class TestAllVariants(unittest.TestCase):
             model.solve()
         print(model.solution)
 
-#    def test_solve_without_customers(self):
-#TODO FIXME when we have an unknown point it generates an error in c++
-#        """raise an error if we have a unknown points in links"""
-#        model = solver.Model()
-#        model.add_vehicle_type(
-#            1,
-#            0,
-#            0,
-#            "VEH1",
-#            capacity=200,
-#            max_number=3,
-#            var_cost_dist=10,
-#            var_cost_time=10)
-#        model.add_link(
-#            "arc1",
-#            start_point_id=0,
-#            end_point_id=1,
-#            distance=5,
-#            time=5)
-#        model.add_depot(id=0, name="D1", tw_begin=0, tw_end=10)
-#        model.solve()
-#        print(model.solution)
-#        self.assertEqual(constants.LINKS_ERROR, model.solution.status)
+    def test_solve_without_customers(self):
+        """raise an error if we have a unknown points in links"""
+        model = solver.Model()
+        model.add_vehicle_type(
+            1,
+            0,
+            0,
+            "VEH1",
+            capacity=200,
+            max_number=3,
+            var_cost_dist=10,
+            var_cost_time=10)
+        model.add_link(
+            "arc1",
+            start_point_id=0,
+            end_point_id=1,
+            distance=5,
+            time=5)
+        model.add_depot(id=0, name="D1", tw_begin=0, tw_end=10)
+        model.solve()
+        print(model.solution)
+        self.assertEqual(constants.LINKS_ERROR, model.solution.status)
 
 
 class TestAllClass(unittest.TestCase):
@@ -603,9 +603,74 @@ class TestAllClass(unittest.TestCase):
             time=time_between_points)
         model.set_parameters(action="enumAllFeasibleRoutes")
         model.solve()
-        model.export("enumerate-cvrptw")
         print(model.solution)
+        model.export("enumerate-cvrptw")
 
+    def test_config_file(self):
+        """ test configuration file for advanced parametrisation """
+        cost_per_time = 10
+        cost_per_distance = 10
+        dist = 5
+        model = solver.Model()
+        model.add_vehicle_type(
+            1,
+            0,
+            0,
+            "VEH1",
+            capacity=200,
+            max_number=3,
+            var_cost_dist=cost_per_distance,
+            var_cost_time=cost_per_time,
+            tw_end=200)
+        model.add_depot(id=0, name="D1", tw_begin=0, tw_end=200)
+        time_between_points = 4
+        begin_time = 0
+        for i in range(1, 5):
+            model.add_customer(
+                id=i,
+                name="C" + str(i),
+                demand=20,
+                tw_begin=begin_time,
+                tw_end=begin_time + 5)
+            begin_time += 5
+        model.add_link(
+            "arc1",
+            start_point_id=0,
+            end_point_id=1,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc2",
+            start_point_id=1,
+            end_point_id=2,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc3",
+            start_point_id=2,
+            end_point_id=3,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc4",
+            start_point_id=3,
+            end_point_id=4,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc5",
+            start_point_id=4,
+            end_point_id=0,
+            distance=dist,
+            time=time_between_points)
+        path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__)))
+        model.set_parameters(config_file=path_project +
+                             os.path.normpath(
+                                "/config/bc.cfg" ))
+        print(path_project)
+        model.solve()
+        print(model.solution)
 
 class TestAllDemos(unittest.TestCase):
     def test_cvrp_demos_an32k5(self):
@@ -648,6 +713,20 @@ class TestAllDemos(unittest.TestCase):
         objective_value = HFVRP.solve_demo("c50_16fsmd.txt")
         self.assertAlmostEqual(
             1131, objective_value, places=1)
+        return None
+
+    def test_mdvrp_p01(self):
+        """test demo p01 in Cordeau format"""
+        objective_value = MDVRP.solve_demo("p01")
+        self.assertAlmostEqual(
+           576.86, objective_value, places=1)
+        return None
+
+    def test_mdvrp_p02(self):
+        """test demo p02 in Cordeau format"""
+        objective_value = MDVRP.solve_demo("p02")
+        self.assertAlmostEqual(
+             473.53, objective_value, places=1)
         return None
 
 

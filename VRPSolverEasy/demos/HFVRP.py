@@ -4,6 +4,30 @@ Heterogeneous Fleet Vehicle Routing Problem """
 import os, math, sys , getopt
 from VRPSolverEasy.src import solver
 
+
+class DataHfvrp:
+    """Contains all data for HFVRP problem
+    """
+    def __init__(
+            self,
+            nb_customers: int,
+            nb_vehicle_types: int,
+            vehicle_capacities=None,
+            vehicle_fixed_costs=None,
+            vehicle_var_costs=None,
+            cust_demands=None,
+            cust_coordinates=None,
+            depot_coordinates=None):
+        self.vehicle_capacities = vehicle_capacities
+        self.vehicle_fixed_costs = vehicle_fixed_costs
+        self.vehicle_var_costs = vehicle_var_costs
+        self.nb_customers = nb_customers
+        self.nb_vehicle_types = nb_vehicle_types
+        self.cust_demands = cust_demands
+        self.cust_coordinates = cust_coordinates
+        self.depot_coordinates = depot_coordinates
+
+
 def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
     """Compute the euclidean distance between 2 points from graph"""
     return round(math.sqrt((x_i - x_j)**2 +
@@ -49,40 +73,69 @@ def solve_demo(instance_name,folder_data="/data/",
     
     # read instance
     data = read_hfvrp_instances(instance_name,folder_data,type_instance)
-
-    # get data
-    vehicle_types = data["VehicleTypes"]
-    depot = data["Points"][0]
-    customers = data["Points"][1:]
-    links = data["Links"]
     
     # modelisation of problem
     model = solver.Model()
 
-    for vehicle_type in vehicle_types:
+    for i in range(data.nb_vehicle_types):
         # add vehicle type
-        model.add_vehicle_type(id=vehicle_type["id"],
-                            start_point_id=vehicle_type["start_point_id"],
-                            end_point_id=vehicle_type["end_point_id"],
-                            capacity=vehicle_type["capacity"],
-                            max_number=vehicle_type["max_number"],
-                            fixed_cost=vehicle_type["fixed_cost"],
-                            var_cost_dist=vehicle_type["var_cost_dist"]
+        model.add_vehicle_type(id=i+1,
+                            start_point_id=0,
+                            end_point_id=0,
+                            capacity=data.vehicle_capacities[i],
+                            max_number=data.nb_customers,
+                            fixed_cost=data.vehicle_fixed_costs[i],
+                            var_cost_dist=data.vehicle_var_costs[i]
                             )
     # add depot
-    model.add_depot(id=depot["id"])
+    model.add_depot(id=0)
 
     # add all customers
-    for customer in customers:
-        model.add_customer(id=customer["id"],
-                           demand=customer["demand"]
+    for i in range(data.nb_customers):
+        model.add_customer(id=i+1, 
+                           demand=data.cust_demands[i]
                            )
-    # add all links
+
+    links = []
+    nb_link = 0
+
+    # Compute the links between depot and other points
+    for i in range(len(data.cust_coordinates)):
+        dist = compute_euclidean_distance(data.cust_coordinates[i][0],
+                                          data.cust_coordinates[i][1],
+                                          data.depot_coordinates[0],
+                                          data.depot_coordinates[1])
+
+        links.append({"name": "L" + str(nb_link),
+                        "start_point_id": 0,
+                        "end_point_id": i+1,
+                        "distance": dist
+                        })
+        nb_link += 1
+
+    # Compute the links between points
+    for i in range(len(data.cust_coordinates)):
+        for j in range(i + 1,len(data.cust_coordinates)):
+            dist = compute_euclidean_distance(data.cust_coordinates[i][0],
+                                              data.cust_coordinates[i][1],
+                                              data.cust_coordinates[j][0],
+                                              data.cust_coordinates[j][1])
+
+            links.append({"name": "L" + str(nb_link),
+                          "start_point_id": i+1,
+                          "end_point_id": j+1,
+                          "distance": dist
+                          })
+
+            nb_link += 1
+
+    # add all links in the model
     for link in links:
         model.add_link(name=link["name"],
                        start_point_id=link["start_point_id"],
                        end_point_id=link["end_point_id"],
-                       distance=link["distance"])
+                       distance=link["distance"]
+                       )
 
     # set parameters
     model.set_parameters(time_limit=time_resolution,
@@ -93,15 +146,15 @@ def solve_demo(instance_name,folder_data="/data/",
         solver path'''
     if (solver_name_input == "CPLEX" and solver_path != "" ):
         model.parameters.cplex_path=solver_path
-
+  
+    model.export()
 
     # solve model
     model.solve()
 
     # export the result
-    #model.solution.export(instance_name.split(".")[0] + "_result")
+    # model.solution.export(instance_name.split(".")[0] + "_result")
 
-    
     return model.statistics.solution_value
 
 
@@ -118,73 +171,55 @@ def read_hfvrp_instances(instance_name, name_folder,type_instance):
     depot_demand = int(next(instance_iter))
     id_point = 0
 
-    # Initialize the points with depot
-    points = [{"x": depot_x,
-               "y": depot_y,
-               "demand": depot_demand,
-               "id": id_point
-               }]
+    # get demands and coordinates
+    cust_coordinates = []
+    cust_demands = []
+    depot_coordinates = [depot_x,depot_y]
 
     for i in range(nb_points):
         id_point += 1
         next(instance_iter) # pass id point (take index)
-        x_coord = int(next(instance_iter))
-        y_coord = int(next(instance_iter))
+        x_coord = float(next(instance_iter))
+        y_coord = float(next(instance_iter))
         demand = int(next(instance_iter))
-        points.append({"x": x_coord,
-                "y": y_coord,
-                "demand": demand,
-                "id": id_point})
+        cust_coordinates.append([x_coord,y_coord])
+        cust_demands.append(demand)
 
     nb_vehicles = int(next(instance_iter))
-    vehicle_types = []
+
+    vehicle_capacities = []
+    vehicle_fixed_costs = []
+    vehicle_var_costs = []
+
     for k in range(1, nb_vehicles+1):
         capacity = int(next(instance_iter))
         fixed_cost = float(next(instance_iter))
         var_cost_dist = float(next(instance_iter))
         next(instance_iter) # pass min number
         max_number = int(next(instance_iter))
-        vehicle_type = {"id": k,  # we cannot have an id less than 1
-                "start_point_id": 0,
-                "end_point_id": 0,
-                "capacity": capacity,
-                "max_number": max_number,
-                "fixed_cost" : fixed_cost,
-                "var_cost_dist": var_cost_dist
-                }
-        vehicle_types.append(vehicle_type)
 
-    # compute the links of graph
-    links = []
-    nb_link = 0
-    for i, point in enumerate(points):
-        for j in range(i + 1, len(points)):
-            dist = compute_euclidean_distance(point["x"],
-                                              point["y"],
-                                              points[j]["x"],
-                                              points[j]["y"]
-                                              )
+        vehicle_capacities.append(capacity)
+        vehicle_fixed_costs.append(fixed_cost)
+        vehicle_var_costs.append(var_cost_dist)
 
-            links.append({"name": "L" + str(nb_link),
-                          "start_point_id": point["id"],
-                          "end_point_id": points[j]["id"],
-                          "distance": dist
-                          })
 
-            nb_link += 1
-
-    return {"Points": points,
-            "VehicleTypes": vehicle_types,
-            "Links": links
-            }
+    return DataHfvrp(nb_points,
+                     nb_vehicles,
+                     vehicle_capacities,
+                     vehicle_fixed_costs,
+                     vehicle_var_costs,
+                     cust_demands,
+                     cust_coordinates,
+                     depot_coordinates
+                     )
 
 
 if __name__ == "__main__":
     if(len(sys.argv)>1):
         solve_demo(sys.argv[1:])
     else:
-        print("""Please indicates the path of your instance like this : \n 
-       python -m VRPSolverEasy.demos.HFVRP -i INSTANCE_PATH/NAME_INSTANCE \n
+        print("""Please indicates the parameters of your model like this : \n 
+       python HFVRP.py -i INSTANCE_PATH/NAME_INSTANCE \n
        -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
        """)
        #uncomments for use the file without command line
