@@ -1,7 +1,8 @@
 import random
 import unittest
+import os
 from VRPSolverEasy.src import solver, constants
-from VRPSolverEasy.demos import CVRPTW,CVRP,HFVRP
+from VRPSolverEasy.demos import CVRPTW,CVRP,HFVRP,MDVRP
 
 class TestAllVariants(unittest.TestCase):
 
@@ -11,7 +12,7 @@ class TestAllVariants(unittest.TestCase):
         dist = 5
         cost_per_distance = 10
         nb_links = 5
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -33,14 +34,14 @@ class TestAllVariants(unittest.TestCase):
 
         model.solve()
         cost = dist * cost_per_distance * nb_links
-        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.solution.status)
+        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
             cost, model.statistics.solution_value, places=5)
 
     def test_cvrp_no_feasible(self):
         """test model in there is only resource of capacity
         with no feasible solution"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -63,7 +64,7 @@ class TestAllVariants(unittest.TestCase):
 
         self.assertEqual(
             constants.BETTER_SOL_DOES_NOT_EXISTS,
-            model.solution.status)
+            model.status)
 
     def test_cvrptw(self):
         """test model in there is two resources time and capacity"""
@@ -71,7 +72,7 @@ class TestAllVariants(unittest.TestCase):
         cost_per_distance = 10
         dist = 5
         nb_links = 5
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -127,14 +128,14 @@ class TestAllVariants(unittest.TestCase):
         model.export("cvrptw")
         cost = ((dist * cost_per_distance) +
                 (time_between_points * cost_per_time)) * nb_links
-        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.solution.status)
+        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
             cost, model.statistics.solution_value, places=5)
         print(model.solution)
 
     def test_cvrptw_nofeasible_on_time(self):
         """test model it's infeasible on time"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -190,17 +191,17 @@ class TestAllVariants(unittest.TestCase):
         print(model.solution)
         self.assertEqual(
             constants.VEHICLES_ERROR,
-            model.solution.status)
+            model.status)
 
     def test_solve_without_all(self):
         """raise an error if we have any components in the model"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(Exception):
             model.solve()
 
     def test_solve_without_points_links(self):
         """raise an error if we have only vehicle types in the model"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(Exception):
             model.add_vehicle_type(
                 1,
@@ -215,7 +216,7 @@ class TestAllVariants(unittest.TestCase):
 
     def test_solve_without_links(self):
         """raise an error if we have any links"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(Exception):
             model.add_vehicle_type(
                 1,
@@ -231,7 +232,7 @@ class TestAllVariants(unittest.TestCase):
 
     def test_solve_without_points(self):
         """raise an error if we have any links"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(Exception):
             model.add_vehicle_type(
                 1,
@@ -251,36 +252,35 @@ class TestAllVariants(unittest.TestCase):
             model.solve()
         print(model.solution)
 
-#    def test_solve_without_customers(self):
-#TODO FIXME when we have an unknown point it generates an error in c++
-#        """raise an error if we have a unknown points in links"""
-#        model = solver.CreateModel()
-#        model.add_vehicle_type(
-#            1,
-#            0,
-#            0,
-#            "VEH1",
-#            capacity=200,
-#            max_number=3,
-#            var_cost_dist=10,
-#            var_cost_time=10)
-#        model.add_link(
-#            "arc1",
-#            start_point_id=0,
-#            end_point_id=1,
-#            distance=5,
-#            time=5)
-#        model.add_depot(id=0, name="D1", tw_begin=0, tw_end=10)
-#        model.solve()
-#        print(model.solution)
-#        self.assertEqual(constants.LINKS_ERROR, model.solution.status)
+    def test_solve_without_customers(self):
+        """raise an error if we have a unknown points in links"""
+        model = solver.Model()
+        model.add_vehicle_type(
+            1,
+            0,
+            0,
+            "VEH1",
+            capacity=200,
+            max_number=3,
+            var_cost_dist=10,
+            var_cost_time=10)
+        model.add_link(
+            "arc1",
+            start_point_id=0,
+            end_point_id=1,
+            distance=5,
+            time=5)
+        model.add_depot(id=0, name="D1", tw_begin=0, tw_end=10)
+        model.solve()
+        print(model.solution)
+        self.assertEqual(constants.LINKS_ERROR, model.status)
 
 
 class TestAllClass(unittest.TestCase):
 
     def test_vehicle_type_with_wrong_properties(self):
         """raise an error the properties of vehicle types are not respected"""
-        model = solver.CreateModel()
+        model = solver.Model()
         # check three non-optional parameters
         with self.assertRaises(Exception):
             model.add_vehicle_type(1, 2)
@@ -308,32 +308,32 @@ class TestAllClass(unittest.TestCase):
 
     def test_add_in_dict_vehicle_types(self):
         """ we must have a new vehicle type in dict vehicle_types after add"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(id=5, start_point_id=3, end_point_id=2)
         self.assertIn(5, model.vehicle_types)
 
     def test_delete_in_dict_vehicle_types(self):
         """ the old vehicle type must be removed from dict after delete"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(id=5, start_point_id=3, end_point_id=2)
         model.delete_vehicle_type(5)
         self.assertNotIn(5, model.vehicle_types)
 
     def test_add_vehicle_types_without_function(self):
         """ we can set vehicle types by using directly the dictionary """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.vehicle_types[1] = solver.VehicleType(1, 2, 3)
         self.assertIn(1, model.vehicle_types)
 
     def test_add_bad_vehicle_types(self):
         """ raise an error if the setting of vehicle_type is not correct"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(solver.PropertyError):
             model.vehicle_types[1] = 5
 
     def test_point_with_wrong_properties(self):
         """raise an error the properties of point are not respected"""
-        model = solver.CreateModel()
+        model = solver.Model()
 
         # check id non optional parameter
         with self.assertRaises(Exception):
@@ -361,32 +361,32 @@ class TestAllClass(unittest.TestCase):
 
     def test_add_in_dict_point(self):
         """ we must have a new point in dict points after add"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_point(id=5)
         self.assertIn(5, model.points)
 
     def test_dict_points_for_delete(self):
         """ the old point must be removed from dict after delete"""
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(id=5, start_point_id=3, end_point_id=2)
         model.delete_vehicle_type(5)
         self.assertNotIn(5, model.vehicle_types)
 
     def test_add_points_without_function(self):
         """ we can set point by using directly the dictionary """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.points[1] = solver.Point(1)
         self.assertIn(1, model.points)
 
     def test_add_bad_point(self):
         """ raise an error if the setting of point is not correct"""
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(solver.PropertyError):
             model.vehicle_types[1] = {1: 5}
 
     def test_link_with_wrong_properties(self):
         """ raise error if the user gives bad type of variables """
-        model = solver.CreateModel()
+        model = solver.Model()
 
         # check is_directed
         with self.assertRaises(Exception):
@@ -414,32 +414,32 @@ class TestAllClass(unittest.TestCase):
 
     def test_add_customer(self):
         """ dict of points must be contain new customer """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_customer(5, "C1")
         self.assertIn(5, model.points)
 
     def test_id_customer(self):
         """ if any id_customer is given, id_customer mus be equal to id """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_customer(5, "C1")
         self.assertEqual(5, model.points[5].id_customer)
 
     def test_id_customer_with_id_too_bigger(self):
         """ raise an error if id_customer is not given by user and id >1022 """
-        model = solver.CreateModel()
+        model = solver.Model()
         with self.assertRaises(solver.PropertyError):
             model.add_customer(1025, "C1")
 
     def test_id_customer_with_id_different(self):
         """ assert id_customer is different of id if it's
             given by the user """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_customer(1025, "C1", id_customer=5)
         self.assertEqual(model.points[1025].id_customer, 5)
 
     def test_add_depot(self):
         """The id_customer of depot must be equal to 0. """
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_depot(5, "C1")
         model.add_depot(9999, "C1")
         self.assertEqual(0, model.points[5].id_customer)
@@ -451,7 +451,7 @@ class TestAllClass(unittest.TestCase):
         time_max = 15
         cost_per_distance = 10
         cost_per_time = 10
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -511,8 +511,11 @@ class TestAllClass(unittest.TestCase):
         model.solve()
         cost = sum(i * cost_per_distance for i in range(1, 6)) * 2
 
+        # test defined solution
+        self.assertEqual(model.solution.is_defined(), True)
+
         # test status
-        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.solution.status)
+        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
 
         # test solution value
         self.assertAlmostEqual(
@@ -549,7 +552,7 @@ class TestAllClass(unittest.TestCase):
         cost_per_time = 10
         cost_per_distance = 10
         dist = 5
-        model = solver.CreateModel()
+        model = solver.Model()
         model.add_vehicle_type(
             1,
             0,
@@ -603,9 +606,74 @@ class TestAllClass(unittest.TestCase):
             time=time_between_points)
         model.set_parameters(action="enumAllFeasibleRoutes")
         model.solve()
-        model.export("enumerate-cvrptw")
         print(model.solution)
+        model.export("enumerate-cvrptw")
 
+    def test_config_file(self):
+        """ test configuration file for advanced parametrisation """
+        cost_per_time = 10
+        cost_per_distance = 10
+        dist = 5
+        model = solver.Model()
+        model.add_vehicle_type(
+            1,
+            0,
+            0,
+            "VEH1",
+            capacity=200,
+            max_number=3,
+            var_cost_dist=cost_per_distance,
+            var_cost_time=cost_per_time,
+            tw_end=200)
+        model.add_depot(id=0, name="D1", tw_begin=0, tw_end=200)
+        time_between_points = 4
+        begin_time = 0
+        for i in range(1, 5):
+            model.add_customer(
+                id=i,
+                name="C" + str(i),
+                demand=20,
+                tw_begin=begin_time,
+                tw_end=begin_time + 5)
+            begin_time += 5
+        model.add_link(
+            "arc1",
+            start_point_id=0,
+            end_point_id=1,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc2",
+            start_point_id=1,
+            end_point_id=2,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc3",
+            start_point_id=2,
+            end_point_id=3,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc4",
+            start_point_id=3,
+            end_point_id=4,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc5",
+            start_point_id=4,
+            end_point_id=0,
+            distance=dist,
+            time=time_between_points)
+        path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__)))
+        model.set_parameters(config_file=path_project +
+                             os.path.normpath(
+                                "/config/bc.cfg" ))
+        print(path_project)
+        model.solve()
+        print(model.solution)
 
 class TestAllDemos(unittest.TestCase):
     def test_cvrp_demos_an32k5(self):
@@ -648,6 +716,20 @@ class TestAllDemos(unittest.TestCase):
         objective_value = HFVRP.solve_demo("c50_16fsmd.txt")
         self.assertAlmostEqual(
             1131, objective_value, places=1)
+        return None
+
+    def test_mdvrp_p01(self):
+        """test demo p01 in Cordeau format"""
+        objective_value = MDVRP.solve_demo("p01")
+        self.assertAlmostEqual(
+           576.86, objective_value, places=1)
+        return None
+
+    def test_mdvrp_p02(self):
+        """test demo p02 in Cordeau format"""
+        objective_value = MDVRP.solve_demo("p02")
+        self.assertAlmostEqual(
+             473.53, objective_value, places=1)
         return None
 
 

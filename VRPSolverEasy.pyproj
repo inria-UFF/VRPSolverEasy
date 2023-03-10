@@ -5,7 +5,7 @@
     <ProjectGuid>5d80578a-17a9-43af-97f1-1f8e4409c20d</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>VRPSolverEasy\plafrim_exp\prepare_experiments.py</StartupFile>
+    <StartupFile>VRPSolverEasy\demos\MDVRP.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -34,6 +34,9 @@
     </Compile>
     <Compile Include="VRPSolverEasy\demos\example.py" />
     <Compile Include="VRPSolverEasy\demos\hfvrp.py" />
+    <Compile Include="VRPSolverEasy\demos\MDVRP.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VRPSolverEasy\demos\__init__.py">
       <SubType>Code</SubType>
     </Compile>

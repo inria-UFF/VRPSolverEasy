@@ -623,17 +623,17 @@ class Point:
         return self._incompatible_vehicles
 
     @incompatible_vehicles.setter
-    def incompatible_vehicles(self, incompatible_vehicles):
+    def incompatible_vehicles(self, incompatible_vehicles_in):
         """setter function of incompatible_vehicles"""
-        if not isinstance(incompatible_vehicles, (list)):
+        if not isinstance(incompatible_vehicles_in, (list)):
             raise PropertyError(constants.POINT.INCOMPATIBLE_VEHICLES.value,
                                 constants.LIST_INTEGER_PROPERTY)
-        if len(incompatible_vehicles) > 0:
-            if not all(isinstance(x, int) for x in incompatible_vehicles):
+        if len(incompatible_vehicles_in) > 0:
+            if not all(isinstance(x, int) for x in incompatible_vehicles_in):
                 raise PropertyError(
                     constants.POINT.INCOMPATIBLE_VEHICLES.value,
                     constants.LIST_INTEGER_PROPERTY)
-        self._incompatible_vehicles = incompatible_vehicles
+        self._incompatible_vehicles = incompatible_vehicles_in
 
     def get_point(self, debug=False):
         """Get all components of a Point which are
@@ -1183,33 +1183,61 @@ class Route:
     def incoming_arc_names(self):
         """list(str) : the names of incoming arc"""
         return self.__incoming_arc_names
+    
+    def __str__(self):
+        route_str = ""
+        time_is_used = sum(self.__time_consumption) > 0
+        capacity_is_used = sum(self.__cap_consumption) > 0
+        if (len(self.__point_ids))>0 :
+            id_veh = self.__vehicle_type_id
+            route_str += 'Route for vehicle  ' + str(id_veh) + ':\n'
+            route_str += ' ID :' + str(self.__point_ids[0])
+            for i in range (1,len(self.__point_ids)):
+                route_str +=' --> ' + str(self.__point_ids[i]) 
+            
+            if (time_is_used):
+                route_str += '\n'
+                route_str += ' Time end :' + str(self.__time_consumption[0])
+                for i in range (1,len(self.__time_consumption)):
+                    route_str += ' --> ' + str(self.__time_consumption[i]) 
+            
+            if(capacity_is_used):
+                route_str += '\n'
+                route_str += ' Load :' + str(self.__cap_consumption[0])
+                for i in range (1,len(self.__cap_consumption)):
+                    route_str += ' --> ' + str(self.__cap_consumption[i]) 
+            route_str += "\nTotal cost : " + str(self.__route_cost) + '\n \n'
+        return route_str
 
     def __repr__(self):
-        return repr(self.__route)
+        return repr(self.__str__())
 
 
 class Solution:
     """Contains all elements of solution after running model.solve()."""
 
-    def __init__(self, json_input=str()):
+    def __init__(self, json_input=None, status=constants.MODEL_NOT_SOLVED):
         self.__json = {}
         self.__routes = []
-        self.__status = 0
-        self.__message = str()
-        if json_input != str():
-            self.__json = json.loads(json_input)
-            self.__status = self.__json["Status"]["code"]
-            self.__message = self.__json["Status"]["message"]
-            if (self.__status > -1 and self.__status < 4) or self.__status == 8:
+        if json_input != None:
+            self.__json = json_input
+            if (status > -1 and status < 4) or status == 8:
                 if len(self.__json["Solution"]) > 0:
                     for route in self.__json["Solution"]:
                         self.__routes.append(Route(route))
 
     def __str__(self):
-        return json.dumps(self.json, indent=1)
+        route_str =""
+        for route in self.__routes:
+            route_str += str(route)
+        return route_str
 
     def __repr__(self):
         return repr(self.__str__())
+
+    def is_defined(self):
+        """ return true if a solution is defined"""
+        return self.__routes != []
 
     @property
     def json(self):
@@ -1221,16 +1249,6 @@ class Solution:
         """list(Route) : contains the set of routes"""
         return self.__routes
 
-    @property
-    def status(self):
-        """int : indicates the status of solution"""
-        return self.__status
-
-    @property
-    def message(self):
-        """int : indicates the message associated with status"""
-        return self.__status
-
     def export(self, name="instance"):
         """Export solution for sharing or debugging model,
         we can specify the name of file"""
@@ -1238,7 +1256,7 @@ class Solution:
             outfile.write(json.dumps(self.json, indent=1))
 
 
-class CreateModel:
+class Model:
     """Define a routing model."""
 
     def __init__(self):
@@ -1250,6 +1268,8 @@ class CreateModel:
         self.__output = str()
         self.solution = Solution()
         self.statistics = Statistics()
+        self.status = int(constants.MODEL_NOT_SOLVED)
+        self.message = constants.ERRORS_MODEL[self.status]
 
     @property
     def vehicle_types(self):
@@ -1313,6 +1333,32 @@ class CreateModel:
     def parameters(self):
         """getter function of parameters"""
         return self._parameters
+
+    @property
+    def status(self):
+        """int : indicates the status of solution"""
+        return self._status
+
+    # a setter function of status
+    @status.setter
+    def status(self, status):
+        """setter function of status"""
+        if not isinstance(status, (int)):
+            raise PropertyError(constants.STATUS, constants.INTEGER_PROPERTY)
+        self._status = status
+
+    @property
+    def message(self):
+        """int : indicates the message associated with status"""
+        return self._message
+
+    # a setter function of message
+    @message.setter
+    def message(self, message):
+        """setter function of message"""
+        if not isinstance(message, (str)):
+            raise PropertyError(constants.MESSAGE, constants.STRING_PROPERTY)
+        self._message = message
 
     # a setter function of parameters
     @parameters.setter
@@ -1485,6 +1531,28 @@ class CreateModel:
             action,
             cplex_path)
 
+
+    def check_depots(self):
+        """update model if there is defined depots not used by vehicles"""
+
+        depots_ids_defined = set()
+        for id in self.points:
+            if (self.points[id].id_customer == 0):
+                depots_ids_defined.add(id) 
+
+        
+        ids_vehicles_types = list(self.vehicle_types.keys())
+        for id_veh in ids_vehicles_types:
+            depots_ids_used = set()
+            depots_ids_used.add(self.vehicle_types[id_veh].start_point_id)
+            depots_ids_used.add(self.vehicle_types[id_veh].end_point_id)
+            depot_not_used = depots_ids_defined.difference(depots_ids_used)
+            for id_depot in depot_not_used:
+                values = self.points[id_depot].incompatible_vehicles + [id_veh]
+                self.points[id_depot].incompatible_vehicles = list(set(values))
+        
+
+
     def set_json(self):
         """Set model in json format with all elements of model"""
         self.__json = json.dumps({constants.JSON_OBJECT.POINTS.value:
@@ -1506,9 +1574,14 @@ class CreateModel:
     def __repr__(self):
         return self.__str__()
 
-    def export(self, name="instance"):
+    def export(self, name="instance",all_elements=False):
         """Export model for debugging model,
            we can specify the name of file"""
+
+        #add preprocessing elements in model
+        if (all_elements):
+            self.check_depots()
+
         model = json.dumps({constants.JSON_OBJECT.POINTS.
                             value: list(self.points.values(True)),
                             constants.JSON_OBJECT.VEHICLE_TYPES.value:
@@ -1521,7 +1594,7 @@ class CreateModel:
         # Writing to sample.json
         with open(name + ".json", "w") as outfile:
             outfile.write(model)
-
+   
     def solve(self):
         """Solve the routing problem by using the shared library
            bapcod and fill the solution.
@@ -1583,7 +1656,9 @@ class CreateModel:
 
         if _loaded_library is None:
             raise ModelError(constants.LOAD_LIB_ERROR)
+        self.check_depots()
         self.set_json()
+
         input = _c.c_char_p(self.__json.encode('UTF-8'))
         solve = _lib_bapcod.solveModel
         solve.argtypes = [_c.c_char_p]
@@ -1594,9 +1669,11 @@ class CreateModel:
 
         try:
             output = solve(input)
-            self.__output = (_c.c_char_p.from_buffer(output)).value
-            self.solution = Solution(self.__output)
-            if self.solution.status > -1 and self.solution.status < 4:
+            self.__output = json.loads((_c.c_char_p.from_buffer(output)).value)
+            self.status = self.__output["Status"]["code"]
+            self.message = self.__output["Status"]["message"]
+            self.solution = Solution(self.__output,self.status)
+            if self.status > -1 and self.status < 4:
                 self.statistics = Statistics(self.solution.json["Statistics"])
             free_memory(output)
         except BaseException:

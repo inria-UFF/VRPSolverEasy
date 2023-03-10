@@ -72,6 +72,7 @@ MIN_LINKS_ERROR = -19
 PLATFORM_ERROR = -20
 LOAD_LIB_ERROR = -21
 BAPCOD_ERROR = -22
+MODEL_NOT_SOLVED = -23
 
 ERRORS_MODEL = {
     CUSTOMERS_ERROR: "CUSTOMERS ERROR",
@@ -98,7 +99,9 @@ ERRORS_MODEL = {
                If the solver used is not the default one,
                make sure you have installed it,
                if the error persists please contact our support
-              for more information"""}
+              for more information""",
+   MODEL_NOT_SOLVED: """ The model is not yet solved. 
+              You can solve it by using the function solve()""" }
 
 # solution status
 INFEASIBLE = -2
@@ -115,6 +118,7 @@ ENUMERATION_INFEASIBLE = 6
 ENUMERATION_NOT_SUCCEEDED = 7
 ENUMERATION_SUCCEEDED = 8
 
+
 SOLUTION_STATUS = {BETTER_SOL_DOES_NOT_EXISTS: "BETTER_SOL_DOES_NOT_EXISTS",
                    BETTER_SOL_NOT_FOUND: "BETTER_SOL_NOT_FOUND",
                    INFEASIBLE: "VEHICLES ERROR", LINKS_ERROR: "LINKS ERROR",
@@ -127,6 +131,8 @@ SOLUTION_STATUS = {BETTER_SOL_DOES_NOT_EXISTS: "BETTER_SOL_DOES_NOT_EXISTS",
 KEY_STR = "key"
 ID_STR = "id"
 NB_POINTS_STR = "The number of points"
+STATUS = "status"
+MESSAGE = "message"
 
 # JSON COMPONENTS
 

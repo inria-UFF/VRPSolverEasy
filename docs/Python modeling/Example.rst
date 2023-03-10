@@ -48,7 +48,7 @@ Model VRPSolverEasy
 .. code-block:: python
 
     # Initialisation
-    model = solver.CreateModel()
+    model = solver.Model()
 
     # Add vehicle type
     model.add_vehicle_type(

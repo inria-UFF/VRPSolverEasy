@@ -37,7 +37,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
     upper_bound = data["UB"]
 
     # modelisation of problem
-    model = solver.CreateModel()
+    model = solver.Model()
 
     # add vehicle type
     model.add_vehicle_type(id=vehicle_type["id"],
@@ -104,7 +104,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
         model.statistics.root_lb,
         model.statistics.root_time,
         model.statistics.nb_branch_and_bound_nodes,
-        model.solution.status
+        model.status
         ))
     """
     if(os.path.isfile("CVRP_Results.txt")):
@@ -117,7 +117,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
             model.statistics.root_lb,
             model.statistics.root_time,
             model.statistics.nb_branch_and_bound_nodes,
-            model.solution.status
+            model.status
             ))
     else:
         with open("CVRP_Results.txt", "a") as f:
@@ -139,7 +139,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
             model.statistics.root_lb,
             model.statistics.root_time,
             model.statistics.nb_branch_and_bound_nodes,
-            model.solution.status
+            model.status
             ))
     """                
 
