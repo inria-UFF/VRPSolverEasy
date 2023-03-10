@@ -1216,22 +1216,17 @@ class Route:
 class Solution:
     """Contains all elements of solution after running model.solve()."""
 
-    def __init__(self, json_input=str()):
+    def __init__(self, json_input=None, status=constants.MODEL_NOT_SOLVED):
         self.__json = {}
         self.__routes = []
-        self.__status = 0
-        self.__message = str()
-        if json_input != str():
-            self.__json = json.loads(json_input)
-            self.__status = self.__json["Status"]["code"]
-            self.__message = self.__json["Status"]["message"]
-            if (self.__status > -1 and self.__status < 4) or self.__status == 8:
+        if json_input != None:
+            self.__json = json_input
+            if (status > -1 and status < 4) or status == 8:
                 if len(self.__json["Solution"]) > 0:
                     for route in self.__json["Solution"]:
                         self.__routes.append(Route(route))
 
     def __str__(self):
-        #return json.dumps(self.json, indent=1)
         route_str =""
         for route in self.__routes:
             route_str += str(route)
@@ -1239,6 +1234,10 @@ class Solution:
 
     def __repr__(self):
         return repr(self.__str__())
+
+    def is_defined(self):
+        """ return true if a solution is defined"""
+        return self.__routes != []
 
     @property
     def json(self):
@@ -1249,16 +1248,6 @@ class Solution:
     def routes(self):
         """list(Route) : contains the set of routes"""
         return self.__routes
-
-    @property
-    def status(self):
-        """int : indicates the status of solution"""
-        return self.__status
-
-    @property
-    def message(self):
-        """int : indicates the message associated with status"""
-        return self.__status
 
     def export(self, name="instance"):
         """Export solution for sharing or debugging model,
@@ -1279,6 +1268,8 @@ class Model:
         self.__output = str()
         self.solution = Solution()
         self.statistics = Statistics()
+        self.status = int(constants.MODEL_NOT_SOLVED)
+        self.message = constants.ERRORS_MODEL[self.status]
 
     @property
     def vehicle_types(self):
@@ -1342,6 +1333,32 @@ class Model:
     def parameters(self):
         """getter function of parameters"""
         return self._parameters
+
+    @property
+    def status(self):
+        """int : indicates the status of solution"""
+        return self._status
+
+    # a setter function of status
+    @status.setter
+    def status(self, status):
+        """setter function of status"""
+        if not isinstance(status, (int)):
+            raise PropertyError(constants.STATUS, constants.INTEGER_PROPERTY)
+        self._status = status
+
+    @property
+    def message(self):
+        """int : indicates the message associated with status"""
+        return self._message
+
+    # a setter function of message
+    @message.setter
+    def message(self, message):
+        """setter function of message"""
+        if not isinstance(message, (str)):
+            raise PropertyError(constants.MESSAGE, constants.STRING_PROPERTY)
+        self._message = message
 
     # a setter function of parameters
     @parameters.setter
@@ -1577,7 +1594,7 @@ class Model:
         # Writing to sample.json
         with open(name + ".json", "w") as outfile:
             outfile.write(model)
-
+   
     def solve(self):
         """Solve the routing problem by using the shared library
            bapcod and fill the solution.
@@ -1641,6 +1658,7 @@ class Model:
             raise ModelError(constants.LOAD_LIB_ERROR)
         self.check_depots()
         self.set_json()
+
         input = _c.c_char_p(self.__json.encode('UTF-8'))
         solve = _lib_bapcod.solveModel
         solve.argtypes = [_c.c_char_p]
@@ -1651,9 +1669,11 @@ class Model:
 
         try:
             output = solve(input)
-            self.__output = (_c.c_char_p.from_buffer(output)).value
-            self.solution = Solution(self.__output)
-            if self.solution.status > -1 and self.solution.status < 4:
+            self.__output = json.loads((_c.c_char_p.from_buffer(output)).value)
+            self.status = self.__output["Status"]["code"]
+            self.message = self.__output["Status"]["message"]
+            self.solution = Solution(self.__output,self.status)
+            if self.status > -1 and self.status < 4:
                 self.statistics = Statistics(self.solution.json["Statistics"])
             free_memory(output)
         except BaseException:

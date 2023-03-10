@@ -122,7 +122,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
         model.statistics.root_lb,
         model.statistics.root_time,
         model.statistics.nb_branch_and_bound_nodes,
-        model.solution.status
+        model.status
         ))
 
     """
@@ -136,7 +136,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
             model.statistics.root_lb,
             model.statistics.root_time,
             model.statistics.nb_branch_and_bound_nodes,
-            model.solution.status
+            model.status
             ))
             f.close()
     else:
@@ -159,7 +159,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
             model.statistics.root_lb,
             model.statistics.root_time,
             model.statistics.nb_branch_and_bound_nodes,
-            model.solution.status
+            model.status
             ))
            f.close()
     """    

@@ -34,7 +34,7 @@ class TestAllVariants(unittest.TestCase):
 
         model.solve()
         cost = dist * cost_per_distance * nb_links
-        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.solution.status)
+        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
             cost, model.statistics.solution_value, places=5)
 
@@ -64,7 +64,7 @@ class TestAllVariants(unittest.TestCase):
 
         self.assertEqual(
             constants.BETTER_SOL_DOES_NOT_EXISTS,
-            model.solution.status)
+            model.status)
 
     def test_cvrptw(self):
         """test model in there is two resources time and capacity"""
@@ -128,7 +128,7 @@ class TestAllVariants(unittest.TestCase):
         model.export("cvrptw")
         cost = ((dist * cost_per_distance) +
                 (time_between_points * cost_per_time)) * nb_links
-        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.solution.status)
+        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
             cost, model.statistics.solution_value, places=5)
         print(model.solution)
@@ -191,7 +191,7 @@ class TestAllVariants(unittest.TestCase):
         print(model.solution)
         self.assertEqual(
             constants.VEHICLES_ERROR,
-            model.solution.status)
+            model.status)
 
     def test_solve_without_all(self):
         """raise an error if we have any components in the model"""
@@ -273,7 +273,7 @@ class TestAllVariants(unittest.TestCase):
         model.add_depot(id=0, name="D1", tw_begin=0, tw_end=10)
         model.solve()
         print(model.solution)
-        self.assertEqual(constants.LINKS_ERROR, model.solution.status)
+        self.assertEqual(constants.LINKS_ERROR, model.status)
 
 
 class TestAllClass(unittest.TestCase):
@@ -511,8 +511,11 @@ class TestAllClass(unittest.TestCase):
         model.solve()
         cost = sum(i * cost_per_distance for i in range(1, 6)) * 2
 
+        # test defined solution
+        self.assertEqual(model.solution.is_defined(), True)
+
         # test status
-        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.solution.status)
+        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
 
         # test solution value
         self.assertAlmostEqual(
