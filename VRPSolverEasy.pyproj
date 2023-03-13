@@ -5,7 +5,7 @@
     <ProjectGuid>5d80578a-17a9-43af-97f1-1f8e4409c20d</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>VRPSolverEasy\demos\MDVRP.py</StartupFile>
+    <StartupFile>VRPSolverEasy\demos\example.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

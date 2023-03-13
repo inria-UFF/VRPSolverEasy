@@ -12,7 +12,7 @@ else:
     import collections
 
 ########
-__version__ = "0.0.1"
+__version__ = "0.1"
 __author__ = "Najib ERRAMI Ruslan SADYKOV Eduardo UCHOA Eduardo QUEIROGA"
 __copyright__ = "Copyright VRPYSolver, all rights reserved"
 __email__ = "najib.errami@inria.fr"
@@ -1195,7 +1195,7 @@ class Route:
             for i in range (1,len(self.__point_ids)):
                 route_str +=' --> ' + str(self.__point_ids[i]) 
             
-            if (time_is_used):
+            if time_is_used:
                 route_str += '\n'
                 route_str += ' Time end :' + str(self.__time_consumption[0])
                 for i in range (1,len(self.__time_consumption)):
@@ -1537,7 +1537,7 @@ class Model:
 
         depots_ids_defined = set()
         for id in self.points:
-            if (self.points[id].id_customer == 0):
+            if self.points[id].id_customer == 0:
                 depots_ids_defined.add(id) 
 
         
@@ -1579,7 +1579,7 @@ class Model:
            we can specify the name of file"""
 
         #add preprocessing elements in model
-        if (all_elements):
+        if all_elements:
             self.check_depots()
 
         model = json.dumps({constants.JSON_OBJECT.POINTS.
