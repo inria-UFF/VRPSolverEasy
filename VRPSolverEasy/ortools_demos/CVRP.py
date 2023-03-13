@@ -6,6 +6,8 @@ import os,sys,getopt
 import math
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
+import hygese as hgs 
+import numpy as np
 
 def read_instance(name : str):
     """ Read an instance in the folder data from a given name """
@@ -21,11 +23,11 @@ def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
     return round(math.sqrt((x_i - x_j)**2 +
                            (y_i - y_j)**2), number_digit)
 
-def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolution=30):
+def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolution=30, hgs=False):
     """return a solution from modelisation"""
 
     # read instance
-    data = read_cvrp_instances(instance_name, ext_heuristic)
+    data = read_cvrp_instances(instance_name, ext_heuristic, hgs)
 
     # get data
     vehicle_type = data["VehicleTypes"]
@@ -146,7 +148,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False, time_resolut
 
     return model.solution
 
-def read_cvrp_instances(instance_name,ext_heuristic=False):
+def read_cvrp_instances(instance_name,ext_heuristic=False, hgs=False):
     """Read literature instances from CVRPLIB by giving the name of instance
        and returns dictionary containing all elements of model"""
 
@@ -190,8 +192,8 @@ def read_cvrp_instances(instance_name,ext_heuristic=False):
     for i in range(dimension_input):
         vehicles.append(capacity_input)
 
-
     data['vehicle_capacities'] = vehicles
+    data['vehicle_capacity'] = capacity_input
     data['num_vehicles'] = dimension_input
     data['depot'] = 0
 
@@ -207,7 +209,6 @@ def read_cvrp_instances(instance_name,ext_heuristic=False):
                         "demand": -1,
                         "id": id_point})
         id_point += 1
-
 
     element = next(instance_iter)
     if element != "DEMAND_SECTION":
@@ -259,7 +260,10 @@ def read_cvrp_instances(instance_name,ext_heuristic=False):
 
     upper_bound = 0
     if ext_heuristic:
-        upper_bound = solve_ext_heuristic(data)
+        if hgs:
+            upper_bound = solve_ext_heuristic_hgs(data)
+        else: # OR Tools
+            upper_bound = solve_ext_heuristic(data)
 
     return {"Points": points,
             "VehicleTypes": vehicle_type,
@@ -358,13 +362,29 @@ def solve_ext_heuristic(data):
     
     return 100000
 
+def solve_ext_heuristic_hgs(data):
+
+    """Solve the CVRP problem."""
+    
+    # Solver initialization
+    ap = hgs.AlgorithmParameters(timeLimit=len(data['demands']))  # seconds
+    hgs_solver = hgs.Solver(parameters=ap, verbose=False)
+    data['service_times'] = np.zeros(len(data['demands']))
+
+    result = hgs_solver.solve_cvrp(data)
+    print(result.cost)
+    print(result.routes)
+    
+    return result.cost + 0.1
+
 def main(argv):
    instance = ''
    type_problem = ''
    solver_name = ''
    heuristic_used = False
+   hgs = False
    time_resolution = 30
-   opts, args = getopt.getopt(argv,"i:t:s:h:e:")
+   opts, args = getopt.getopt(argv,"i:t:s:h:H:e:")
    
    for opt, arg in opts:
       if opt in ["-i"]:
@@ -375,10 +395,12 @@ def main(argv):
          solver_name = arg
       elif opt == "-h":
          heuristic_used = arg == "yes"
+      elif opt == "-H":
+         hgs = arg == "yes"
       elif opt == "-e":
          time_resolution = float(arg)
 
-   solve_demo(instance,solver_name,heuristic_used,time_resolution)
+   solve_demo(instance,solver_name,heuristic_used,time_resolution, hgs)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
