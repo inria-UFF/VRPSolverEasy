@@ -4,6 +4,9 @@ Installation
 
 This is a guide to install VRPSolverEasy package.
 
+.. note::
+   If you work with an ARM architecture you must install python in version x86-64 and have to install with this one.
+
 Installation of free version
 ----------------------------
 
@@ -35,7 +38,7 @@ Installation using git
 - Download the package and extract it into a local directory
 - (*Linux* or *MacOs*) Move to this local directory and enter::
 
-   sudo python -m pip install .
+   python -m pip install .
 
 
 Installation of academic version 
@@ -49,8 +52,11 @@ To install this version, you must :
 #. Clone VRPSolverEasy in your local machine
 #. Install CPLEX
 #. Download Bapcod source code on its `web page <https://bapcod.math.u-bordeaux.fr/>`_. 
-#. Install Bapcod using installation instructions in the Bapcod user guide.
+#. Install Bapcod using installation instructions in the Bapcod  :download:`user guide <https://bapcod.math.u-bordeaux.fr/BaPCodUserGuide0.74.pdf>` .
 #. Compile bapcod-shared library using this command :
+
+.. warning:: 
+   This installation is only possible with an academic email
 
 
 .. code-block:: ruby

@@ -3,36 +3,45 @@ Heterogeneous Fleet Vehicle Routing Problem """
 
 from VRPSolverEasy.src import solver
 import VRPSolverEasy.demos.CVRPTW as utils
-import os,sys,getopt
+import os
+import sys
+import getopt
 import math
 from functools import partial
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-def read_instance(name : str):
+
+def read_instance(name: str):
     """ Read an instance in the folder data from a given name """
     path_project = os.path.abspath(os.getcwd())
-    with open (name,
-        "r",encoding="UTF-8" )as file:
+    with open(name,
+              "r", encoding="UTF-8")as file:
         elements = [str(element) for element in file.read().split()]
     file.close()
     return elements
+
 
 def compute_euclidean_distance(x_i, y_i, x_j, y_j):
     """Compute the euclidean distance between 2 points from graph"""
     return math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2)
 
+
 def compute_one_decimal_floor_euclidean_distance(x_i, y_i, x_j, y_j):
     """Compute the euclidean distance between 2 points from graph"""
     return math.floor(math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2) * 10) / 10
 
-def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
+
+def solve_demo(instance_name, solver_name="CLP", ext_heuristic=False,
                time_resolution=30,
                time_resolution_heuristic=30):
     """return a solution from modelisation"""
 
     # read instance
-    data = read_hfvrp_instances(instance_name,ext_heuristic,time_resolution_heuristic)
+    data = read_hfvrp_instances(
+        instance_name,
+        ext_heuristic,
+        time_resolution_heuristic)
 
     # get data
     vehicle_types = data["VehicleTypes"]
@@ -47,13 +56,13 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
     for vehicle_type in vehicle_types:
         # add vehicle type
         model.add_vehicle_type(id=vehicle_type["id"],
-                            start_point_id=vehicle_type["start_point_id"],
-                            end_point_id=vehicle_type["end_point_id"],
-                            capacity=vehicle_type["capacity"],
-                            max_number=vehicle_type["max_number"],
-                            fixed_cost=vehicle_type["fixed_cost"],
-                            var_cost_dist=vehicle_type["var_cost_dist"]
-                            )
+                               start_point_id=vehicle_type["start_point_id"],
+                               end_point_id=vehicle_type["end_point_id"],
+                               capacity=vehicle_type["capacity"],
+                               max_number=vehicle_type["max_number"],
+                               fixed_cost=vehicle_type["fixed_cost"],
+                               var_cost_dist=vehicle_type["var_cost_dist"]
+                               )
     # add depot
     model.add_depot(id=depot["id"])
 
@@ -73,17 +82,16 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
     model.set_parameters(time_limit=time_resolution, heuristic_used=True)
     # model.set_parameters(upper_bound=3185.2)
 
-    #print(upper_bound) debug mode
+    # print(upper_bound) debug mode
 
     if ext_heuristic:
         model.parameters.upper_bound = upper_bound
     model.parameters.print_level = 0
-    
+
     model.parameters.solver_name = solver_name
-    #if(solver_name == "CPLEX"):
-        #model.parameters.heuristic_used = True   TODO
-        #model.parameters.time_limit_heuristic = 5 TODO
-    
+    # if(solver_name == "CPLEX"):
+    # model.parameters.heuristic_used = True   TODO
+    # model.parameters.time_limit_heuristic = 5 TODO
 
     # if you have cplex 22.1 installed on your laptop you can ab i, and x
     # change the bapcod-shared library and specify the path like this:
@@ -92,26 +100,25 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
     # cplex_path="C:\\Program Files\\
     # IBM\\ILOG\\CPLEX_Studio221\\cplex\\bin\\x64_win64\\cplex2210.dll")
 
-
     # solve model
-    #model.export()
+    # model.export()
     model.solve()
 
     path_instance_name = instance_name.split(".")[0]
     name_instance = path_instance_name.split("\\")[
-        len(path_instance_name.split("\\"))-1]
+        len(path_instance_name.split("\\")) - 1]
     print('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
-            "instance_name","solver_name","ext_heuristic",
-            "solution_value",
-            "solution_time",
-            "best_lb",
-            "root_lb",
-            "root_time",
-            "nb_branch_and_bound_nodes",
-            "status"
-            ), end='')
+        "instance_name", "solver_name", "ext_heuristic",
+        "solution_value",
+        "solution_time",
+        "best_lb",
+        "root_lb",
+        "root_time",
+        "nb_branch_and_bound_nodes",
+        "status"
+    ), end='')
     print('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
-        name_instance,solver_name,ext_heuristic,
+        name_instance, solver_name, ext_heuristic,
         model.statistics.solution_value,
         model.statistics.solution_time,
         model.statistics.best_lb,
@@ -119,7 +126,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
         model.statistics.root_time,
         model.statistics.nb_branch_and_bound_nodes,
         model.status
-        ))
+    ))
 
     """
     if(os.path.isfile("HFVRP_Results.txt")):
@@ -159,12 +166,15 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,
 
     """
     # export the result
-    #model.solution.export()
-    #print(model.parameters.upper_bound)
+    # model.solution.export()
+    # print(model.parameters.upper_bound)
     return model.solution
 
 
-def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuristic=30):
+def read_hfvrp_instances(
+        instance_name,
+        ext_heuristic=False,
+        time_resolution_heuristic=30):
     """Read literature instances of HFVRP by giving the name of instance
         and returns dictionary containing all elements of model"""
     instance_iter = iter(read_instance(instance_name))
@@ -174,7 +184,7 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
     firstRead = next(instance_iter)
     index = 0
 
-    if firstRead == 'NAME': # read XH instances (large instances)
+    if firstRead == 'NAME':  # read XH instances (large instances)
         nb_points, nb_vehicles, max_num_veh = [], [], []
         capacities, fixed_costs, var_costs = [], [], []
         while True:
@@ -209,36 +219,38 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
         vehicle_types = []
         # Create vehicle types
         for k in range(nb_vehicles):
-            vehicle_type = {"id": k+1,  # we cannot have an id less than 1
-                    "start_point_id": 0,
-                    "end_point_id": 0,
-                    "capacity": capacities[k],
-                    "max_number": max_num_veh[k],
-                    "fixed_cost" : fixed_costs[k],
-                    "var_cost_dist": var_costs[k]
-                    }
+            vehicle_type = {"id": k + 1,  # we cannot have an id less than 1
+                            "start_point_id": 0,
+                            "end_point_id": 0,
+                            "capacity": capacities[k],
+                            "max_number": max_num_veh[k],
+                            "fixed_cost": fixed_costs[k],
+                            "var_cost_dist": var_costs[k]
+                            }
             vehicle_types.append(vehicle_type)
 
         # create copies of vehicles of the same type to run OR-Tools heuristic
         for k in range(nb_vehicles):
             maxNbVeh = max_num_veh[k]
-            vehicles_capacities.extend([capacities[k] for i in range(maxNbVeh)])
-            vehicles_fixed_costs.extend([fixed_costs[k] for i in range(maxNbVeh)])
+            vehicles_capacities.extend([capacities[k]
+                                       for i in range(maxNbVeh)])
+            vehicles_fixed_costs.extend(
+                [fixed_costs[k] for i in range(maxNbVeh)])
             vehicles_var_costs.extend([var_costs[k] for i in range(maxNbVeh)])
             index += max_num_veh[k]
 
         id_point = 0
         # Create points
-        for current_id in range(nb_points+1):
+        for current_id in range(nb_points + 1):
             point_id = int(next(instance_iter))
             if point_id != current_id + 1:
                 raise Exception("Unexpected index")
             x_coord = int(next(instance_iter))
             y_coord = int(next(instance_iter))
             points.append({"x": x_coord,
-                            "y": y_coord,
-                            "demand": -1,
-                            "id": id_point})
+                           "y": y_coord,
+                           "demand": -1,
+                           "id": id_point})
             id_point += 1
 
         element = next(instance_iter)
@@ -247,7 +259,7 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
 
         jobs = []
         # Get the demands
-        for current_id in range(nb_points+1):
+        for current_id in range(nb_points + 1):
             point_id = int(next(instance_iter))
             if point_id != current_id + 1:
                 raise Exception("Unexpected index")
@@ -258,16 +270,16 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
         element = next(instance_iter)
         if element != "DEPOT_SECTION":
             raise Exception("Expected line DEPOT_SECTION")
-        next(instance_iter) # pass id depot
+        next(instance_iter)  # pass id depot
 
         end_depot_section = int(next(instance_iter))
         if end_depot_section != -1:
             raise Exception("Expected only one depot.")
 
-    else: # classic instances format
+    else:  # classic instances format
 
         nb_points = int(firstRead)
-        next(instance_iter) # pass id depot (always 0)
+        next(instance_iter)  # pass id depot (always 0)
         depot_x = int(next(instance_iter))
         depot_y = int(next(instance_iter))
         depot_demand = int(next(instance_iter))
@@ -275,52 +287,52 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
 
         # Initialize the points with depot
         points.append({"x": depot_x,
-                "y": depot_y,
-                "demand": depot_demand,
-                "id": id_point
-                })
-        
+                       "y": depot_y,
+                       "demand": depot_demand,
+                       "id": id_point
+                       })
+
         jobs = [0]
         for i in range(nb_points):
             id_point += 1
-            next(instance_iter) # pass id point (take index)
+            next(instance_iter)  # pass id point (take index)
             x_coord = int(next(instance_iter))
             y_coord = int(next(instance_iter))
             demand = int(next(instance_iter))
             points.append({"x": x_coord,
-                    "y": y_coord,
-                    "demand": demand,
-                    "id": id_point})
-            jobs.append(demand) 
+                           "y": y_coord,
+                           "demand": demand,
+                           "id": id_point})
+            jobs.append(demand)
         data["demands"] = jobs
-        
+
         nb_vehicles = int(next(instance_iter))
         vehicle_types = []
-        
-        for k in range(1, nb_vehicles+1):
+
+        for k in range(1, nb_vehicles + 1):
             capacity = int(next(instance_iter))
             fixed_cost = float(next(instance_iter))
             var_cost_dist = float(next(instance_iter))
-            next(instance_iter) # pass min number
+            next(instance_iter)  # pass min number
             max_number = int(next(instance_iter))
             vehicle_type = {"id": k,  # we cannot have an id less than 1
-                    "start_point_id": 0,
-                    "end_point_id": 0,
-                    "capacity": capacity,
-                    "max_number": max_number,
-                    "fixed_cost" : fixed_cost,
-                    "var_cost_dist": var_cost_dist
-                    }
+                            "start_point_id": 0,
+                            "end_point_id": 0,
+                            "capacity": capacity,
+                            "max_number": max_number,
+                            "fixed_cost": fixed_cost,
+                            "var_cost_dist": var_cost_dist
+                            }
             vehicle_types.append(vehicle_type)
             for i in range(max_number):
                 vehicles_capacities.append(capacity)
                 vehicles_var_costs.append(var_cost_dist)
                 vehicles_fixed_costs.append(fixed_cost)
                 index += 1
-        
+
     data['vehicle_capacities'] = vehicles_capacities
     data['var_costs'] = vehicles_var_costs
-    data['fixed_costs'] = vehicles_fixed_costs 
+    data['fixed_costs'] = vehicles_fixed_costs
     data['num_vehicles'] = index
     data['depot'] = 0
 
@@ -338,11 +350,11 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
             links.append({"name": "L" + str(nb_link),
                           "start_point_id": point["id"],
                           "end_point_id": points[j]["id"],
-                          "distance": dist 
+                          "distance": dist
                           })
 
-            matrix[i][j] = dist 
-            matrix[j][i] = dist 
+            matrix[i][j] = dist
+            matrix[j][i] = dist
 
             nb_link += 1
 
@@ -350,13 +362,14 @@ def read_hfvrp_instances(instance_name,ext_heuristic=False,time_resolution_heuri
 
     upper_bound = 0
     if ext_heuristic:
-        upper_bound = solve_ext_heuristic(data,time_resolution_heuristic)
+        upper_bound = solve_ext_heuristic(data, time_resolution_heuristic)
 
     return {"Points": points,
             "VehicleTypes": vehicle_types,
             "Links": links,
             "UB": upper_bound
             }
+
 
 def print_solution(data, manager, routing, solution):
     """Prints solution on console."""
@@ -383,11 +396,11 @@ def print_solution(data, manager, routing, solution):
         print(plan_output)
         total_distance += route_distance
         total_load += route_load
-    print('Total distance of all routes: {}m'.format(total_distance/1000))
+    print('Total distance of all routes: {}m'.format(total_distance / 1000))
     print('Total load of all routes: {}'.format(total_load))
 
 
-def solve_ext_heuristic(data,time_resolution_heuristic=30):
+def solve_ext_heuristic(data, time_resolution_heuristic=30):
 
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -402,17 +415,20 @@ def solve_ext_heuristic(data,time_resolution_heuristic=30):
         # Convert from routing variable Index to distance matrix NodeIndex.
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
-        return round(1000 * (data['distance_matrix'][from_node][to_node] * data['var_costs'][id_vehicle]))
+        return round(1000 *
+                     (data['distance_matrix'][from_node][to_node] *
+                      data['var_costs'][id_vehicle]))
 
-    transit_callback_index = [ routing.RegisterTransitCallback(
-                            partial(distance_callback,id_vehicle = i),
-                            ) for i in range(data['num_vehicles'])]
+    transit_callback_index = [routing.RegisterTransitCallback(
+        partial(distance_callback, id_vehicle=i),
+    ) for i in range(data['num_vehicles'])]
 
     for id in range(len(data['var_costs'])):
-        routing.SetArcCostEvaluatorOfVehicle(transit_callback_index[id], int(id))
+        routing.SetArcCostEvaluatorOfVehicle(
+            transit_callback_index[id], int(id))
 
     # Define cost of each arc.
-    #routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+    # routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
     # Add Capacity constraint.
     def demand_callback(from_index):
@@ -429,9 +445,9 @@ def solve_ext_heuristic(data,time_resolution_heuristic=30):
         data['vehicle_capacities'],  # vehicle maximum capacities
         True,  # start cumul to zero
         'Capacity')
-    
-    for i,cost in enumerate(data['fixed_costs']):
-        routing.SetFixedCostOfVehicle(int(1000 * cost),i)
+
+    for i, cost in enumerate(data['fixed_costs']):
+        routing.SetFixedCostOfVehicle(int(1000 * cost), i)
 
     # Setting first solution heuristic
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
@@ -444,37 +460,43 @@ def solve_ext_heuristic(data,time_resolution_heuristic=30):
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
-    if solution : 
+    if solution:
         # print_solution(data,manager,routing,solution)
-        return solution.ObjectiveValue()/1000 + 0.1
-    
+        return solution.ObjectiveValue() / 1000 + 0.1
+
     return 1000000
 
-def main(argv):
-   instance = ''
-   type_problem = ''
-   solver_name = ''
-   heuristic_used = False
-   time_resolution = 30
-   time_resolution_heuristic = 30
-   opts, args = getopt.getopt(argv,"i:t:s:h:e:f:")
-   
-   for opt, arg in opts:
-      if opt in ["-i"]:
-         instance = arg
-      elif opt == "-t":
-         type_problem = arg
-      elif opt == "-s":
-         solver_name = arg
-      elif opt == "-h":
-         heuristic_used = arg == "yes"
-      elif opt == "-e":
-         time_resolution = float(arg)
-      elif opt == "-f":
-         time_resolution_heuristic = int(arg)
 
-   solve_demo(instance,solver_name,heuristic_used,time_resolution,time_resolution_heuristic)
+def main(argv):
+    instance = ''
+    type_problem = ''
+    solver_name = ''
+    heuristic_used = False
+    time_resolution = 30
+    time_resolution_heuristic = 30
+    opts, args = getopt.getopt(argv, "i:t:s:h:e:f:")
+
+    for opt, arg in opts:
+        if opt in ["-i"]:
+            instance = arg
+        elif opt == "-t":
+            type_problem = arg
+        elif opt == "-s":
+            solver_name = arg
+        elif opt == "-h":
+            heuristic_used = arg == "yes"
+        elif opt == "-e":
+            time_resolution = float(arg)
+        elif opt == "-f":
+            time_resolution_heuristic = int(arg)
+
+    solve_demo(
+        instance,
+        solver_name,
+        heuristic_used,
+        time_resolution,
+        time_resolution_heuristic)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
-    

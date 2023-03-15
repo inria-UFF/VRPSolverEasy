@@ -101,8 +101,7 @@ def solve_demo(instance_name, folder_data="/data/",
                            capacity=data.vehicle_capacity,
                            tw_begin=data.depot_tw_begin,
                            tw_end=data.depot_tw_end,
-                           var_cost_dist=1,
-                           var_cost_time=1
+                           var_cost_dist=1
                            )
     # add depot
     model.add_depot(id=0,

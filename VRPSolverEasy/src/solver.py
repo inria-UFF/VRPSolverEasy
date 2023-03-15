@@ -1008,7 +1008,7 @@ class Parameters:
 
     @action.setter
     def action(self, action):
-        """setter function of action"""
+        """setter function of action """
         if not isinstance(action, (str)):
             raise PropertyError(constants.PARAMETERS.ACTION.value,
                                 constants.STRING_PROPERTY)
@@ -1188,25 +1188,35 @@ class Route:
         route_str = ""
         time_is_used = sum(self.__time_consumption) > 0
         capacity_is_used = sum(self.__cap_consumption) > 0
+        name_is_used = all(i != "" for i in self.__point_names)
         if (len(self.__point_ids))>0 :
             id_veh = self.__vehicle_type_id
-            route_str += 'Route for vehicle  ' + str(id_veh) + ':\n'
-            route_str += ' ID :' + str(self.__point_ids[0])
+            route_str += 'Route for vehicle ' + str(id_veh) + ':\n'
+            route_str += ' ID : ' + str(self.__point_ids[0])
             for i in range (1,len(self.__point_ids)):
                 route_str +=' --> ' + str(self.__point_ids[i]) 
             
+            if name_is_used:
+                route_str += '\n'
+                route_str += ' Name : ' + str(self.__point_names[0])
+                for i in range (1,len(self.__point_names)):
+                    route_str +=' --> ' + str(self.__point_names[i]) 
+
             if time_is_used:
                 route_str += '\n'
-                route_str += ' Time end :' + str(self.__time_consumption[0])
+                route_str += ' End time : ' + str(self.__time_consumption[0])
                 for i in range (1,len(self.__time_consumption)):
                     route_str += ' --> ' + str(self.__time_consumption[i]) 
             
-            if(capacity_is_used):
+            if capacity_is_used:
                 route_str += '\n'
-                route_str += ' Load :' + str(self.__cap_consumption[0])
+                route_str += ' Load : ' + str(self.__cap_consumption[0])
                 for i in range (1,len(self.__cap_consumption)):
                     route_str += ' --> ' + str(self.__cap_consumption[i]) 
-            route_str += "\nTotal cost : " + str(self.__route_cost) + '\n \n'
+
+            if self.__route_cost != 0 :
+                route_str += "\nTotal cost : " + str(self.__route_cost) 
+            route_str += '\n \n'
         return route_str
 
     def __repr__(self):
@@ -1301,7 +1311,7 @@ class Model:
         """contains the set of customers and depots
 
             Type:
-                -- PointsDict : dictionary contains only points
+                - PointsDict : dictionary contains only points
             Informations:
                 - It's possible to resolve the problem until 1022 points.
                 - For the moment, the capacity of depot is not considered
@@ -1596,8 +1606,9 @@ class Model:
             outfile.write(model)
    
     def solve(self):
-        """Solve the routing problem by using the shared library
-           bapcod and fill the solution.
+        """
+        Solve the routing problem by using the shared library bapcod.
+           
 
         Additional informations:
             VRPSolverEasy is compatible with Windows 64x,  Linux and macOS only
@@ -1673,7 +1684,7 @@ class Model:
             self.status = self.__output["Status"]["code"]
             self.message = self.__output["Status"]["message"]
             self.solution = Solution(self.__output,self.status)
-            if self.status > -1 and self.status < 4:
+            if self.status > -1 and self.status < 4 and self.parameters.action != "enumAllFeasibleRoutes":
                 self.statistics = Statistics(self.solution.json["Statistics"])
             free_memory(output)
         except BaseException:

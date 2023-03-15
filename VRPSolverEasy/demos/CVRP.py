@@ -140,6 +140,26 @@ def solve_demo(instance_name, folder_data="/data/",
     # solve model
     model.solve()
 
+    if model.solution.is_defined :
+        print(f"""Statistics :
+        best lower bound : { model.statistics.best_lb } 
+        
+        solution time : {model.statistics.solution_time}
+        
+        solution value : {model.statistics.solution_value}
+
+        root lower bound : {model.statistics.solution_value}
+
+        root root time : {model.statistics.root_time}.
+        """)
+        print(f"Status : {model.status}.\n")
+        print(f"Message : {model.message}.\n")   
+        for route in model.solution.routes:            
+            print(f"Vehicle Type id : {route.vehicle_type_id}.")
+            print(f"Ids : {route.point_ids}.")
+            print(f"Load : {route.cap_consumption}.\n")
+
+
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
 

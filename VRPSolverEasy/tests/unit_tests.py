@@ -186,9 +186,11 @@ class TestAllVariants(unittest.TestCase):
             end_point_id=0,
             distance=4,
             time=time_between_points)
+        model.export("cvrptw_noFeasible_on_time",True)
         model.solve()
-        model.export("cvrptw_noFeasible_on_time")
+        
         print(model.solution)
+        print(model.message)
         self.assertEqual(
             constants.VEHICLES_ERROR,
             model.status)
@@ -694,14 +696,14 @@ class TestAllDemos(unittest.TestCase):
         """test demo C101 in solomon format"""
         objective_value = CVRPTW.solve_demo("C101.txt")
         self.assertAlmostEqual(
-            1657.9, objective_value, places=1)
+            828.95, objective_value, places=1)
         return None
 
     def test_cvrptw_demos_r101(self):
         """test demo R101 in solomon format"""
         objective_value = CVRPTW.solve_demo("R101.txt")
         self.assertAlmostEqual(
-            3285.75, objective_value, places=1)
+            1642.875, objective_value, places=1)
         return None
 
     def test_hfvrp_c50_13fsmd(self):

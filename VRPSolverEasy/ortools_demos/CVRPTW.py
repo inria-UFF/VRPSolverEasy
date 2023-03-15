@@ -2,38 +2,45 @@
 Capacitated Vehicle Routing Problem with Time Windows. """
 
 import math
-import os,sys,getopt
+import os
+import sys
+import getopt
 from VRPSolverEasy.src import solver
 from functools import partial
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
 
-def read_instance(name : str):
+def read_instance(name: str):
     """ Read an instance in the folder data from a given name """
     path_project = os.path.abspath(os.getcwd())
-    with open (name,
-        "r",encoding="UTF-8" )as file:
+    with open(name,
+              "r", encoding="UTF-8")as file:
         elements = [str(element) for element in file.read().split()]
     file.close()
     return elements
 
 
-def compute_euclidean_distance(x_i, y_i, x_j, y_j,number_digit=3):
+def compute_euclidean_distance(x_i, y_i, x_j, y_j, number_digit=3):
     """Compute the euclidean distance between 2 points from graph"""
     return round(math.sqrt((x_i - x_j)**2 +
                            (y_i - y_j)**2), number_digit)
+
 
 def compute_one_decimal_floor_euclidean_distance(x_i, y_i, x_j, y_j):
     """Compute the euclidean distance between 2 points from graph"""
     return math.floor(math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2) * 10) / 10
 
 
-def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resolution=30):
+def solve_demo(
+        instance_name,
+        solver_name="CLP",
+        ext_heuristic=False,
+        time_resolution=30):
     """Return a solution from modelisation"""
 
     # read instance
-    data = read_cvrptw_instances(instance_name,ext_heuristic)
+    data = read_cvrptw_instances(instance_name, ext_heuristic)
 
     # get data
     vehicle_type = data["vehicle_type"]
@@ -42,7 +49,6 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
     links = data["Links"]
     upper_bound = data["UB"]
 
-    
     # modelisation of problem
     model = solver.Model()
 
@@ -86,7 +92,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
 
     if ext_heuristic:
         model.parameters.upper_bound = upper_bound
-    
+
     model.parameters.solver_name = solver_name
     model.parameters.print_level = 0
 
@@ -102,20 +108,20 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
 
     path_instance_name = instance_name.split(".")[0]
     name_instance = path_instance_name.split("\\")[
-        len(path_instance_name.split("\\"))-1]
+        len(path_instance_name.split("\\")) - 1]
 
     print('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
-            "instance_name","solver_name","ext_heuristic",
-            "solution_value",
-            "solution_time",
-            "best_lb",
-            "root_lb",
-            "root_time",
-            "nb_branch_and_bound_nodes",
-            "status"
-            ), end='')
+        "instance_name", "solver_name", "ext_heuristic",
+        "solution_value",
+        "solution_time",
+        "best_lb",
+        "root_lb",
+        "root_time",
+        "nb_branch_and_bound_nodes",
+        "status"
+    ), end='')
     print('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
-        name_instance,solver_name,ext_heuristic,
+        name_instance, solver_name, ext_heuristic,
         model.statistics.solution_value,
         model.statistics.solution_time,
         model.statistics.best_lb,
@@ -123,7 +129,7 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
         model.statistics.root_time,
         model.statistics.nb_branch_and_bound_nodes,
         model.status
-        ))
+    ))
 
     """
     if(os.path.isfile("CVRPTW_Results.txt")):
@@ -162,15 +168,15 @@ def solve_demo(instance_name,solver_name="CLP",ext_heuristic=False,time_resoluti
             model.status
             ))
            f.close()
-    """    
+    """
 
     # export the result
-    #model.solution.export(instance_name.split(".")[0] + "_result")
+    # model.solution.export(instance_name.split(".")[0] + "_result")
 
     return model.solution
 
 
-def read_cvrptw_instances(instance_name,ext_heuristic=False):
+def read_cvrptw_instances(instance_name, ext_heuristic=False):
     """Read literature instances of CVRPTW ("Solomon" format) by giving the name of instance,
         compute lower bound and returns dictionary containing all elements of model"""
     instance_iter = iter(read_instance(instance_name))
@@ -208,19 +214,18 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
                     "var_cost_time": 0
                     }
     index = 0
-    time_windows = [(depot_tw_begin,depot_tw_end)]
+    time_windows = [(depot_tw_begin, depot_tw_end)]
     service_times = [0]
     for i in range(max_number_input):
-        vehicles.append(capacity_input)       
+        vehicles.append(capacity_input)
         index += 1
-    
+
     data['vehicle_capacities'] = vehicles
     data['num_vehicles'] = max_number_input
     data['depot'] = 0
 
-
     demands = []
-    
+
     # Initialize the points with depot
     points = [{"x": depot_x,
                "y": depot_y,
@@ -232,7 +237,7 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
                }]
     demands.append(depot_demand)
     # Add the customers in the list of points
-    
+
     while True:
         id_point += 1
         value = next(instance_iter, None)
@@ -252,8 +257,7 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
                        "service_time": service_time,
                        "id": id_point})
         demands.append(demand)
-        time_windows.append((tw_begin 
-                             ,tw_end))
+        time_windows.append((tw_begin, tw_end))
         service_times.append(service_time)
 
     data['demands'] = demands
@@ -261,12 +265,13 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
     # compute the links of graph
     links = []
     matrix = [[0 for i in range((len(points)))] for i in range(len(points))]
-    matrix_time = [[0 for i in range((len(points)))] for i in range(len(points))]
+    matrix_time = [[0 for i in range((len(points)))]
+                   for i in range(len(points))]
     nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
-            dist = compute_one_decimal_floor_euclidean_distance(point["x"], point["y"],
-                                                                points[j]["x"], points[j]["y"])
+            dist = compute_one_decimal_floor_euclidean_distance(
+                point["x"], point["y"], points[j]["x"], points[j]["y"])
 
             links.append({"name": "L" + str(nb_link),
                           "start_point_id": point["id"],
@@ -276,13 +281,13 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
                           })
             matrix_time[i][j] = dist + service_times[i]
             matrix_time[j][i] = dist + service_times[j]
-            matrix[i][j] = dist 
-            matrix[j][i] = dist 
+            matrix[i][j] = dist
+            matrix[j][i] = dist
 
             nb_link += 1
 
-    data['distance_matrix'] = matrix 
-    data['time_matrix'] = matrix_time        
+    data['distance_matrix'] = matrix
+    data['time_matrix'] = matrix_time
     upper_bound = 0
 
     if ext_heuristic:
@@ -294,21 +299,19 @@ def read_cvrptw_instances(instance_name,ext_heuristic=False):
             "UB": upper_bound
             }
 
-    
 
-
-def compute_cost_solution(data,manager, routing, solution):
+def compute_cost_solution(data, manager, routing, solution):
     """Prints solution on console."""
-    
+
     time_dimension = routing.GetDimensionOrDie('Time')
     total_time = 0
     total_cost = 0
-    arc = (0,0)
+    arc = (0, 0)
     for vehicle_id in range(data['num_vehicles']):
         index = routing.Start(vehicle_id)
         plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
         index_route = 0
-        arc = (0,0)
+        arc = (0, 0)
         while not routing.IsEnd(index):
             time_var = time_dimension.CumulVar(index)
             plan_output += '{0} Time({1},{2}) -> '.format(
@@ -316,11 +319,10 @@ def compute_cost_solution(data,manager, routing, solution):
                 solution.Max(time_var))
             id = manager.IndexToNode(index)
             index = solution.Value(routing.NextVar(index))
-            if(index_route > 0):
-                arc =(arc[1],id)
+            if (index_route > 0):
+                arc = (arc[1], id)
                 total_cost += data["distance_matrix"][arc[0]][arc[1]]
             index_route += 1
-
 
         total_cost += data["distance_matrix"][arc[1]][0]
         time_var = time_dimension.CumulVar(index)
@@ -336,10 +338,9 @@ def compute_cost_solution(data,manager, routing, solution):
     print('Total time of all routes: {}min'.format(total_time))
     return total_cost * 2 + 1
 
+
 def solve_ext_heuristic(data):
-
     """Solve the CVRP problem."""
-
 
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -356,7 +357,8 @@ def solve_ext_heuristic(data):
         to_node = manager.IndexToNode(to_index)
         return data['distance_matrix'][from_node][to_node] * 10
 
-    transit_callback_index_distance = routing.RegisterTransitCallback(distance_callback)
+    transit_callback_index_distance = routing.RegisterTransitCallback(
+        distance_callback)
 
     # Define cost of each arc.
     routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index_distance)
@@ -385,7 +387,8 @@ def solve_ext_heuristic(data):
         to_node = manager.IndexToNode(to_index)
         return data['time_matrix'][from_node][to_node] * 10
 
-    transit_callback_index_time = routing.RegisterTransitCallback(time_callback)
+    transit_callback_index_time = routing.RegisterTransitCallback(
+        time_callback)
 
     # Add Time Windows constraint.
     time = 'Time'
@@ -404,8 +407,8 @@ def solve_ext_heuristic(data):
         index = manager.NodeToIndex(location_idx)
         begin = time_window[0] * 10
         end = time_window[1] * 10
-        time_dimension.CumulVar(index).SetRange(begin,end) 
-    
+        time_dimension.CumulVar(index).SetRange(begin, end)
+
     # Add time window constraints for each vehicle start node.
     depot_idx = data['depot']
     for vehicle_id in range(data['num_vehicles']):
@@ -413,7 +416,6 @@ def solve_ext_heuristic(data):
         time_dimension.CumulVar(index).SetRange(
             data['time_windows'][depot_idx][0] * 10,
             data['time_windows'][depot_idx][1] * 10)
-
 
     # Instantiate route start and end times to produce feasible times.
     for i in range(data['num_vehicles']):
@@ -432,34 +434,36 @@ def solve_ext_heuristic(data):
 
     # Solve the problem.ema
     solution = routing.SolveWithParameters(search_parameters)
-        
+
     # Print solution on console.
     if solution:
         return solution.ObjectiveValue() / 10 + 0.1
-            
+
     return 100000
 
-def main(argv):
-   instance = ''
-   type_problem = ''
-   solver_name = ''
-   heuristic_used = False
-   time_resolution = 30
-   opts, args = getopt.getopt(argv,"i:t:s:h:e:")
-   
-   for opt, arg in opts:
-      if opt in ["-i"]:
-         instance = arg
-      elif opt == "-t":
-         type_problem = arg
-      elif opt == "-s":
-         solver_name = arg
-      elif opt == "-h":
-         heuristic_used = arg == "yes"
-      elif opt == "-e":
-         time_resolution = float(arg)
 
-   solve_demo(instance,solver_name,heuristic_used,time_resolution)
+def main(argv):
+    instance = ''
+    type_problem = ''
+    solver_name = ''
+    heuristic_used = False
+    time_resolution = 30
+    opts, args = getopt.getopt(argv, "i:t:s:h:e:")
+
+    for opt, arg in opts:
+        if opt in ["-i"]:
+            instance = arg
+        elif opt == "-t":
+            type_problem = arg
+        elif opt == "-s":
+            solver_name = arg
+        elif opt == "-h":
+            heuristic_used = arg == "yes"
+        elif opt == "-e":
+            time_resolution = float(arg)
+
+    solve_demo(instance, solver_name, heuristic_used, time_resolution)
+
+
 if __name__ == "__main__":
     main(sys.argv[1:])
-    

@@ -48,7 +48,7 @@ def run_example():
         tw_end=5000)
 
     # Add depot
-    model.add_depot(id=0, name="D1", tw_begin=0, tw_end=5000)
+    model.add_depot(id=0, name="DEPOT", tw_begin=0, tw_end=5000)
 
     coordinates_keys = list(coordinates.keys())
     # Add Customers

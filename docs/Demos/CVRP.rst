@@ -1,6 +1,7 @@
 CVRP
 ================
 
+The Capacitated Vehicle Routing Problem (CVRP) is a well-known optimization problem in operations research, where a set of vehicles with limited capacities is tasked with servicing a set of customers, located at different points in a geographic area, with minimum cost. The objective of the problem is to find the optimal route for each vehicle such that all customers are visited, and the total distance traveled is minimized, while respecting the capacity constraints of the vehicles.
 
 Instance formats
 ----------------------------
@@ -60,21 +61,118 @@ Get data
     # read instance
     data = read_cvrp_instances(instance_name,folder_data,type_instance)
 
-In the first time, we read instance and get data in this format :
+In the first time, we read instance and get data with this attributes :
 
 .. code-block:: python
 
-    {
-        #TODO
-                    
+        vehicle_capacity = 300
+        nb_customers = 3
+        cust_demands = [15,52,65]
+        cust_coordinates = [[55.21,44.36],[54.31,65.23],[57.81,53.27]]
+        depot_coordinates = [54.69,57.36]
+
+.. note::
+   You can also enumerate all feasible solution by changing the parameter action but this parameter works only for small instances ::
+
+     model.parameters.action = "enumAllFeasibleRoutes"
+
+
+Add vehicle type
+^^^^^^^^^^^^^^^^^^^^^^
+  .. code-block:: python
+
+    # modelisation of problem
+    model = solver.Model()
+
+    # add vehicle type
+    model.add_vehicle_type(id=1, #id cannot be less than 1
+                           start_point_id=0,
+                           end_point_id=0,
+                           max_number=data.nb_customers,
+                           capacity=data.vehicle_capacity,
+                           var_cost_dist=1
+                           )
+
+.. note::
+   You can also resolve an OVRP(Open Vehicle Routing Problem) problem if you put **start_point_id=-1** or **end_point_id=-1**.
+   The characteristic of the OVRP problem is that the vehicle is not required to return to the depot.
+
+
+Add depot and customers 
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    # add depot
+    model.add_depot(id=0)
+
+    # add all customers
+    for i in range(data.nb_customers):
+        model.add_customer(id=i+1, 
+                           demand=data.cust_demands[i]
+                           )
+
+Add links
+^^^^^^^^^^^^^^^^^^^^^^  
+
+.. code-block:: python
+
+
+    nb_link = 0
+
+    # Compute the links between depot and other points
+    for i,cust_i in enumerate(data.cust_coordinates):
+        dist = compute_euclidean_distance(cust_i[0],
+                                          cust_i[1],
+                                          data.depot_coordinates[0],
+                                          data.depot_coordinates[1],
+                                          0)
+
+        model.add_link(name="L" + str(nb_link),
+                       start_point_id=0,
+                       end_point_id=i + 1,
+                       distance=dist
+                       )
+        nb_link += 1
+
+    # Compute the links between points
+    for i,cust_i in enumerate(data.cust_coordinates):
+        for j in range(i + 1, len(data.cust_coordinates)):
+            dist = compute_euclidean_distance(cust_i[0],
+                                              cust_i[1],
+                                              data.cust_coordinates[j][0],
+                                              data.cust_coordinates[j][1],
+                                              0)
+            model.add_link(name="L" + str(nb_link),
+                           start_point_id=i + 1,
+                           end_point_id=j + 1,
+                           distance=dist
+                           )
+
+            nb_link += 1
+                     
     }
 
 In this demo, we have only one vehicle type and the distances are computing by using eucledian distance.
 
 
-Modelisation
-^^^^^^^^^^^^^^^^^^^^^^
+Set parameters
+^^^^^^^^^^^^^^^^^^^^^^ 
 
-#TODO
+.. code-block:: python
+
+   # set parameters
+      model.set_parameters(time_limit=30,
+                           solver_name="CLP")
+
+                     
+Solve model
+^^^^^^^^^^^^^^^^^^^^^^ 
+
+.. code-block:: python
+
+   # set parameters
+   model.solve()
+
 
 

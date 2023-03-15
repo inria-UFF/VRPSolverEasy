@@ -14,6 +14,8 @@ Welcome to VRPSolverEasy's documentation!
    :caption: Contents:
 
    Installation/index
-   Python modeling/index
+   Example/index
    Demos/index
+   Important notes/index
+   Solver API/index 
    Bibliography/index

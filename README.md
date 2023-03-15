@@ -23,7 +23,7 @@ The second way is to following this steps:
 ```
 - (MacOs and Linux):
 ```
-sudo python pip install .
+ python pip install .
 ```
 If you work on ARM Mac, you must install python in x86-x64 architecture and use the same commands.
 
