@@ -174,5 +174,78 @@ Solve model
    # set parameters
    model.solve()
 
+Print solution
+^^^^^^^^^^^^^^^^^^^^^^ 
+.. _target to paragraph:
+
+* The first command will print solution with an automatically printing function :
+
+.. code-block:: python
+
+   # print solution
+   print(model.solution)
+
+.. code-block:: python
+
+    Route for vehicle 1:
+    ID : 0 --> 30 --> 16 --> 1 --> 12 --> 0
+    Load : 0.0 --> 14.0 --> 32.0 --> 51.0 --> 72.0 --> 72.0
+    Total cost : 73.0
+
+    Route for vehicle 1:
+    ID : 0 --> 27 --> 24 --> 0
+    Load : 0.0 --> 20.0 --> 44.0 --> 44.0
+    Total cost : 59.0
+
+    ...
+
+* The second way will print manually solution like this :
+
+.. code-block:: python
+
+    if model.solution.is_defined :
+        print(f"""Statistics :
+        best lower bound : { model.statistics.best_lb } 
+        
+        solution time : {model.statistics.solution_time}
+        
+        solution value : {model.statistics.solution_value}
+
+        root lower bound : {model.statistics.solution_value}
+
+        root root time : {model.statistics.root_time}.
+        """)
+        print(f"Status : {model.status}.\n")
+        print(f"Message : {model.message}.\n")   
+        for route in model.solution.routes:            
+            print(f"Vehicle Type id : {route.vehicle_type_id}.")
+            print(f"Ids : {route.point_ids}.")
+            print(f"Load : {route.cap_consumption}.\n")
 
 
+.. code-block:: python
+
+        Statistics :
+            best lower bound : 784.0
+
+            solution time : 1.1036816
+
+            solution value : 784.0000000000484
+
+            root lower bound : 784.0000000000484
+
+            root root time : 1.0990863.
+
+        Status : 0.
+
+        Message : The solution found is optimal.
+
+        Vehicle Type id : 1.
+        Ids : [0, 30, 16, 1, 12, 0].
+        Load : [0.0, 14.0, 32.0, 51.0, 72.0, 72.0].
+
+        Vehicle Type id : 1.
+        Ids : [0, 27, 24, 0].
+        Load : [0.0, 20.0, 44.0, 44.0].
+
+        ...

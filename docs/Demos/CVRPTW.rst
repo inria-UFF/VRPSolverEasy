@@ -184,3 +184,15 @@ Solve model
 
    # set parameters
    model.solve()
+
+Print solution
+^^^^^^^^^^^^^^^^^^^^^^ 
+
+You can print solution with an automatically printing function :
+
+.. code-block:: python
+
+   # print solution
+   print(model.solution)
+
+or you can print manually each route, to do this, we invite you to consult the last section of the demo :doc:`/Demos/CVRP` 
