@@ -133,6 +133,78 @@ class TestAllVariants(unittest.TestCase):
             cost, model.statistics.solution_value, places=5)
         print(model.solution)
 
+    def test_cvrptw_with_parallel_arcs(self):
+        """test model in there is two resources time and capacity 
+        and parallel arcs"""
+        cost_per_time = 10
+        cost_per_distance = 10
+        dist = 5
+        nb_links = 5
+        model = solver.Model()
+        model.add_vehicle_type(
+            1,
+            0,
+            0,
+            "VEH1",
+            capacity=200,
+            max_number=3,
+            var_cost_dist=cost_per_distance,
+            var_cost_time=cost_per_time,
+            tw_end=200)
+        model.add_depot(id=0, name="D1", tw_begin=0, tw_end=200)
+        time_between_points = 4
+        begin_time = 0
+        for i in range(1, 5):
+            model.add_customer(
+                id=i,
+                name="C" + str(i),
+                demand=20,
+                tw_begin=begin_time,
+                tw_end=begin_time + 5)
+            begin_time += 5
+        model.add_link(
+            "arc1",
+            start_point_id=0,
+            end_point_id=1,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc2",
+            start_point_id=1,
+            end_point_id=2,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc3",
+            start_point_id=2,
+            end_point_id=3,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc4",
+            start_point_id=3,
+            end_point_id=4,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc5",
+            start_point_id=4,
+            end_point_id=0,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc6",
+            start_point_id=4,
+            end_point_id=0,
+            distance=dist,
+            time=1,
+            fixed_cost=5)
+        model.solve()       
+        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
+        self.assertAlmostEqual(
+            425, model.statistics.solution_value, places=5)
+        print(model.solution)
+
     def test_cvrptw_nofeasible_on_time(self):
         """test model it's infeasible on time"""
         model = solver.Model()
@@ -186,7 +258,6 @@ class TestAllVariants(unittest.TestCase):
             end_point_id=0,
             distance=4,
             time=time_between_points)
-        model.export("cvrptw_noFeasible_on_time",True)
         model.solve()
         
         print(model.solution)
@@ -194,6 +265,72 @@ class TestAllVariants(unittest.TestCase):
         self.assertEqual(
             constants.VEHICLES_ERROR,
             model.status)
+
+    def test_ovrptw(self):
+        """test variant open vehicle routing problem with time windows"""
+        cost_per_time = 10
+        cost_per_distance = 10
+        dist = 5
+        nb_links = 5
+        model = solver.Model()
+        model.add_vehicle_type(
+            1,
+            0,
+            -1,
+            "VEH1",
+            capacity=200,
+            max_number=3,
+            var_cost_dist=cost_per_distance,
+            var_cost_time=cost_per_time,
+            tw_end=200)
+        model.add_depot(id=0, name="D1", tw_begin=0, tw_end=200)
+        time_between_points = 4
+        begin_time = 0
+        for i in range(1, 5):
+            model.add_customer(
+                id=i,
+                name="C" + str(i),
+                demand=20,
+                tw_begin=begin_time,
+                tw_end=begin_time + 5)
+            begin_time += 5
+        model.add_link(
+            "arc1",
+            start_point_id=0,
+            end_point_id=1,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc2",
+            start_point_id=1,
+            end_point_id=2,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc3",
+            start_point_id=2,
+            end_point_id=3,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc4",
+            start_point_id=3,
+            end_point_id=4,
+            distance=dist,
+            time=time_between_points)
+        model.add_link(
+            "arc5",
+            start_point_id=4,
+            end_point_id=0,
+            distance=dist,
+            time=time_between_points)
+        model.solve()       
+        self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
+        print(model.solution)
+        print(model.message)
+        self.assertAlmostEqual(
+            360, model.statistics.solution_value, places=5)
+        print(model.solution)
 
     def test_solve_without_all(self):
         """raise an error if we have any components in the model"""

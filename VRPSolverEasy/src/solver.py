@@ -304,7 +304,7 @@ class VehicleType:
         if not isinstance(start_point_id, (int)):
             raise PropertyError(constants.VEHICLE_TYPE.START_POINT_ID.value,
                                 constants.INTEGER_PROPERTY)
-        if start_point_id < 0:
+        if start_point_id < -1:
             raise PropertyError(constants.VEHICLE_TYPE.START_POINT_ID.value,
                                 constants.GREATER_ZERO_PROPERTY)
         self._start_point_id = start_point_id
@@ -320,7 +320,7 @@ class VehicleType:
         if not isinstance(end_point_id, (int)):
             raise PropertyError(constants.VEHICLE_TYPE.END_POINT_ID.value,
                                 constants.INTEGER_PROPERTY)
-        if end_point_id < 0:
+        if end_point_id < -1:
             raise PropertyError(constants.VEHICLE_TYPE.END_POINT_ID.value,
                                 constants.GREATER_ZERO_PROPERTY)
         self._end_point_id = end_point_id
