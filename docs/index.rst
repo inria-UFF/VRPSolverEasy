@@ -18,4 +18,3 @@ Welcome to VRPSolverEasy's documentation!
    Demos/index
    Important notes/index
    Solver API/index 
-   Bibliography/index
