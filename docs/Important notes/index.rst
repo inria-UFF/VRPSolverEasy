@@ -26,12 +26,16 @@ Debug
 
 If you have trouble solving your problems, you can :
 
-* Check the compatibility of your system and your Python (VRPSolverEasy works only in x64 architecture with Python >= 3.7)
+* Check the compatibility of your system and your Python version.
+
+.. warning:: 
+    VRPSolverEasy works only in x64 architecture with Python >= 3.7
+
 * If it's compatible, you can check your model by exporting it like this::
   
         model.export(instanceName)
   
-* If there is no problem in the model, you can reduce the instance by putting a very low number of points and running the enumeration of all feasible solutions::
+* If there is no problem in the model, you can reduce the instance by putting a very low number of points and running the enumeration of all feasible routes::
 
         model.parameters.action = "enumAllFeasibleRoutes"  
   
