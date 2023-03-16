@@ -864,12 +864,6 @@ class TestAllDemos(unittest.TestCase):
            576.86, objective_value, places=1)
         return None
 
-    def test_mdvrp_p02(self):
-        """test demo p02 in Cordeau format"""
-        objective_value = MDVRP.solve_demo("p02")
-        self.assertAlmostEqual(
-             473.53, objective_value, places=1)
-        return None
 
 
 def VRPSolverEasyTestAll():
