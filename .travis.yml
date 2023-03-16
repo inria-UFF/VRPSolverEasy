@@ -1,6 +1,0 @@
-language: python
-
-install:
-- pip install .
-
-script: VRPSolverRealTest
