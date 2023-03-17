@@ -93,7 +93,7 @@ def solve_demo(instance_name, folder_data="/data/",
                            demand=data.cust_demands[i]
                            )
 
-    nb_link = 0
+    link_id = 0
 
     # Compute the links between depot and other points
     for i,cust_i in enumerate(data.cust_coordinates):
@@ -103,12 +103,12 @@ def solve_demo(instance_name, folder_data="/data/",
                                           data.depot_coordinates[1],
                                           0)
 
-        model.add_link(name="L" + str(nb_link),
+        model.add_link(name="L" + str(link_id),
                        start_point_id=0,
                        end_point_id=i + 1,
                        distance=dist
                        )
-        nb_link += 1
+        link_id += 1
 
     # Compute the links between points
     for i,cust_i in enumerate(data.cust_coordinates):
@@ -118,13 +118,13 @@ def solve_demo(instance_name, folder_data="/data/",
                                               data.cust_coordinates[j][0],
                                               data.cust_coordinates[j][1],
                                               0)
-            model.add_link(name="L" + str(nb_link),
+            model.add_link(name="L" + str(link_id),
                            start_point_id=i + 1,
                            end_point_id=j + 1,
                            distance=dist
                            )
 
-            nb_link += 1
+            link_id += 1
 
     # set parameters
     model.set_parameters(time_limit=time_resolution,
@@ -146,9 +146,11 @@ def solve_demo(instance_name, folder_data="/data/",
         
         solution time : {model.statistics.solution_time}
         
+        number of nodes : {model.model.statistics.nb_branch_and_bound_nodes}
+        
         solution value : {model.statistics.solution_value}
 
-        root lower bound : {model.statistics.solution_value}
+        root lower bound : {model.statistics.root_lb}
 
         root root time : {model.statistics.root_time}.
         """)
