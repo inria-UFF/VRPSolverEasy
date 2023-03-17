@@ -10,22 +10,22 @@ The **cvrp.py** file allows you to resolve **augerat** instances in the followin
 
 * The first line indicates the name of the instance.
 * The second line gives a comment about the data, for example, the optimal value expected.
-* The third line gives the type of instance.
+* The third line gives the type of the instance.
 * The fourth line gives the dimension of the problem
 * The fifth line indicates the technique used for calculating the distance between 2 points.
-* the 6th line indicates the capacity of vehicle.  
+* the 6th line indicates the capacity of the vehicle.  
 * After the keyword *NODE_COORD_SECTION*, for each point, the following informations are given :
 
-    * Index of point
+    * Index of the point
     * X coordinate
     * Y coordinate  
 
 After the keyword *DEMAND_SECTION*, for each point the following informations are given :
    
-    * Index of point
+    * Index of the point
     * Demand
 
-After the keyword *DEPOT_SECTION*, we retrieve the index of depot.
+After the keyword *DEPOT_SECTION*, we retrieve the index of the depot.
    
 Run instances
 ----------------------------
@@ -72,7 +72,7 @@ In the first time, we read instance and get data with this attributes :
         depot_coordinates = [54.69,57.36]
 
 .. note::
-   You can also enumerate all feasible solution by changing the parameter action but this parameter works only for small instances ::
+   You can also enumerate all feasible routes by changing the parameter action but this parameter works only for small instances ::
 
      model.parameters.action = "enumAllFeasibleRoutes"
 

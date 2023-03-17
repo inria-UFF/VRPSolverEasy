@@ -11,7 +11,7 @@ The **cvrptw.py** file allows you to resolve **solomon** instances in the follow
 * The fifth line gives the number of vehicles and the capacity. 
 * From the 10th line, we have the following informations for each point of graph.
 
-   * Index of point (0 correspond to the depot)
+   * Index of the point (0 corresponds to the depot)
    * X coordinate
    * Y coordinate
    * Demand
@@ -36,7 +36,7 @@ If you want to use CPLEX as solver, you have to install cplex by following the d
 
 Python file
 ^^^^^^^^^^^^^^^^^^^^^^
-You can modify the demos directly in the file **CVRPTW.py**, which is included in the folder demos. You can go to the bottom of the file, uncomment, and update this line::
+You can modify the demo directly in the file **CVRPTW.py**, which is included in the folder demos. You can go to the bottom of the file, uncomment, and update this line::
     
     solve_demo("R101.txt")
 
@@ -53,7 +53,7 @@ Get data
     # read instance
     data = read_cvrptw_instances(instance_name,folder_data,type_instance)
 
-In the first time, we read instance and get data with this attributes :
+In the first time, we read the instance and get data with these attributes :
 
 .. code-block:: python
 
@@ -85,7 +85,7 @@ Add vehicle types
                            var_cost_dist=1
                            )
 
-Here the start point id and the end point id = 0 because we have only one depot from which all the vehicles start and return.
+Here, the start point id and the end point id = 0 because we have only one depot from which all the vehicles start and return.
 
 Add depot and customers 
 ^^^^^^^^^^^^^^^^^^^^^^^^  
@@ -188,7 +188,7 @@ Solve model
 Print solution
 ^^^^^^^^^^^^^^^^^^^^^^ 
 
-You can print solution with an automatically printing function :
+You can print the solution with an automatic printing function :
 
 .. code-block:: python
 

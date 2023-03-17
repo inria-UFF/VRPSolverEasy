@@ -393,15 +393,15 @@ class Point:
         Additional informations:
            - service_time : It can represent the time of
              loading or unloading.
-           - penalty_or_cost : if the point is a customer
-             we can specify penalty for not
+           - penalty_or_cost : If the point is a customer
+             we can specify a penalty for not
              visiting the customer
              otherwise, if the point is a depot
-             we can specify a cost to using the depot
+             we can specify a cost to using the depot.
            - tw_begin : time windows begin
            - tw_end : time windows end 
-           - incompatible_vehicles : id of vehicles that cannot deliver
-             the customer or not accepted in a depot
+           - incompatible_vehicles : id of vehicles that cannot serve
+             the customer or are not accepted in a depot.
     """
 
     def __init__(self, id, name=str(), id_customer=0, penalty_or_cost=0.0,
@@ -513,12 +513,12 @@ class Point:
 
     @property
     def tw_begin(self):
-        """getter function of tw_begin"""
+        """getter function of time windows begin"""
         return self._tw_begin
 
     @tw_begin.setter
     def tw_begin(self, tw_begin):
-        """setter function of tw_begin"""
+        """setter function of time windows begin"""
         if not isinstance(tw_begin, (int, float)):
             raise PropertyError(constants.POINT.TIME_WINDOWS_BEGIN.value,
                                 constants.NUMBER_PROPERTY)
@@ -526,12 +526,12 @@ class Point:
 
     @property
     def tw_end(self):
-        """getter function of tw_end"""
+        """getter function of time windows end"""
         return self._tw_end
 
     @tw_end.setter
     def tw_end(self, tw_end):
-        """setter function of tw_end"""
+        """setter function of time windows end"""
         if not isinstance(tw_end, (int, float)):
             raise PropertyError(constants.POINT.TIME_WINDOWS_END.value,
                                 constants.NUMBER_PROPERTY)
@@ -668,11 +668,11 @@ class Customer(Point):
     """Define a point customer of graph.
 
     Additional informations:
-        id_customer(int): must be inferior or equal to 1022
-        penalty(float): represents the penalty of non visited customer
-        tw_begin(float): time window begin
-        tw_end(float): time window end
-        demand: must be an integer
+       - id_customer(int): must be inferior or equal to 1022
+       - penalty(float): represents the penalty of non visited customer
+       - tw_begin(float): time window begin
+       - tw_end(float): time window end
+       - demand(int): must be an integer
     """
 
     def __init__(
@@ -985,7 +985,7 @@ class Parameters:
     @property
     def print_level(self):
         """indicates the level of print from Bapcod
-                            during the resolution, we can choose (-2,-1,0,1,2)"""
+                            during the resolution, we can choose (-2,-1,0)"""
         return self._print_level
 
     @print_level.setter
@@ -1020,9 +1020,9 @@ class Parameters:
 
     @property
     def cplex_path(self):
-        """str : path of library cplex 22.1
+        """str : path of library cplex 22.1.
            You can specify a path if you want to use cplex and 
-           replace  bapcod-shared library by the library using cplex"""
+           replace the bapcod-shared library by the library using cplex"""
         return self._cplex_path
 
     @cplex_path.setter
@@ -1261,7 +1261,7 @@ class Solution:
 
     def export(self, name="instance"):
         """Export solution for sharing or debugging model,
-        we can specify the name of file"""
+        we can specify the name of the file"""
         with open(name + ".json", "w") as outfile:
             outfile.write(json.dumps(self.json, indent=1))
 
@@ -1434,11 +1434,11 @@ class Model:
             time,
             fixed_cost)
 
-    def delete_Link(self, id: int):
-        """ Delete a link by giving his id """
-        if id not in self.links:
+    def delete_Link(self, name: str):
+        """ Delete a link by giving his name """
+        if name not in self.links:
             raise ModelError(constants.DEL_LINK_ERROR)
-        del self.links[id]
+        del self.links[name]
 
     def add_point(
             self,
@@ -1451,9 +1451,9 @@ class Model:
             tw_end=0.0,
             demand_or_capacity=0,
             incompatible_vehicles=[]):
-        """Add Point in dictionary :py:attr:`points`, if we want to add Depot
-           id_customer must be equal to 0 otherwise it cannot be superior
-           to 1022 for a Customer"""
+        """Add Point in dictionary :py:attr:`points`, if we want to add Depot,
+           id_customer must be equal to 0, otherwise it cannot be greater
+           than 1022 for a Customer"""
 
         if id in self.points:
             raise ModelError(constants.ADD_POINT_ERROR)
@@ -1524,11 +1524,11 @@ class Model:
                        heuristic_used=False, time_limit_heuristic=20,
                        config_file=str(), solver_name="CLP",
                        print_level=-1, action="solve", cplex_path=""):
-        """Set parameters of model. For more advanced parameters please
+        """Set parameters of the model. For more advanced parameters please
        indicates a configuration file on config_file variable.
        solver_name : [CLP,CPLEX]
        action : [solve,enumAllFeasibleRoutes],
-       print_level = [-2,-1,0,1,2]"""
+       print_level = [-2,-1,0]"""
 
         self.parameters = Parameters(
             time_limit,
@@ -1543,7 +1543,8 @@ class Model:
 
 
     def check_depots(self):
-        """update model if there is defined depots not used by vehicles"""
+        """Update the model if there are defined intermediate 
+        depots not used by vehicles"""
 
         depots_ids_defined = set()
         for id in self.points:
@@ -1585,8 +1586,10 @@ class Model:
         return self.__str__()
 
     def export(self, name="instance",all_elements=False):
-        """Export model for debugging model,
-           we can specify the name of file"""
+        """Export the model for debugging model,
+           we can specify the file name.
+           If you put all_elements to True, 
+           it exports the model with preprocessing elements."""
 
         #add preprocessing elements in model
         if all_elements:

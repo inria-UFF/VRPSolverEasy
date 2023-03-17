@@ -55,7 +55,7 @@ If you want to use CPLEX as solver, you have to install cplex by following the d
 
 Python file
 ^^^^^^^^^^^^^^^^^^^^^^
-You can modify the demos directly in the file **MDVRP.py**, which is included in the folder demos. You can go to the bottom of the file, uncomment, and update this line::
+You can modify the demo directly in the file **MDVRP.py**, which is included in the folder demos. You can go to the bottom of the file, uncomment, and update this line::
     
     solve_demo("p01")
 
@@ -175,7 +175,7 @@ Solve model
 Print solution
 ^^^^^^^^^^^^^^^^^^^^^^ 
 
-You can print solution with an automatically printing function :
+You can print the solution with an automatic printing function :
 
 .. code-block:: python
 

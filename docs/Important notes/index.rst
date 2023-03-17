@@ -4,7 +4,7 @@ Important notes
 
 
 Improve performances
-------------------
+---------------------
 
 You can improve the performance of the solver if you set the upper bound parameter : ::
         

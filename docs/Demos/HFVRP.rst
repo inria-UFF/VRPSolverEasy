@@ -10,7 +10,7 @@ The  **hfvrp.py** file allows you to resolve **queiroga** instances in the follo
 * The first line indicates the number of points.
 * After the number of points, for each point, the following informations are given :
    
-    * Index of point
+    * Index of the point
     * X coordinate
     * Y coordinate  
     * Demand
@@ -40,7 +40,7 @@ If you want to use CPLEX as solver, you have to install cplex by following the d
 
 Python file
 ^^^^^^^^^^^^^^^^^^^^^^
-You can modify the demos directly in the file **HFVRP.py**, which is included in the folder demos. You can go to the bottom of the file, uncomment, and update this line::
+You can modify the demo directly in the file **HFVRP.py**, which is included in the folder demos. You can go to the bottom of the file, uncomment, and update this line::
     
     solve_demo("c50_13fsmd.txt")
 
@@ -88,7 +88,7 @@ Add vehicle types
                                var_cost_dist=data.vehicle_var_costs[i]
                                )
 
-In this demos, each type of vehicle is characterized by its capacity, its fixed cost and its variable cost.
+In this demo, each type of vehicle is characterized by its capacity, its fixed cost, and its variable cost.
 
 Add depot and customers 
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -162,7 +162,7 @@ Solve model
 Print solution
 ^^^^^^^^^^^^^^^^^^^^^^ 
 
-You can print solution with an automatically printing function :
+You can print the solution with an automatic printing function :
 
 .. code-block:: python
 
