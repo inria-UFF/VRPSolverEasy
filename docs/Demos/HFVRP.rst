@@ -1,46 +1,44 @@
 HFVRP
 =========
-The Heterogeneous Fleet Vehicle Routing Problem (HFVRP) is a variant of the classical Vehicle Routing Problem (VRP) in which the fleet of vehicles is composed of vehicles with different attributes (capacities, costs..). The objective of the HFVRP is to minimize the total travel time, distance or cost of the vehicles while servicing a set of customers with specific demands and time windows, subject to various constraints
+The Heterogeneous Fleet Vehicle Routing Problem (HFVRP) is a variant of the CVRP in which vehicles have different capacity, fixed cost and unitary traveling costs. 
 
-Instance formats
-----------------------------
+Instances format
+----------------
 
-The  **hfvrp.py** file allows you to resolve **queiroga** instances in the following format : 
+The demo read the instances in the following format (standard in the academic literature for the HFVRP): 
 
-* The first line indicates the number of points.
-* After the number of points, for each point, the following informations are given :
+* The first line indicates the number of points (depot and customers).
+* The, for each point, the following information is given :
    
     * Index of the point
     * X coordinate
     * Y coordinate  
     * Demand
 
-* After these lines, the number of vehicle types is given and the following lines contain for each vehicle :
+* Afterwards, the number of vehicle types is given and the following lines contain for each vehicle type:
    
    * Capacity
    * Fixed cost 
-   * Variable cost 
-   * Minimum number of vehicles 
-   * Maximum number of vehicles 
+   * Variable cost (cost traveling each unit distance) 
+   * Minimum number of vehicles to use (always zero) 
+   * Maximum number of vehicles to use 
 
 Run instances
-----------------------------
+-------------
 There are two ways to run a specific instance:
 
 Command line
 ^^^^^^^^^^^^^^^^^^^^^^
 
-After the installation, you can run an instance by specifying different parameters directly in the command line, like this::
+You can solve an instance by specifying different parameters directly in the command line, like this::
 
-    python CVRP.py -i INSTANCE_PATH/NAME_INSTANCE 
-       -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
+    python HFVRP.py -i <instance path> -t <time limit> -s <solver_name>
 
-If you want to use CPLEX as solver, you have to install cplex by following the different :doc:`installation </Installation/index>` steps.
-
+CPLEX solver can be used only with the :doc:`academic version </Installation/index>`. When using CPLEX solver on a Windows computer, one should give its path: :code:`-p <path to CPLEX>`.
 
 Python file
 ^^^^^^^^^^^^^^^^^^^^^^
-You can modify the demo directly in the file **HFVRP.py**, which is included in the folder demos. You can go to the bottom of the file, uncomment, and update this line::
+You can specify the instance name directly in the demo file **HFVRP.py**, by uncommenting the last line::
     
     solve_demo("c50_13fsmd.txt")
 
@@ -55,26 +53,26 @@ Get data
    
 
     # read instance
-    data = read_hfvrp_instances(instance_name,folder_data,type_instance)
+    data = read_hfvrp_instance(instance_name,folder_data)
 
-In the first time, we read instance and get data with this attributes :
+An example of the contents of :code:`data` :
 
 .. code-block:: python
 
+        nb_vehicle_types = 2
+        nb_customers = 3
         vehicle_capacities = [300,250]
         vehicle_fixed_costs = [12,24]
         vehicle_var_costs = [12,24]
-        nb_customers = 3
-        nb_vehicle_types = 2
         cust_demands = [15,52,65]
         cust_coordinates = [[55.21,44.36],[54.31,65.23],[57.81,53.27]]
         depot_coordinates = [54.69,57.36]
 
 Add vehicle types
-^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^
   .. code-block:: python
 
-    # modelisation of problem
+    # create the model
     model = solver.Model()
 
     for i in range(data.nb_vehicle_types):
@@ -85,13 +83,10 @@ Add vehicle types
                                capacity=data.vehicle_capacities[i],
                                max_number=data.nb_customers,
                                fixed_cost=data.vehicle_fixed_costs[i],
-                               var_cost_dist=data.vehicle_var_costs[i]
-                               )
-
-In this demo, each type of vehicle is characterized by its capacity, its fixed cost, and its variable cost.
+                               var_cost_dist=data.vehicle_var_costs[i])
 
 Add depot and customers 
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -101,15 +96,14 @@ Add depot and customers
     # add all customers
     for i in range(data.nb_customers):
         model.add_customer(id=i+1, 
-                           demand=data.cust_demands[i]
-                           )
+                           demand=data.cust_demands[i])
 
 Add links
 ^^^^^^^^^^^^^^^^^^^^^^  
 
 .. code-block:: python
 
-    nb_link = 0
+    link_id = 0
 
     # Compute the links between depot and other points
     for i,cust_i in enumerate(data.cust_coordinates):
@@ -120,9 +114,8 @@ Add links
         model.add_link(name="L" + str(nb_link),
                        start_point_id=0,
                        end_point_id=i + 1,
-                       distance=dist
-                       )
-        nb_link += 1
+                       distance=dist)
+        link_id += 1
 
     # Compute the links between points
     for i,cust_i in enumerate(data.cust_coordinates):
@@ -131,14 +124,12 @@ Add links
                                               cust_i[1],
                                               data.cust_coordinates[j][0],
                                               data.cust_coordinates[j][1])
-            model.add_link(name="L" + str(nb_link),
+            model.add_link(name="L" + str(link_id),
                            start_point_id=i + 1,
                            end_point_id=j + 1,
-                           distance=dist
-                           )
+                           distance=dist)
 
-            nb_link += 1
-                     
+            link_id += 1                     
     }
 
 Set parameters
@@ -146,9 +137,8 @@ Set parameters
 
 .. code-block:: python
 
-   # set parameters
-      model.set_parameters(time_limit=30,
-                           solver_name="CLP")
+    # set parameters
+    model.set_parameters(time_limit=30, solver_name="CLP")
 
                      
 Solve model
@@ -156,17 +146,16 @@ Solve model
 
 .. code-block:: python
 
-   # set parameters
    model.solve()
    
 Print solution
 ^^^^^^^^^^^^^^^^^^^^^^ 
 
-You can print the solution with an automatic printing function :
+You can output the solution using the :code:`print()` function
 
 .. code-block:: python
 
-   # print solution
-   print(model.solution)
+    if (model.solution.is_defined())
+        print(model.solution)
 
-or you can print manually each route, to do this, we invite you to consult the last section of the demo :doc:`/Demos/CVRP` 
+or you can analyze the solution manually by retrieving each route. For and example, consult the last section of the demo :doc:`/Demos/CVRP`. 

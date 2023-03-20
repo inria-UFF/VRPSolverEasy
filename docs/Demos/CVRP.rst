@@ -74,7 +74,7 @@ Add vehicle type
 
   .. code-block:: python
 
-    # modelisation of problem
+    # create model
     model = solver.Model()
 
     # add vehicle type
@@ -86,7 +86,7 @@ Add vehicle type
                            var_cost_dist=1)
 
 .. note::
-   You can also model the variant with open routes (open vehicle routing problem or ORP) by specifying :python:`start_point_id=-1` and/or :python:`end_point_id=-1`. An open route may start and/or finish at any customer point. 
+   You can also model the variant with open routes (open vehicle routing problem or ORP) by specifying :code:`start_point_id=-1` and/or :code:`end_point_id=-1`. An open route may start and/or finish at any customer point. 
    
 
 Add depot and customers 
@@ -156,7 +156,6 @@ Solve model
 
 .. code-block:: python
 
-   # set parameters
    model.solve()
 
 .. note::

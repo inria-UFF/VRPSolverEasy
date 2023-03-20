@@ -6,7 +6,7 @@ VRPSolverEasy distribution provides the demos, which give VRPSolver models for s
 .. toctree::
    :maxdepth: 1
 
-   CVRPTW
    CVRP
+   CVRPTW
    HFVRP
    MDVRP
