@@ -1,7 +1,7 @@
 Example
 ======================================
 
-We will show you how to modelise a simple optimization routing problem by using VRPSolverEasy.
+We will show you how define the VRPSolverEasy model for the capacitated vehicle routing problem with time windows (VRPTW).
 
 Data
 ------------------
@@ -9,17 +9,13 @@ Data
 .. image:: Pictures/data.jpg
 
 
-
-In this example, the objective is to minimize the total cost of a route 
-such that each customer is served within their time windows and the total demand handled by each truck does not exceed its capacity.
-The distance between points were calculated using the Euclidean norm and the time 
-between points corresponds to the distance.
+In the VRPTW, the objective is to minimize the total route length (traveled distance) such that each customer is served within his time window and the total demand delivered by each truck does not exceed its capacity.
+The distance between points are calculated using the Euclidean norm and the traveling time between points is equal to the distance.
 
 .. code-block:: python
   
 
     # data
-    cost_per_time = 10
     cost_per_distance = 10
     begin_time = 0
     end_time = 5000
@@ -39,8 +35,7 @@ between points corresponds to the distance.
     demands = [0, 500, 300, 600, 658, 741, 436]
 
 
-In this example, we resolve a very simple **CVRPTW** with the same time windows.
-
+In this example, we solve a very small VRPTW instance in which time windows of customers are equal. This special case is called distance constrained vehicle routing problem (DCVRP).
 
 Model VRPSolverEasy
 ---------------------
@@ -59,7 +54,6 @@ Model VRPSolverEasy
         capacity=1100,
         max_number=6,
         var_cost_dist=cost_per_distance,
-        var_cost_time=cost_per_time,
         tw_end=5000)
 
     # Add depot
@@ -93,20 +87,27 @@ Model VRPSolverEasy
             enumerate += 1
 
 
- 
+Solving model 
+-----------------------------------------
+
+.. code-block:: python
+
+    model.solve()
+
 
 Results
 ------------------
 
 .. image:: Pictures/Results.jpg
 
-After the resolution, you can use the routes of vehicles in :
+After solving, we can print the solution if it found:
 
 .. code-block:: python
 
-    model.solution
+    if model.solution.is_defined():
+        print(model.solution)
 
-If you print the solution, it displays the following output::
+You obtain the following output::
 
     Route for vehicle 1:
         ID : 0 --> 2 --> 5 --> 0
@@ -130,8 +131,11 @@ If you print the solution, it displays the following output::
         Total cost : 12563.84
 
 .. note::
-   You can also enumerate all feasible solution by changing the parameter action but this parameter works only for small instances ::
+   You can also enumerate all feasible solutions by changing parameters before solving ::
 
      model.parameters.action = "enumAllFeasibleRoutes"
 
-You can read the :doc:`/Solver API/index` page for more informations.
+   Enumeration works only for very small instances, and should be used only for debugging and demonstration/teaching purposes.    
+
+
+Full documentation of the VRPSolver API is given in :doc:`/Solver API/index`.

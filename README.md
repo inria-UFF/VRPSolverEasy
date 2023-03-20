@@ -1,6 +1,26 @@
 # VRPSolverEasy [![Python package](https://github.com/inria-UFF/VRPSolverEasy/actions/workflows/python-package.yml/badge.svg)](https://github.com/inria-UFF/VRPSolverEasy/actions/workflows/python-package.yml)
 
-This project is an implementation of VRPSolver, a package allows you to resolve routing problems by using the bapCod solver,(COIN-OR) CLP and CPLEX solver.
+VRPSolverEasy is a Python package which provides a **simple interface for** [VRPSolver](https://vrpsolver.math.u-bordeaux.fr/), which is a state-of-the-art Branch-Cut-and-Price exact solver for vehicle routing problems (VRPs). The simplified interface is accessible for **users without operations research background**, i.e., you do not need to know how to model your problem as an Integer Programming problem. As a price to pay for the simplicity, this interface is restricted to some standard VRP variants, which involve the following features and their combinations:
+* capacitated vehicles,
+* customer time windows,
+* heterogeneous fleet,
+* multiple depots,
+* open routes, 
+* optional customers with penalties,
+* parallel links to model transition time/cost trade-off,
+* customers with alternative locations and/or time windows.
+
+To our knowledge, VRPSolver is the most efficient **exact** solver available for VRPs. Its particularity is to focus on finding and improving a **lower bound** on the optimal solution value of your instance. It is less efficient in finding feasible solutions, but still can be better than available heuristic solvers for non-classic VRP variants. One can expect to find **provably optimal solutions** for instances with up to 100 customers. Instances with up to 200-250 customers may also be solved in some cases, usually in long runs. Performance of VRPSolver significantly improves when it is used together with an efficient heuristic VRP solver, which is able to provide *very good* initial upper bounds. 
+
+VRPSolverEasy package is a **work in progress** for the moment. The accompanying paper is in preparation. 
+
+VRPSolver is based on a research proof-of-concept code prone to issues. Use it only for research, teaching, testing, and R&D purposes at your own risk. It is not suited for use in production. Please use Issues section in this repository to report bugs and issues, and to give suggestions. 
+
+## License
+
+The VRPSolverEasy package itself is open-source and free to use. It includes compiled libraries of [BaPCod](https://bapcod.math.u-bordeaux.fr/), its VRPSolver extension, and COIN-OR CLP solver. These libraries are also free to use.  
+
+For better performance, it is possible to use VRPSolverEasy together with CPLEX MIP solver. This combination called *academic version* requires an access to the source code of BaPCod available with an [academic-use-only license](https://bapcod.math.u-bordeaux.fr/#licence). The academic version of VRPSolverEasy additionally includes a MIP-based (slow) heuristic which is useful for finding feasible solutions in the absence of an external heuristic solver. 
 
 ## Installation 
 
@@ -17,30 +37,21 @@ python -m pip install VRPSolverEasy
 The second way is to following this steps:
 
 - Download the package and extract it into a local directory
-- (Windows) Move to this local directory and enter :
+- Move to this local directory and enter :
 ```
  python pip install .
 ```
-- (MacOs and Linux):
-```
- python pip install .
-```
-If you work on ARM Mac, you must install python in x86-x64 architecture and use the same commands.
 
-## Examples
+Installation instructions for Mac computers with Apple ARM processors, as well as for the academic version, are given in the documentation.
 
-### Initialisation of model
+## Example 
 
-After installation, if you want to create your first model you have to import the solver like this:
+A simple example which shows how to use the VRPSolverEasy package:
+
 ```
 import VRPSolverEasy.src.solver as solver
-```
-
-#### Create and solve your first model 
-```
-    """modelisation of small example using solver"""
+    
     # data
-    cost_per_time = 10
     cost_per_distance = 10
     begin_time = 0
     end_time = 5000
@@ -71,7 +82,6 @@ import VRPSolverEasy.src.solver as solver
         capacity=1100,
         max_number=6,
         var_cost_dist=cost_per_distance,
-        var_cost_time=cost_per_time,
         tw_end=5000)
 
     # Add depot
@@ -104,17 +114,16 @@ import VRPSolverEasy.src.solver as solver
                 time=dist)
             enumerate += 1
 
-    # solver model
+    # solve model
     model.solve()
     model.export()
 
-    print(model.solution)
+    if model.solution.is_defined():
+        print(model.solution)
 ```
 ## Documentation
 
-If you want to know more about the documentation, you can go on https://vrpsolvereasy.readthedocs.io/en/latest/. 
-
-### Build Documentation
+Documentation, explanation of demos (CVRP, VRPTW, HFVRP, and MDVRP), and the solver API are accessible here: https://vrpsolvereasy.readthedocs.io/en/latest/. 
 
 You can also build the documentation locally by following this instructions from the source folder :
 
@@ -125,4 +134,4 @@ cd ..
 make html
 ```
 
-The HTML pages will be in the folder build\html.
+The HTML pages will be in the folder `build\html`.

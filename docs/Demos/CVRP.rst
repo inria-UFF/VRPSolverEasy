@@ -1,26 +1,26 @@
 CVRP
 ================
 
-The Capacitated Vehicle Routing Problem (CVRP) is a well-known optimization problem in operations research, where a set of vehicles with limited capacities is tasked with servicing a set of customers, located at different points in a geographic area, with minimum cost. The objective of the problem is to find the optimal route for each vehicle such that all customers are visited, and the total distance traveled is minimized, while respecting the capacity constraints of the vehicles.
+The Capacitated Vehicle Routing Problem (CVRP) is the most basic VRP, where a set of homogeneous vehicles of limited capacity serves a set of customers, located at different points in a geographic area. The objective of the problem is to minimize the total routing cost, i.e. the total distance traveled by vehicles. 
 
-Instance formats
+Instances format
 ----------------------------
 
-The **cvrp.py** file allows you to resolve **augerat** instances in the following format : 
+The demo reads instances in the standard `CVRPLIB <http://vrp.galgos.inf.puc-rio.br/index.php/en/>`_ format.
 
 * The first line indicates the name of the instance.
 * The second line gives a comment about the data, for example, the optimal value expected.
 * The third line gives the type of the instance.
-* The fourth line gives the dimension of the problem
-* The fifth line indicates the technique used for calculating the distance between 2 points.
+* The fourth line gives the dimension of the instance.
+* The fifth line indicates how distances are calculated.
 * the 6th line indicates the capacity of the vehicle.  
-* After the keyword *NODE_COORD_SECTION*, for each point, the following informations are given :
+* After the keyword *NODE_COORD_SECTION*, the following information is given for each point:
 
     * Index of the point
     * X coordinate
     * Y coordinate  
 
-After the keyword *DEMAND_SECTION*, for each point the following informations are given :
+After the keyword *DEMAND_SECTION*, the following information is given for each point :
    
     * Index of the point
     * Demand
@@ -28,23 +28,21 @@ After the keyword *DEMAND_SECTION*, for each point the following informations ar
 After the keyword *DEPOT_SECTION*, we retrieve the index of the depot.
    
 Run instances
-----------------------------
+-------------
 There are two ways to run a specific instance:
 
 Command line
 ^^^^^^^^^^^^^^^^^^^^^^
 
-After the installation, you can run an instance by specifying different parameters directly in the command line, like this::
+You can solve an instance by specifying different parameters directly in the command line, like this::
 
-    python CVRP.py -i INSTANCE_PATH/NAME_INSTANCE 
-       -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
+    python CVRP.py -i <instance path> -t <time limit> -s <solver_name>
 
-If you want to use CPLEX as solver, you have to install cplex by following the different :doc:`installation </Installation/index>` steps.
-
+CPLEX solver can be used only with the :doc:`academic version </Installation/index>`. When using CPLEX solver on a Windows computer, one should give its path: :code:`-p <path to CPLEX>`.
 
 Python file
 ^^^^^^^^^^^^^^^^^^^^^^
-You can modify the demos directly in the file **CVRP.py**, which is included in the folder demos. You can go to the bottom of the file, uncomment, and update this line::
+You can specify the instance name directly in the demo file **CVRP.py**, by uncommenting the last line::
     
     solve_demo("A-n36-k5.vrp")
 
@@ -57,11 +55,10 @@ Get data
 
 .. code-block:: python
    
-
     # read instance
-    data = read_cvrp_instances(instance_name,folder_data,type_instance)
+    data = read_instance(instance_name,folder_data)
 
-In the first time, we read instance and get data with this attributes :
+An example of the contents of :code:`data` :
 
 .. code-block:: python
 
@@ -71,17 +68,13 @@ In the first time, we read instance and get data with this attributes :
         cust_coordinates = [[55.21,44.36],[54.31,65.23],[57.81,53.27]]
         depot_coordinates = [54.69,57.36]
 
-.. note::
-   You can also enumerate all feasible routes by changing the parameter action but this parameter works only for small instances ::
-
-     model.parameters.action = "enumAllFeasibleRoutes"
-
 
 Add vehicle type
 ^^^^^^^^^^^^^^^^^^^^^^
+
   .. code-block:: python
 
-    # modelisation of problem
+    # create model
     model = solver.Model()
 
     # add vehicle type
@@ -90,13 +83,11 @@ Add vehicle type
                            end_point_id=0,
                            max_number=data.nb_customers,
                            capacity=data.vehicle_capacity,
-                           var_cost_dist=1
-                           )
+                           var_cost_dist=1)
 
 .. note::
-   You can also resolve an OVRP(Open Vehicle Routing Problem) problem if you put **start_point_id=-1** or **end_point_id=-1**.
-   The characteristic of the OVRP problem is that the vehicle is not required to return to the depot.
-
+   You can also model the variant with open routes (open vehicle routing problem or ORP) by specifying :code:`start_point_id=-1` and/or :code:`end_point_id=-1`. An open route may start and/or finish at any customer point. 
+   
 
 Add depot and customers 
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -109,31 +100,27 @@ Add depot and customers
     # add all customers
     for i in range(data.nb_customers):
         model.add_customer(id=i+1, 
-                           demand=data.cust_demands[i]
-                           )
+                           demand=data.cust_demands[i])
 
 Add links
 ^^^^^^^^^^^^^^^^^^^^^^  
 
 .. code-block:: python
 
-
-    nb_link = 0
+    link_id = 0
 
     # Compute the links between depot and other points
     for i,cust_i in enumerate(data.cust_coordinates):
         dist = compute_euclidean_distance(cust_i[0],
                                           cust_i[1],
                                           data.depot_coordinates[0],
-                                          data.depot_coordinates[1],
-                                          0)
+                                          data.depot_coordinates[1], 0)
 
-        model.add_link(name="L" + str(nb_link),
+        model.add_link(name="L" + str(link_id),
                        start_point_id=0,
                        end_point_id=i + 1,
-                       distance=dist
-                       )
-        nb_link += 1
+                       distance=dist)
+        link_id += 1
 
     # Compute the links between points
     for i,cust_i in enumerate(data.cust_coordinates):
@@ -141,19 +128,17 @@ Add links
             dist = compute_euclidean_distance(cust_i[0],
                                               cust_i[1],
                                               data.cust_coordinates[j][0],
-                                              data.cust_coordinates[j][1],
-                                              0)
-            model.add_link(name="L" + str(nb_link),
+                                              data.cust_coordinates[j][1], 0)
+            model.add_link(name="L" + str(link_id),
                            start_point_id=i + 1,
                            end_point_id=j + 1,
-                           distance=dist
-                           )
+                           distance=dist)
 
-            nb_link += 1
+            link_id += 1
                      
     }
 
-In this demo, we have only one vehicle type and the distances are computing by using eucledian distance.
+In this demo, we have only one vehicle type, and the Eucledian distances are used.
 
 
 Set parameters
@@ -171,8 +156,12 @@ Solve model
 
 .. code-block:: python
 
-   # set parameters
    model.solve()
+
+.. note::
+   You can also enumerate all feasible routes by changing the action parameter (possible only for small instances) ::
+
+     model.parameters.action = "enumAllFeasibleRoutes"
 
 Print solution
 ^^^^^^^^^^^^^^^^^^^^^^ 
@@ -181,12 +170,13 @@ Print solution
 * The first command will print solution with an automatically printing function :
 
 .. code-block:: python
-
+   
    # print solution
    print(model.solution)
 
-.. code-block:: python
-
+.. code-block:: text
+    :caption: Output
+    
     Route for vehicle 1:
     ID : 0 --> 30 --> 16 --> 1 --> 12 --> 0
     Load : 0.0 --> 14.0 --> 32.0 --> 51.0 --> 72.0 --> 72.0
@@ -199,7 +189,7 @@ Print solution
 
     ...
 
-* The second way will print manually solution like this :
+* The second way is to print the solver statistics and solution manually :
 
 .. code-block:: python
 
@@ -208,10 +198,12 @@ Print solution
         best lower bound : { model.statistics.best_lb } 
         
         solution time : {model.statistics.solution_time}
+
+        number of nodes : {model.model.statistics.nb_branch_and_bound_nodes}
         
         solution value : {model.statistics.solution_value}
 
-        root lower bound : {model.statistics.solution_value}
+        root lower bound : {model.statistics.root_lb}
 
         root root time : {model.statistics.root_time}.
         """)
@@ -223,16 +215,19 @@ Print solution
             print(f"Load : {route.cap_consumption}.\n")
 
 
-.. code-block:: python
+.. code-block:: text
+    :caption: Output
 
         Statistics :
             best lower bound : 784.0
 
             solution time : 1.1036816
 
+            number of nodes : 1
+
             solution value : 784.0000000000484
 
-            root lower bound : 784.0000000000484
+            root lower bound : 784.0
 
             root root time : 1.0990863.
 

@@ -13,7 +13,6 @@ def compute_euclidean_distance(x_i, y_i, x_j, y_j):
 def run_example():
     """modelisation of small example using solver"""
     # data
-    cost_per_time = 10
     cost_per_distance = 10
     begin_time = 0
     end_time = 5000
@@ -44,7 +43,6 @@ def run_example():
         capacity=1100,
         max_number=6,
         var_cost_dist=cost_per_distance,
-        var_cost_time=cost_per_time,
         tw_end=5000)
 
     # Add depot
@@ -81,7 +79,8 @@ def run_example():
     model.solve()
     model.export()
 
-    print(model.solution)
+    if model.solution.is_defined():
+        print(model.solution)
 
 
 if __name__ == "__main__":
