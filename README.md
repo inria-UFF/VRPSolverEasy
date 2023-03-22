@@ -8,6 +8,7 @@ VRPSolverEasy is a Python package which provides a **simple interface for** [VRP
 * open routes, 
 * optional customers with penalties,
 * parallel links to model transition time/cost trade-off,
+* incompatibilities between vehicles and customers,
 * customers with alternative locations and/or time windows.
 
 To our knowledge, VRPSolver is the most efficient **exact** solver available for VRPs. Its particularity is to focus on finding and improving a **lower bound** on the optimal solution value of your instance. It is less efficient in finding feasible solutions, but still can be better than available heuristic solvers for non-classic VRP variants. One can expect to find **provably optimal solutions** for instances with up to 100 customers. Instances with up to 200-250 customers may also be solved in some cases, usually in long runs. Performance of VRPSolver significantly improves when it is used together with an efficient heuristic VRP solver, which is able to provide *very good* initial upper bounds. 
