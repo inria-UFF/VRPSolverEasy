@@ -32,23 +32,16 @@ def compute_euclidean_distance(x_i, y_i, x_j, y_j, number_digit=3):
                            (y_i - y_j)**2), number_digit)
 
 
-def read_instance(name: str, folder_data="/data/"):
+def read_instance(name: str):
     """ Read an instance in the folder data from a given name """
-    path_project = os.path.join(os.path.dirname
-                                (os.path.realpath(__file__)))
-    if folder_data != "/data/":
-        path_project = ""
 
     with open(
-            path_project +
-            os.path.normpath(
-                folder_data +
-                name),
+            os.path.normpath(name),
             "r", encoding="UTF-8") as file:
         return [str(element) for element in file.read().split()]
 
 
-def solve_demo(instance_name, folder_data="/data/",
+def solve_demo(instance_name,
                time_resolution=30,
                solver_name_input="CLP",
                solver_path=""):
@@ -71,7 +64,7 @@ def solve_demo(instance_name, folder_data="/data/",
                 solver_path = arg
 
     # read instance
-    data = read_cvrp_instances(instance_name, folder_data, type_instance)
+    data = read_cvrp_instances(instance_name)
 
     # modelisation of problem
     model = solver.Model()
@@ -118,8 +111,7 @@ def solve_demo(instance_name, folder_data="/data/",
                                               data.cust_coordinates[j][0],
                                               data.cust_coordinates[j][1],
                                               0)
-            model.add_link(name="L" + str(link_id),
-                           start_point_id=i + 1,
+            model.add_link(start_point_id=i + 1,
                            end_point_id=j + 1,
                            distance=dist
                            )
@@ -135,7 +127,7 @@ def solve_demo(instance_name, folder_data="/data/",
     if (solver_name_input == "CPLEX" and solver_path != ""):
         model.parameters.cplex_path = solver_path
 
-    model.export()
+    #model.export(instance_name)
 
     # solve model
     model.solve()
@@ -148,7 +140,7 @@ def solve_demo(instance_name, folder_data="/data/",
         
         number of nodes : {model.statistics.nb_branch_and_bound_nodes}
         
-        solution value : {model.statistics.solution_value}
+        solution value : {model.solution_value}
 
         root lower bound : {model.statistics.root_lb}
 
@@ -165,18 +157,15 @@ def solve_demo(instance_name, folder_data="/data/",
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
 
-    return model.statistics.solution_value
+    return model.solution_value
 
 
-def read_cvrp_instances(instance_name, name_folder, type_instance):
+def read_cvrp_instances(instance_full_path):
     """Read literature instances from CVRPLIB by giving the name of instance
        and returns dictionary containing all elements of model"""
 
     instance_iter = iter(
-        read_instance(
-            type_instance +
-            instance_name,
-            name_folder))
+        read_instance(instance_full_path))
 
     id_point = 0
     dimension_input = -1
@@ -256,5 +245,3 @@ if __name__ == "__main__":
        python CVRP.py -i INSTANCE_PATH/NAME_INSTANCE \n
        -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
        """)
-       # uncomment for use the file without command line
-       # solve_demo("A-n32-k5.vrp")

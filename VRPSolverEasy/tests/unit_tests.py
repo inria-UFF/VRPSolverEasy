@@ -24,11 +24,11 @@ class TestAllVariants(unittest.TestCase):
         model.add_depot(id=0, name="D1")
         for i in range(1, 5):
             model.add_customer(id=i, name="C" + str(i), demand=20)
-        model.add_link("arc1", start_point_id=0, end_point_id=1, distance=dist)
-        model.add_link("arc2", start_point_id=1, end_point_id=2, distance=dist)
-        model.add_link("arc3", start_point_id=2, end_point_id=3, distance=dist)
-        model.add_link("arc4", start_point_id=3, end_point_id=4, distance=dist)
-        model.add_link("arc5", start_point_id=4, end_point_id=0, distance=dist)
+        model.add_link(name="arc1", start_point_id=0, end_point_id=1, distance=dist)
+        model.add_link(name="arc2", start_point_id=1, end_point_id=2, distance=dist)
+        model.add_link(name="arc3", start_point_id=2, end_point_id=3, distance=dist)
+        model.add_link(name="arc4", start_point_id=3, end_point_id=4, distance=dist)
+        model.add_link(name="arc5", start_point_id=4, end_point_id=0, distance=dist)
 
         # model.export("cvrp",true) DEBUG MODE
 
@@ -36,7 +36,7 @@ class TestAllVariants(unittest.TestCase):
         cost = dist * cost_per_distance * nb_links
         self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
-            cost, model.statistics.solution_value, places=5)
+            cost, model.solution_value, places=5)
 
     def test_cvrp_no_feasible(self):
         """test model in there is only resource of capacity
@@ -53,11 +53,11 @@ class TestAllVariants(unittest.TestCase):
         model.add_depot(id=0, name="D1")
         for i in range(1, 5):
             model.add_customer(id=i, name="C" + str(i), demand=20)
-        model.add_link("arc1", start_point_id=0, end_point_id=1, distance=5)
-        model.add_link("arc2", start_point_id=1, end_point_id=2, distance=6)
-        model.add_link("arc3", start_point_id=2, end_point_id=3, distance=4)
-        model.add_link("arc4", start_point_id=3, end_point_id=4, distance=4)
-        model.add_link("arc5", start_point_id=4, end_point_id=0, distance=4)
+        model.add_link(name="arc1", start_point_id=0, end_point_id=1, distance=5)
+        model.add_link(name="arc2", start_point_id=1, end_point_id=2, distance=6)
+        model.add_link(name="arc3", start_point_id=2, end_point_id=3, distance=4)
+        model.add_link(name="arc4", start_point_id=3, end_point_id=4, distance=4)
+        model.add_link(name="arc5", start_point_id=4, end_point_id=0, distance=4)
         model.solve()
 
         # model.export("cvrp_noFeasible",true) DEBUG MODE
@@ -95,31 +95,31 @@ class TestAllVariants(unittest.TestCase):
                 tw_end=begin_time + 5)
             begin_time += 5
         model.add_link(
-            "arc1",
+            name="arc1",
             start_point_id=0,
             end_point_id=1,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc2",
+            name="arc2",
             start_point_id=1,
             end_point_id=2,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc3",
+            name="arc3",
             start_point_id=2,
             end_point_id=3,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc4",
+            name="arc4",
             start_point_id=3,
             end_point_id=4,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc5",
+            name="arc5",
             start_point_id=4,
             end_point_id=0,
             distance=dist,
@@ -130,7 +130,7 @@ class TestAllVariants(unittest.TestCase):
                 (time_between_points * cost_per_time)) * nb_links
         self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
-            cost, model.statistics.solution_value, places=5)
+            cost, model.solution_value, places=5)
         print(model.solution)
 
     def test_cvrptw_with_parallel_arcs(self):
@@ -163,37 +163,37 @@ class TestAllVariants(unittest.TestCase):
                 tw_end=begin_time + 5)
             begin_time += 5
         model.add_link(
-            "arc1",
+            name="arc1",
             start_point_id=0,
             end_point_id=1,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc2",
+            name="arc2",
             start_point_id=1,
             end_point_id=2,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc3",
+            name="arc3",
             start_point_id=2,
             end_point_id=3,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc4",
+            name="arc4",
             start_point_id=3,
             end_point_id=4,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc5",
+            name="arc5",
             start_point_id=4,
             end_point_id=0,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc6",
+            name="arc6",
             start_point_id=4,
             end_point_id=0,
             distance=dist,
@@ -202,7 +202,7 @@ class TestAllVariants(unittest.TestCase):
         model.solve()       
         self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
-            425, model.statistics.solution_value, places=5)
+            425, model.solution_value, places=5)
         print(model.solution)
 
     def test_cvrptw_nofeasible_on_time(self):
@@ -229,31 +229,31 @@ class TestAllVariants(unittest.TestCase):
                 tw_end=begin_time + 5)
             begin_time += 5
         model.add_link(
-            "arc1",
+            name="arc1",
             start_point_id=0,
             end_point_id=1,
             distance=5,
             time=time_between_points)
         model.add_link(
-            "arc2",
+            name="arc2",
             start_point_id=1,
             end_point_id=2,
             distance=6,
             time=time_between_points)
         model.add_link(
-            "arc3",
+            name="arc3",
             start_point_id=2,
             end_point_id=3,
             distance=4,
             time=time_between_points)
         model.add_link(
-            "arc4",
+            name="arc4",
             start_point_id=3,
             end_point_id=4,
             distance=4,
             time=time_between_points)
         model.add_link(
-            "arc5",
+            name="arc5",
             start_point_id=4,
             end_point_id=0,
             distance=4,
@@ -295,31 +295,31 @@ class TestAllVariants(unittest.TestCase):
                 tw_end=begin_time + 5)
             begin_time += 5
         model.add_link(
-            "arc1",
+            name="arc1",
             start_point_id=0,
             end_point_id=1,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc2",
+            name="arc2",
             start_point_id=1,
             end_point_id=2,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc3",
+            name="arc3",
             start_point_id=2,
             end_point_id=3,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc4",
+            name="arc4",
             start_point_id=3,
             end_point_id=4,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc5",
+            name="arc5",
             start_point_id=4,
             end_point_id=0,
             distance=dist,
@@ -329,7 +329,7 @@ class TestAllVariants(unittest.TestCase):
         print(model.solution)
         print(model.message)
         self.assertAlmostEqual(
-            360, model.statistics.solution_value, places=5)
+            360, model.solution_value, places=5)
         print(model.solution)
 
     def test_solve_without_all(self):
@@ -383,7 +383,7 @@ class TestAllVariants(unittest.TestCase):
                 var_cost_dist=10,
                 var_cost_time=10)
             model.add_link(
-                "arc1",
+                name="arc1",
                 start_point_id=0,
                 end_point_id=1,
                 distance=5,
@@ -404,7 +404,7 @@ class TestAllVariants(unittest.TestCase):
             var_cost_dist=10,
             var_cost_time=10)
         model.add_link(
-            "arc1",
+            name="arc1",
             start_point_id=0,
             end_point_id=1,
             distance=5,
@@ -609,31 +609,31 @@ class TestAllClass(unittest.TestCase):
 
         # Here the arcs of solutions
         model.add_link(
-            "arc1",
+            name="arc1",
             start_point_id=0,
             end_point_id=1,
             distance=1,
             time=1)
         model.add_link(
-            "arc2",
+            name="arc2",
             start_point_id=1,
             end_point_id=2,
             distance=2,
             time=2)
         model.add_link(
-            "arc3",
+            name="arc3",
             start_point_id=2,
             end_point_id=3,
             distance=3,
             time=3)
         model.add_link(
-            "arc4",
+            name="arc4",
             start_point_id=3,
             end_point_id=4,
             distance=4,
             time=4)
         model.add_link(
-            "arc5",
+            name="arc5",
             start_point_id=4,
             end_point_id=0,
             distance=5,
@@ -658,7 +658,7 @@ class TestAllClass(unittest.TestCase):
 
         # test solution value
         self.assertAlmostEqual(
-            cost, model.statistics.solution_value, places=5)
+            cost, model.solution_value, places=5)
 
         # test ids
         self.assertIn(model.solution.routes[0].point_ids, [[0, 1, 2, 3, 4, 0],
@@ -714,31 +714,31 @@ class TestAllClass(unittest.TestCase):
                 tw_end=begin_time + 5)
             begin_time += 5
         model.add_link(
-            "arc1",
+            name="arc1",
             start_point_id=0,
             end_point_id=1,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc2",
+            name="arc2",
             start_point_id=1,
             end_point_id=2,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc3",
+            name="arc3",
             start_point_id=2,
             end_point_id=3,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc4",
+            name="arc4",
             start_point_id=3,
             end_point_id=4,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc5",
+            name="arc5",
             start_point_id=4,
             end_point_id=0,
             distance=dist,
@@ -776,31 +776,31 @@ class TestAllClass(unittest.TestCase):
                 tw_end=begin_time + 5)
             begin_time += 5
         model.add_link(
-            "arc1",
+            name="arc1",
             start_point_id=0,
             end_point_id=1,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc2",
+            name="arc2",
             start_point_id=1,
             end_point_id=2,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc3",
+            name="arc3",
             start_point_id=2,
             end_point_id=3,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc4",
+            name="arc4",
             start_point_id=3,
             end_point_id=4,
             distance=dist,
             time=time_between_points)
         model.add_link(
-            "arc5",
+            name="arc5",
             start_point_id=4,
             end_point_id=0,
             distance=dist,
@@ -817,49 +817,78 @@ class TestAllClass(unittest.TestCase):
 class TestAllDemos(unittest.TestCase):
     def test_cvrp_demos_an32k5(self):
         """test demo A-n32-k5 in augerat format"""
-        objective_value = CVRP.solve_demo("A-n32-k5.vrp")
+        path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__ + "/../")))
+        path_demo = path_project + os.path.normpath(
+                                "/demos/data/CVRP/A-n32-k5.vrp")
+        objective_value = CVRP.solve_demo(path_demo)
         self.assertAlmostEqual(
             784, objective_value, places=0)
         return None
 
     def test_cvrp_demos_bn31k5(self):
         """test demo B-n31-k5 in augerat format"""
-        objective_value = CVRP.solve_demo("B-n31-k5.vrp")
+        path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__ + "/../")))
+        path_demo = path_project + os.path.normpath(
+                                "/demos/data/CVRP/B-n31-k5.vrp")
+        objective_value = CVRP.solve_demo(path_demo)
         self.assertAlmostEqual(
             672, objective_value, places=1)
         return None
 
     def test_cvrptw_demos_c101(self):
         """test demo C101 in solomon format"""
-        objective_value = CVRPTW.solve_demo("C101.txt")
+        path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__ + "/../")))
+        path_demo = path_project + os.path.normpath(
+                                "/demos/data/CVRPTW/C101.txt")
+        objective_value = CVRPTW.solve_demo(path_demo)
         self.assertAlmostEqual(
             828.95, objective_value, places=1)
         return None
 
     def test_cvrptw_demos_r101(self):
         """test demo R101 in solomon format"""
-        objective_value = CVRPTW.solve_demo("R101.txt")
+        path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__ + "/../")))
+        path_demo = path_project + os.path.normpath(
+                                "/demos/data/CVRPTW/R101.txt")
+        objective_value = CVRPTW.solve_demo(path_demo)
         self.assertAlmostEqual(
             1642.875, objective_value, places=1)
         return None
 
     def test_hfvrp_c50_13fsmd(self):
         """test demo c50_13fsmd in queiroga format"""
-        objective_value = HFVRP.solve_demo("c50_13fsmd.txt")
+        path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__ + "/../")))
+        path_demo = path_project + os.path.normpath(
+                                "/demos/data/HFVRP/c50_13fsmd.txt")
+        objective_value = HFVRP.solve_demo(path_demo)
         self.assertAlmostEqual(
            1491.85, objective_value, places=1)
         return None
 
     def test_hfvrp_c50_16fsmd(self):
         """test demo c50_16fsmd in queiroga format"""
-        objective_value = HFVRP.solve_demo("c50_16fsmd.txt")
+        path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__ + "/../")))
+        path_demo = path_project + os.path.normpath(
+                                "/demos/data/HFVRP/c50_16fsmd.txt")
+        objective_value = HFVRP.solve_demo(path_demo)
         self.assertAlmostEqual(
             1131, objective_value, places=1)
         return None
 
     def test_mdvrp_p01(self):
         """test demo p01 in Cordeau format"""
-        objective_value = MDVRP.solve_demo("p01")
+        path_project = os.path.join(os.path.dirname
+                                            (os.path.realpath(__file__ + "/../")))
+        path_demo = path_project + os.path.normpath(
+                                "/demos/data/MDVRP/p01")
+
+        objective_value = MDVRP.solve_demo(path_demo)
         self.assertAlmostEqual(
            576.86, objective_value, places=1)
         return None

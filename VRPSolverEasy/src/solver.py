@@ -135,12 +135,11 @@ class LinksDict(dict,collections.MutableMapping):
         return dict.__getitem__(self, key)
 
     def __setitem__(self, key, value):
-        if not isinstance(key, (str)):
-            raise PropertyError(constants.KEY_STR, 3)
-        if not isinstance(value, (Link)):
-            raise PropertyError(str(), 12)
-        if value.name != key:
-            raise PropertyError(str(), constants.DICT_PROPERTY)
+        if not isinstance(value, list):
+            raise ModelError(constants.ADD_LINK_ERROR)
+        for i in value:
+            if not isinstance(i,Link):
+                raise PropertyError(str(), 12)
         dict.__setitem__(self, key, value)
 
     def __delitem__(self, key):
@@ -158,7 +157,7 @@ class LinksDict(dict,collections.MutableMapping):
     def values(self, debug=False):
         if len(dict.values(self)) == 0:
             raise ModelError(constants.MIN_LINKS_ERROR)
-        return list(value.get_link(debug) for value in dict.values(self))
+        return list(value.get_link(debug) for list_ in dict.values(self) for value in list_ )
 
 
 class VehicleType:
@@ -168,8 +167,8 @@ class VehicleType:
     def __init__(
             self,
             id: int,
-            start_point_id: int,
-            end_point_id: int,
+            start_point_id=-1,
+            end_point_id=-1,
             name=str(),
             capacity=0,
             fixed_cost=0.0,
@@ -727,8 +726,8 @@ class Link:
         start point with the same time and distance
     """
 
-    def __init__(self, name=str(), is_directed=False, start_point_id=0,
-                 end_point_id=0, distance=0.0, time=0.0, fixed_cost=0.0):
+    def __init__(self, start_point_id, end_point_id, name=str(), is_directed=False,
+                 distance=0.0, time=0.0, fixed_cost=0.0):
         self.name = name
         self.is_directed = is_directed
         self.start_point_id = start_point_id
@@ -1065,7 +1064,7 @@ class Statistics:
 
     def __init__(self, json_input=str()):
         self.__solution_time = 0
-        self.__solution_value = 0
+       # self.__solution_value = 0
         self.__best_lb = 0
         self.__root_lb = 0
         self.__root_time = 0
@@ -1074,8 +1073,8 @@ class Statistics:
             self.__json_input = json_input
             self.__solution_time = json_input[constants.STATISTICS.
                                               SOLUTION_TIME.value]
-            self.__solution_value = json_input[constants.STATISTICS.
-                                               SOLUTION_VALUE.value]
+            #self.__solution_value = json_input[constants.STATISTICS.
+            #                                   SOLUTION_VALUE.value]
             self.__best_lb = json_input[constants.STATISTICS.
                                         BEST_LOWER_BOUND.value]
             self.__root_lb = json_input[constants.STATISTICS.
@@ -1229,11 +1228,12 @@ class Solution:
     def __init__(self, json_input=None, status=constants.MODEL_NOT_SOLVED):
         self.__json = {}
         self.__routes = []
+
         if json_input != None:
             self.__json = json_input
             if (status > -1 and status < 4) or status == 8:
-                if len(self.__json["Solution"]) > 0:
-                    for route in self.__json["Solution"]:
+                if len(self.__json["Solution"]["Routes"]) > 0:
+                    for route in self.__json["Solution"]["Routes"]:
                         self.__routes.append(Route(route))
 
     def __str__(self):
@@ -1274,6 +1274,7 @@ class Model:
         self.vehicle_types = VehicleTypesDict()
         self.points = PointsDict()
         self.links = LinksDict()
+        self.max_total_vehicles_number = 10000
         self.parameters = Parameters()
         self.__output = str()
         self.solution = Solution()
@@ -1340,6 +1341,24 @@ class Model:
         self._links = links
 
     @property
+    def max_total_vehicles_number(self):
+        """the maximum total vehicles number"""
+        return self._max_total_vehicles_number
+
+    # a setter function of links
+    @max_total_vehicles_number.setter
+    def max_total_vehicles_number(self, number):
+        """setter function of max number of vehicles"""
+        if not isinstance(number, (int)):
+            raise PropertyError(constants.JSON_OBJECT.MAXNUMBER,
+                               constants.INTEGER_PROPERTY)     
+        if number < 1:
+            raise PropertyError(
+                constants.JSON_OBJECT.MAXNUMBER,
+                constants.GREATER_ONE_PROPERTY)
+        self._max_total_vehicles_number = number
+
+    @property
     def parameters(self):
         """getter function of parameters"""
         return self._parameters
@@ -1381,8 +1400,8 @@ class Model:
     def add_vehicle_type(
             self,
             id: int,
-            start_point_id: int,
-            end_point_id: int,
+            start_point_id=-1,
+            end_point_id=-1,
             name=str(),
             capacity=0,
             fixed_cost=0.0,
@@ -1415,30 +1434,42 @@ class Model:
 
     def add_link(
             self,
-            name=str(),
-            is_directed=False,
             start_point_id=0,
             end_point_id=0,
+            name=str(),
+            is_directed=False,
             distance=0.0,
             time=0.0,
             fixed_cost=0.0):
         """Add Link in dictionary :py:attr:`links`"""
-        if name in self.links:
-            raise ModelError(constants.ADD_LINK_ERROR)
-        self.links[name] = Link(
-            name,
-            is_directed,
-            start_point_id,
-            end_point_id,
-            distance,
-            time,
-            fixed_cost)
+        if (start_point_id,end_point_id) in self.links : 
+            self.links[(start_point_id,end_point_id)].append(Link(
+                start_point_id,
+                end_point_id,
+                name,
+                is_directed,
+                distance,
+                time,
+                fixed_cost))
+        else :
+            self.links[(start_point_id,end_point_id)] = [Link(
+                start_point_id,
+                end_point_id,  
+                name,
+                is_directed,
+                distance,
+                time,
+                fixed_cost)]
+                
 
-    def delete_Link(self, name: str):
-        """ Delete a link by giving his name """
-        if name not in self.links:
+    def delete_Link(self, start_point_id : int,end_point_id : int):
+        """ Delete a link by giving start point id and end point id """
+        if start_point_id not in self.links:
             raise ModelError(constants.DEL_LINK_ERROR)
-        del self.links[name]
+        if end_point_id not in self.links[start_point_id]:
+            raise ModelError(constants.DEL_LINK_ERROR)
+        else :
+            del self.links[(start_point_id,end_point_id)]
 
     def add_point(
             self,
@@ -1507,7 +1538,7 @@ class Model:
             raise ModelError(constants.ADD_POINT_ERROR)
         id_cust = id_customer
         if id_cust == 0:
-            id_cust = id
+            id_cust = id 
         self.add_point(id=id, name=name, id_customer=id_cust,
                        service_time=service_time, penalty_or_cost=penalty,
                        tw_begin=tw_begin, tw_end=tw_end,
@@ -1541,6 +1572,9 @@ class Model:
             action,
             cplex_path)
 
+    def set_max_total_vehicles_number(self, number=10000):
+        self.max_total_vehicles_number = number
+
 
     def check_depots(self):
         """Update the model if there are defined intermediate 
@@ -1566,7 +1600,9 @@ class Model:
 
     def set_json(self):
         """Set model in json format with all elements of model"""
-        self.__json = json.dumps({constants.JSON_OBJECT.POINTS.value:
+        self.__json = json.dumps({constants.JSON_OBJECT.MAXNUMBER.value:
+                                  self.max_total_vehicles_number,
+                                  constants.JSON_OBJECT.POINTS.value:
                                   list(self.points.values()),
                                   constants.JSON_OBJECT.
                                   VEHICLE_TYPES.value:
@@ -1595,7 +1631,9 @@ class Model:
         if all_elements:
             self.check_depots()
 
-        model = json.dumps({constants.JSON_OBJECT.POINTS.
+        model = json.dumps({constants.JSON_OBJECT.MAXNUMBER.value:
+                            self.max_total_vehicles_number,
+                            constants.JSON_OBJECT.POINTS.
                             value: list(self.points.values(True)),
                             constants.JSON_OBJECT.VEHICLE_TYPES.value:
                            list(self.vehicle_types.values(True)),
@@ -1687,8 +1725,16 @@ class Model:
             self.status = self.__output["Status"]["code"]
             self.message = self.__output["Status"]["message"]
             self.solution = Solution(self.__output,self.status)
+
             if self.status > -1 and self.status < 4 and self.parameters.action != "enumAllFeasibleRoutes":
                 self.statistics = Statistics(self.solution.json["Statistics"])
+                self.solution_value = self.solution.json["Solution"][
+                                                        constants.STATISTICS.
+                                                        SOLUTION_VALUE.value] #todo
             free_memory(output)
         except BaseException:
             raise ModelError(constants.BAPCOD_ERROR)
+if __name__ == "__main__":
+    m = Model()
+    m.add_link(start_point_id = 1, end_point_id = 2)
+    m.add_link(start_point_id = 1, end_point_id = 2,time = 5)

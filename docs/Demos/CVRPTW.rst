@@ -136,8 +136,7 @@ Add links
                                           cust_i[1],
                                           data.depot_coordinates[0],
                                           data.depot_coordinates[1])
-        model.add_link(name="L" + str(link_id),
-                       start_point_id=0,
+        model.add_link(start_point_id=0,
                        end_point_id=i + 1,
                        distance=dist,
                        time=dist)
@@ -150,8 +149,7 @@ Add links
                                               cust_i[1],
                                               data.cust_coordinates[j][0],
                                               data.cust_coordinates[j][1])
-            model.add_link(name="L" + str(link_id),
-                           start_point_id=i + 1,
+            model.add_link(start_point_id=i + 1,
                            end_point_id=j + 1,
                            distance=dist,
                            time=dist)

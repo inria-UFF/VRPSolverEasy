@@ -51,11 +51,6 @@ You can solve an instance by specifying different parameters directly in the com
 
 CPLEX solver can be used only with the :doc:`academic version </Installation/index>`. When using CPLEX solver on a Windows computer, one should give its path: :code:`-p <path to CPLEX>`.
 
-Python file
-^^^^^^^^^^^^^^^^^^^^^^
-You can specify the instance name directly in the demo file **MDVRP.py**, by uncommenting the last line::
-        
-    solve_demo("p01")
 
 Demo code
 ----------------------------
@@ -128,8 +123,7 @@ Add links
                 cust_i[1],
                 data.depot_coordinates[depot_id][0],
                 data.depot_coordinates[depot_id][1])
-            model.add_link(name="L" + str(link_id),
-                           start_point_id=depot_id,
+            model.add_link(start_point_id=depot_id,
                            end_point_id=i + data.nb_depots + 1,
                            distance=dist
                            )
@@ -142,8 +136,7 @@ Add links
                                               cust_i[1],
                                               data.cust_coordinates[j][0],
                                               data.cust_coordinates[j][1])
-            model.add_link(name="L" + str(link_id),
-                           start_point_id=i + data.nb_depots + 1,
+            model.add_link(start_point_id=i + data.nb_depots + 1,
                            end_point_id=j + data.nb_depots + 1,
                            distance=dist
                            )

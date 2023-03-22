@@ -34,23 +34,16 @@ def compute_euclidean_distance(x_i, y_i, x_j, y_j, number_digit=3):
                            (y_i - y_j)**2), number_digit)
 
 
-def read_instance(name: str, folder_data="/data/"):
+def read_instance(name: str):
     """ Read an instance in the folder data from a given name """
-    path_project = os.path.join(os.path.dirname
-                                (os.path.realpath(__file__)))
-    if folder_data != "/data/":
-        path_project = ""
 
     with open(
-            path_project +
-            os.path.normpath(
-                folder_data +
-                name),
+            os.path.normpath(name),
             "r", encoding="UTF-8") as file:
         return [str(element) for element in file.read().split()]
 
 
-def solve_demo(instance_name, folder_data="/data/",
+def solve_demo(instance_name,
                time_resolution=30,
                solver_name_input="CLP",
                solver_path=""):
@@ -74,43 +67,46 @@ def solve_demo(instance_name, folder_data="/data/",
                 solver_path = arg
 
     # read instance
-    data = read_mdvrp_instances(instance_name, folder_data, type_instance)
-
+    data = read_mdvrp_instances(instance_name)
+    
+    
     # modelisation of problem
     model = solver.Model()
 
     # add vehicle types
     for i in range(data.nb_depots):
-        model.add_vehicle_type(id=i + 1,
-                               start_point_id=i,
-                               end_point_id=i,
+        model.add_vehicle_type(id=data.nb_customers + i,
+                               start_point_id=data.nb_customers + i,
+                               end_point_id=data.nb_customers + i,
                                capacity=data.vehicle_capacity,
                                max_number=data.nb_customers,
                                var_cost_dist=1
                                )
-    # add depots
-    for i in range(data.nb_depots):
-        model.add_depot(id=i)
 
     # add all customers
     for i in range(data.nb_customers):
-        model.add_customer(id=i + data.nb_depots + 1,
+        model.add_customer(id=i,
+                           id_customer = i+1,
                            demand=data.cust_demands[i]
                            )
+    # add depots
+    for i in range(data.nb_customers,data.nb_customers + data.nb_depots):
+        model.add_depot(id=i)
+
+
 
     nb_link = 0
 
     # Compute the links between depots and other points
-    for depot_id in range(data.nb_depots):
+    for index,coord_depot in enumerate(data.depot_coordinates):
         for i, cust_i in enumerate(data.cust_coordinates):
             dist = compute_euclidean_distance(
                 cust_i[0],
                 cust_i[1],
-                data.depot_coordinates[depot_id][0],
-                data.depot_coordinates[depot_id][1])
-            model.add_link(name="L" + str(nb_link),
-                           start_point_id=depot_id,
-                           end_point_id=i + data.nb_depots + 1,
+                coord_depot[0],
+                coord_depot[1])
+            model.add_link(start_point_id=index+data.nb_customers,
+                           end_point_id=i,
                            distance=dist
                            )
             nb_link += 1
@@ -122,9 +118,8 @@ def solve_demo(instance_name, folder_data="/data/",
                                               cust_i[1],
                                               data.cust_coordinates[j][0],
                                               data.cust_coordinates[j][1])
-            model.add_link(name="L" + str(nb_link),
-                           start_point_id=i + data.nb_depots + 1,
-                           end_point_id=j + data.nb_depots + 1,
+            model.add_link(start_point_id=i,
+                           end_point_id=j,
                            distance=dist
                            )
             nb_link += 1
@@ -138,23 +133,22 @@ def solve_demo(instance_name, folder_data="/data/",
     if (solver_name_input == "CPLEX" and solver_path != ""):
         model.parameters.cplex_path = solver_path
 
+    #model.export(instance_name,all_elements=True)
+
     # solve model
     model.solve()
 
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
 
-    return model.statistics.solution_value
+    return model.solution_value
 
 
-def read_mdvrp_instances(instance_name, name_folder, type_instance):
+def read_mdvrp_instances(instance_full_path):
     """Read literature instances of MDVRP by giving the name of instance
         and returns dictionary containing all elements of model"""
     instance_iter = iter(
-        read_instance(
-            type_instance +
-            instance_name,
-            name_folder))
+        read_instance(instance_full_path))
 
     # pass type instance
     next(instance_iter)
@@ -213,5 +207,3 @@ if __name__ == "__main__":
        python MDVRP.py -i INSTANCE_PATH/NAME_INSTANCE \n
        -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
        """)
-       # uncomments for use the file without command line
-       # solve_demo("p02")

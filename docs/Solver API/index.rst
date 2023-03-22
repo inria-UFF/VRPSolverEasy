@@ -121,7 +121,13 @@ Solution
 
 
 
+Statistics 
+-----------
 
+.. autoclass:: Statistics
+    :members:
+    :member-order:
+    :special-members:
        
   
 

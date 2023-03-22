@@ -26,7 +26,7 @@ For better performance, it is possible to use VRPSolverEasy together with CPLEX 
 
 ![Python](https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg)
 
-`VRPSolverEasy` requires a version of python  >= 3.7
+`VRPSolverEasy` requires a version of python  >= 3.6
 
 There is two differents way to install `VRPSolverEasy` :
 

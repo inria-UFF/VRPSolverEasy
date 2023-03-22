@@ -86,7 +86,8 @@ ERRORS_MODEL = {
     MIN_VEHICLE_TYPES_ERROR: "The model must contains at least one"
                              "vehicle type",
     LINKS_ERROR: "LINKS ERROR",
-    ADD_LINK_ERROR: "Cannot add two links with the same name.",
+    ADD_LINK_ERROR: """The dictionary of links must contain only lists of links,
+                       however the choice of the key can be free""",
     DEL_LINK_ERROR: "We cannot delete this link. (Unknown id)",
     MIN_LINKS_ERROR: "The model must contains at least one link",
     PLATFORM_ERROR: """Cannot determine the underlying platform of
@@ -139,6 +140,7 @@ MESSAGE = "message"
 
 
 class JSON_OBJECT(Enum):
+    MAXNUMBER = "MaxTotalVehiclesNumber"
     POINTS = "Points"
     VEHICLE_TYPES = "VehicleTypes"
     LINKS = "Links"

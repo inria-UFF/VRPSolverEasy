@@ -15,7 +15,7 @@ Free version uses COIN-OR CLP linear programming solver, embedded in the solver.
 Requirements
 ^^^^^^^^^^^^^^
 
-You must have installed version of Python >=3.7
+You must have installed version of Python >=3.6
 
 If you have an old version of package setuptools, it's recommanded to upgrade version. You can
 run this command line on terminal::
