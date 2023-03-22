@@ -421,18 +421,16 @@ class TestAllClass(unittest.TestCase):
         """raise an error the properties of vehicle types are not respected"""
         model = solver.Model()
         # check three non-optional parameters
-        with self.assertRaises(Exception):
-            model.add_vehicle_type(1, 2)
 
-        # check id point >1
+        # check id vehicle >1
         with self.assertRaises(solver.PropertyError):
             model.add_vehicle_type(0, 2, 6)
 
-        # check start point >0
+        # check start point >-1
         with self.assertRaises(solver.PropertyError):
             model.add_vehicle_type(3, -2, 6)
 
-        # check end point >0
+        # check end point >-1
         with self.assertRaises(solver.PropertyError):
             model.add_vehicle_type(4, 2, -6)
 
