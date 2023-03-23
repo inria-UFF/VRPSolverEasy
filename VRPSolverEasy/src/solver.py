@@ -105,6 +105,7 @@ class PointsDict(dict,collections.MutableMapping):
                 constants.LESS_MAX_POINTS_PROPERTY)
         dict.__setitem__(self, key, value)
 
+            
     def __delitem__(self, key):
         dict.__delitem__(self, key)
 
@@ -437,6 +438,7 @@ class Point:
         if id > 10000:
             raise PropertyError(constants.POINT.ID.value,
                                 constants.LESS_MAX_POINTS_ID_PROPERTY)
+
         self._id = id
 
     @property
@@ -685,10 +687,18 @@ class Customer(Point):
             tw_end=0,
             demand=0,
             incompatible_vehicles=[]):
+        
+        if  id < 1:
+                raise PropertyError(constants.POINT.ID.value,
+                                constants.GREATER_ONE_PROPERTY)
+        id_cust = id_customer
+        if id_cust == 0:
+            id_cust = id 
+
         super().__init__(
             id,
             name,
-            id_customer,
+            id_cust,
             penalty,
             service_time,
             tw_begin,
@@ -714,7 +724,7 @@ class Depot(Point):
             tw_end=0,
             capacity=0,
             incompatible_vehicles=[]):
-        super().__init__(id, name, -1, cost, service_time, tw_begin, tw_end,
+        super().__init__(id, name, 0, cost, service_time, tw_begin, tw_end,
                          capacity, incompatible_vehicles)
 
 
@@ -1470,16 +1480,21 @@ class Model:
         else :
             del self.links[(start_point_id,end_point_id)]
 
-    def __propagate_penalties(self,id_customer,id,penalty_or_cost):
+    def __propagate_penalties(self,id_customer,id,penalty_or_cost=0):
         """ Updates the penalties of the same cluster of customers """
         if id_customer not in self.__customers:
             self.__customers[id_customer] = [id]
             
         else:
-            for point_id in self.__customers[id_customer]:
-                if point_id in self.points:
-                    self.points[point_id].penalty_or_cost = penalty_or_cost
-            self.__customers[id_customer].append(id)
+            if(penalty_or_cost != 0):
+                for point_id in self.__customers[id_customer]:
+                    if point_id in self.points:
+                        self.points[point_id].penalty_or_cost = penalty_or_cost
+                self.__customers[id_customer].append(id)
+            else:
+                point_id = self.__customers[id_customer][0]
+                self.points[id].penalty_or_cost = self.points[point_id].penalty_or_cost
+                self.__customers[id_customer].append(id)
         
     def add_point(
             self,
@@ -1499,9 +1514,6 @@ class Model:
         if id in self.points:
             raise ModelError(constants.ADD_POINT_ERROR)
 
-        if id_customer>0:
-            self.__propagate_penalties(id_customer,id,penalty_or_cost)
-
         self.points[id] = Point(
             id,
             name,
@@ -1512,6 +1524,9 @@ class Model:
             tw_end,
             demand_or_capacity,
             incompatible_vehicles)
+
+        if id_customer>0:
+            self.__propagate_penalties(id_customer,id,penalty_or_cost)
 
     def add_depot(
             self,
@@ -1553,11 +1568,16 @@ class Model:
         id_cust = id_customer
         if id_cust == 0:
             id_cust = id 
+            if  id < 1:
+                raise PropertyError(constants.POINT.ID.value,
+                                constants.GREATER_ONE_PROPERTY)
+
         self.add_point(id=id, name=name, id_customer=id_cust,
                        service_time=service_time, penalty_or_cost=penalty,
                        tw_begin=tw_begin, tw_end=tw_end,
                        demand_or_capacity=demand,
                        incompatible_vehicles=incompatible_vehicles)
+
 
     def delete_customer(self, id: int):
         """ Delete a customer by giving his id """
@@ -1750,7 +1770,4 @@ class Model:
             free_memory(output)
         except BaseException:
             raise ModelError(constants.BAPCOD_ERROR)
-if __name__ == "__main__":
-    m = Model()
-    m.add_link(start_point_id = 1, end_point_id = 2)
-    m.add_link(start_point_id = 1, end_point_id = 2,time = 5)
+
