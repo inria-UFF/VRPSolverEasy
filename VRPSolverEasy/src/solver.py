@@ -1273,6 +1273,7 @@ class Model:
         self.__json = {}
         self.vehicle_types = VehicleTypesDict()
         self.points = PointsDict()
+        self.__customers = dict()
         self.links = LinksDict()
         self.max_total_vehicles_number = 10000
         self.parameters = Parameters()
@@ -1345,7 +1346,7 @@ class Model:
         """the maximum total vehicles number"""
         return self._max_total_vehicles_number
 
-    # a setter function of links
+   
     @max_total_vehicles_number.setter
     def max_total_vehicles_number(self, number):
         """setter function of max number of vehicles"""
@@ -1462,15 +1463,24 @@ class Model:
                 fixed_cost)]
                 
 
-    def delete_Link(self, start_point_id : int,end_point_id : int):
+    def delete_link(self, start_point_id : int,end_point_id : int):
         """ Delete a link by giving start point id and end point id """
-        if start_point_id not in self.links:
-            raise ModelError(constants.DEL_LINK_ERROR)
-        if end_point_id not in self.links[start_point_id]:
+        if (start_point_id,end_point_id) not in self.links:
             raise ModelError(constants.DEL_LINK_ERROR)
         else :
             del self.links[(start_point_id,end_point_id)]
 
+    def __propagate_penalties(self,id_customer,id,penalty_or_cost):
+        """ Updates the penalties of the same cluster of customers """
+        if id_customer not in self.__customers:
+            self.__customers[id_customer] = [id]
+            
+        else:
+            for point_id in self.__customers[id_customer]:
+                if point_id in self.points:
+                    self.points[point_id].penalty_or_cost = penalty_or_cost
+            self.__customers[id_customer].append(id)
+        
     def add_point(
             self,
             id,
@@ -1488,6 +1498,10 @@ class Model:
 
         if id in self.points:
             raise ModelError(constants.ADD_POINT_ERROR)
+
+        if id_customer>0:
+            self.__propagate_penalties(id_customer,id,penalty_or_cost)
+
         self.points[id] = Point(
             id,
             name,
@@ -1550,6 +1564,8 @@ class Model:
         if id not in self.points:
             raise ModelError(constants.DEL_POINT_ERROR)
         del self.points[id]
+        if id in self.__customers:
+            del self.__customers[id]
 
     def set_parameters(self, time_limit=300, upper_bound=1000000,
                        heuristic_used=False, time_limit_heuristic=20,
