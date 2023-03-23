@@ -64,6 +64,7 @@ An example of the contents of :code:`data` :
         vehicle_capacities = [300,250]
         vehicle_fixed_costs = [12,24]
         vehicle_var_costs = [12,24]
+        vehicle_max_numbers = [3,3]
         cust_demands = [15,52,65]
         cust_coordinates = [[55.21,44.36],[54.31,65.23],[57.81,53.27]]
         depot_coordinates = [54.69,57.36]
@@ -81,7 +82,7 @@ Add vehicle types
                                start_point_id=0,
                                end_point_id=0,
                                capacity=data.vehicle_capacities[i],
-                               max_number=data.nb_customers,
+                               max_number=data.vehicle_max_numbers[i],
                                fixed_cost=data.vehicle_fixed_costs[i],
                                var_cost_dist=data.vehicle_var_costs[i])
 
@@ -111,8 +112,7 @@ Add links
                                           cust_i[1],
                                           data.depot_coordinates[0],
                                           data.depot_coordinates[1])
-        model.add_link(name="L" + str(nb_link),
-                       start_point_id=0,
+        model.add_link(start_point_id=0,
                        end_point_id=i + 1,
                        distance=dist)
         link_id += 1
@@ -124,8 +124,7 @@ Add links
                                               cust_i[1],
                                               data.cust_coordinates[j][0],
                                               data.cust_coordinates[j][1])
-            model.add_link(name="L" + str(link_id),
-                           start_point_id=i + 1,
+            model.add_link(start_point_id=i + 1,
                            end_point_id=j + 1,
                            distance=dist)
 

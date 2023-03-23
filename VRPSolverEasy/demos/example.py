@@ -68,9 +68,9 @@ def run_example():
                                               coordinates_values[i][1],
                                               coordinates_values[j][1])
             model.add_link(
-                "arc" + str(enum),
                 start_point_id=i,
                 end_point_id=j,
+                name = "arc" + str(enum),
                 distance=dist,
                 time=dist)
             enum += 1

@@ -107,7 +107,7 @@ def solve_demo(
     ), end='')
     print('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
         name_instance, solver_name, ext_heuristic,
-        model.statistics.solution_value,
+        model.solution_value,
         model.statistics.solution_time,
         model.statistics.best_lb,
         model.statistics.root_lb,
@@ -120,7 +120,7 @@ def solve_demo(
         with open("CVRP_Results.txt", "a") as f:
             f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
             name_instance,solver_name,ext_heuristic,
-            model.statistics.solution_value,
+            model.solution_value,
             model.statistics.solution_time,
             model.statistics.best_lb,
             model.statistics.root_lb,
@@ -142,7 +142,7 @@ def solve_demo(
             ))
            f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
             name_instance,solver_name,ext_heuristic,
-            model.statistics.solution_value,
+            model.solution_value,
             model.statistics.solution_time,
             model.statistics.best_lb,
             model.statistics.root_lb,
@@ -381,7 +381,7 @@ def solve_ext_heuristic_hgs(data):
     print(result.cost)
     print(result.routes)
 
-    return result.cost + 0.1
+    return  result.cost + 0.1
 
 
 def main(argv):
@@ -411,4 +411,12 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    #main(sys.argv[1:])
+    # uncomment for use the file without command line
+    path_project = os.path.join(os.path.dirname
+                                        (os.path.realpath(__file__)))
+
+    path_demo = path_project + os.path.normpath(
+                            "/data/CVRP/A-n32-k5.vrp" )
+
+    solve_demo(path_demo)

@@ -19,12 +19,14 @@ class DataHfvrp:
             vehicle_capacities=None,
             vehicle_fixed_costs=None,
             vehicle_var_costs=None,
+            vehicle_max_numbers=None,
             cust_demands=None,
             cust_coordinates=None,
             depot_coordinates=None):
         self.vehicle_capacities = vehicle_capacities
         self.vehicle_fixed_costs = vehicle_fixed_costs
         self.vehicle_var_costs = vehicle_var_costs
+        self.vehicle_max_numbers = vehicle_max_numbers
         self.nb_customers = nb_customers
         self.nb_vehicle_types = nb_vehicle_types
         self.cust_demands = cust_demands
@@ -38,23 +40,14 @@ def compute_euclidean_distance(x_i, y_i, x_j, y_j, number_digit=3):
                            (y_i - y_j)**2), number_digit)
 
 
-def read_instance(name: str, folder_data="/data/"):
+def read_instance(name: str):
     """ Read an instance in the folder data from a given name """
-    path_project = os.path.join(os.path.dirname
-                                (os.path.realpath(__file__)))
-    if folder_data != "/data/":
-        path_project = ""
-
     with open(
-            path_project +
-            os.path.normpath(
-                folder_data +
-                name),
+            os.path.normpath(name),
             "r", encoding="UTF-8") as file:
         return [str(element) for element in file.read().split()]
 
-
-def solve_demo(instance_name, folder_data="/data/",
+def solve_demo(instance_name,
                time_resolution=30,
                solver_name_input="CLP",
                solver_path=""):
@@ -68,8 +61,6 @@ def solve_demo(instance_name, folder_data="/data/",
         for opt, arg in opts[0]:
             if opt in ["-i"]:
                 instance_name = arg
-                folder_data = ""
-                type_instance = ""
             if opt in ["-t"]:
                 time_resolution = float(arg)
             if opt in ["-s"]:
@@ -78,7 +69,7 @@ def solve_demo(instance_name, folder_data="/data/",
                 solver_path = arg
 
     # read instance
-    data = read_hfvrp_instances(instance_name, folder_data, type_instance)
+    data = read_hfvrp_instances(instance_name)
 
     # modelisation of problem
     model = solver.Model()
@@ -89,7 +80,7 @@ def solve_demo(instance_name, folder_data="/data/",
                                start_point_id=0,
                                end_point_id=0,
                                capacity=data.vehicle_capacities[i],
-                               max_number=data.nb_customers,
+                               max_number=data.vehicle_max_numbers[i],
                                fixed_cost=data.vehicle_fixed_costs[i],
                                var_cost_dist=data.vehicle_var_costs[i]
                                )
@@ -124,8 +115,7 @@ def solve_demo(instance_name, folder_data="/data/",
                                               cust_i[1],
                                               data.cust_coordinates[j][0],
                                               data.cust_coordinates[j][1])
-            model.add_link(name="L" + str(nb_link),
-                           start_point_id=i + 1,
+            model.add_link(start_point_id=i + 1,
                            end_point_id=j + 1,
                            distance=dist
                            )
@@ -141,7 +131,7 @@ def solve_demo(instance_name, folder_data="/data/",
     if (solver_name_input == "CPLEX" and solver_path != ""):
         model.parameters.cplex_path = solver_path
 
-    model.export()
+    #model.export(instance_name)
 
     # solve model
     model.solve()
@@ -149,17 +139,14 @@ def solve_demo(instance_name, folder_data="/data/",
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
 
-    return model.statistics.solution_value
+    return model.solution_value
 
 
-def read_hfvrp_instances(instance_name, name_folder, type_instance):
+def read_hfvrp_instances(instance_full_path):
     """Read literature instances of HFVRP by giving the name of instance
         and returns dictionary containing all elements of model"""
     instance_iter = iter(
-        read_instance(
-            type_instance +
-            instance_name,
-            name_folder))
+        read_instance(instance_full_path))
 
     nb_points = int(next(instance_iter))
 
@@ -188,23 +175,26 @@ def read_hfvrp_instances(instance_name, name_folder, type_instance):
     vehicle_capacities = []
     vehicle_fixed_costs = []
     vehicle_var_costs = []
+    vehicle_max_numbers = []
 
     for _ in range(1, nb_vehicles + 1):
         capacity = int(next(instance_iter))
         fixed_cost = float(next(instance_iter))
         var_cost_dist = float(next(instance_iter))
         next(instance_iter)  # pass min number
-        next(instance_iter)
+        max_number = int(next(instance_iter))
 
         vehicle_capacities.append(capacity)
         vehicle_fixed_costs.append(fixed_cost)
         vehicle_var_costs.append(var_cost_dist)
+        vehicle_max_numbers.append(max_number)
 
     return DataHfvrp(nb_points,
                      nb_vehicles,
                      vehicle_capacities,
                      vehicle_fixed_costs,
                      vehicle_var_costs,
+                     vehicle_max_numbers,
                      cust_demands,
                      cust_coordinates,
                      depot_coordinates
@@ -219,5 +209,3 @@ if __name__ == "__main__":
        python HFVRP.py -i INSTANCE_PATH/NAME_INSTANCE \n
        -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
        """)
-       # uncomments for use the file without command line
-       # solve_demo("c50_13fsmd.txt")
