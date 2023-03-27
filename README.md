@@ -50,8 +50,15 @@ Installation instructions for Mac computers with Apple ARM processors, as well a
 A simple example which shows how to use the VRPSolverEasy package:
 
 ```python
-import VRPSolverEasy.src.solver as solver
-    
+
+import math
+from VRPSolverEasy.src import solver
+
+def compute_euclidean_distance(x_i, y_i, x_j, y_j):
+    """compute the euclidean distance between 2 points from graph"""
+    return round(math.sqrt((x_i - x_j)**2 +
+                           (y_i - y_j)**2), 3)
+
 # data
 cost_per_distance = 10
 begin_time = 0
@@ -108,9 +115,9 @@ for i in range(0, 7):
                                           coordinates_values[i][1],
                                           coordinates_values[j][1])
         model.add_link(
-            "arc" + str(enumerate),
             start_point_id=i,
             end_point_id=j,
+            name="arc" + str(enumerate),
             distance=dist,
             time=dist)
         enumerate += 1
@@ -121,6 +128,7 @@ model.export()
 
 if model.solution.is_defined():
     print(model.solution)
+
 ```
 ## Documentation
 
