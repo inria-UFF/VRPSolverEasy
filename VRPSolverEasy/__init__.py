@@ -1,1 +1,1 @@
-from VRPSolverEasy.src import *
+from VRPSolverEasy.src.solver import *

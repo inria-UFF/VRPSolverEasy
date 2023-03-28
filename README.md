@@ -52,7 +52,7 @@ A simple example which shows how to use the VRPSolverEasy package:
 ```python
 
 import math
-from VRPSolverEasy import *
+import VRPSolverEasy
 
 def compute_euclidean_distance(x_i, y_i, x_j, y_j):
     """compute the euclidean distance between 2 points from graph"""
@@ -83,7 +83,7 @@ def compute_euclidean_distance(x_i, y_i, x_j, y_j):
 demands = [0, 500, 300, 600, 658, 741, 436]
 
 # Initialisation
-model = solver.Model()
+model = VRPSolverEasy.Model()
 
 # Add vehicle type
 model.add_vehicle_type(
