@@ -35,13 +35,13 @@ For better performance, it is possible to use VRPSolverEasy together with CPLEX 
 python -m pip install --upgrade pip
 ```
 
-There is two differents way to install `VRPSolverEasy` :
+There is two different way to install `VRPSolverEasy` :
 
 The first way is to install it with `pip` 
 ```
 python -m pip install VRPSolverEasy
 ```
-The second way is to following this steps:
+The second way is to follow these steps:
 
 - Download the package and extract it into a local directory
 - Move to this local directory and enter :
@@ -53,7 +53,7 @@ Installation instructions for Mac computers with Apple ARM processors, as well a
 
 ## Example 
 
-A simple example which shows how to use the VRPSolverEasy package:
+A simple example that shows how to use the VRPSolverEasy package:
 
 ```python
 
