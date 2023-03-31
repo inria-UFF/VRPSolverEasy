@@ -29,6 +29,12 @@ For better performance, it is possible to use VRPSolverEasy together with CPLEX 
 
 `VRPSolverEasy` requires a version of python  >= 3.6
 
+> :warning: Before starting the installation, we invite you to update your version of pip by running this command:
+
+```
+python -m pip install --upgrade pip
+```
+
 There is two differents way to install `VRPSolverEasy` :
 
 The first way is to install it with `pip` 
