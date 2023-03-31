@@ -60,7 +60,8 @@ Installation of academic version
 Academic version of VRPSolverEasy uses commercial CPLEX MIP solver, which can be obtained for free for academic purposes. This version has improved performance and provides a built-in (slow) MIP-based heuristic, which is useful for finding feasible solutions in the absence of an external heuristic solver. 
 
 .. warning:: 
-   Academic version is also free but requires an e-mail address from an academic institution to download BaPCod source code. 
+   Academic version is also free but requires an e-mail address from an academic institution to download BaPCod source code.
+   If CPLEX is not installed in the default directory, we invite you to add the path to the dynamic libraries in the environment variables. 
 
 To install this version, you must :
 
