@@ -27,7 +27,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="setup.py" />
     <Compile Include="VRPSolverEasy\demos\cvrp.py" />
     <Compile Include="VRPSolverEasy\demos\cvrptw.py">
       <SubType>Code</SubType>
@@ -47,9 +46,6 @@
     <Compile Include="VRPSolverEasy\ortools_demos\CVRP.py" />
     <Compile Include="VRPSolverEasy\ortools_demos\CVRPTW.py" />
     <Compile Include="VRPSolverEasy\ortools_demos\HFVRP.py" />
-    <Compile Include="VRPSolverEasy\plafrim_exp\prepare_experiments.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="VRPSolverEasy\src\constants.py">
       <SubType>Code</SubType>
     </Compile>
@@ -108,7 +104,6 @@
     <Folder Include="VRPSolverEasy\lib\Windows\" />
     <Folder Include="VRPSolverEasy\doc\" />
     <Folder Include="VRPSolverEasy\" />
-    <Folder Include="VRPSolverEasy\plafrim_exp\" />
     <Folder Include="VRPSolverEasy\ortools_demos\" />
     <Folder Include="VRPSolverEasy\src\data\" />
     <Folder Include="VRPSolverEasy\tests\" />
