@@ -123,9 +123,6 @@ A simple example that shows how to use the VRPSolverEasy package:
                   "Oregon, the US": (44.000000, -120.500000)
                   }
 
-   def compute_euclidean_distance(x_i, y_i, x_j, y_j):
-       """Compute the euclidean distance between 2 points from graph"""
-       return math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2)
 
    # demands of points
    demands = [0, 500, 300, 600, 658, 741, 436]
