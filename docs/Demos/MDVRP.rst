@@ -113,8 +113,6 @@ Add links
 
 .. code-block:: python
 
-    link_id = 0
-
     # Compute the links between depots and other points
     for depot_id in range(data.nb_depots):
         for i, cust_i in enumerate(data.cust_coordinates):
@@ -123,11 +121,11 @@ Add links
                 cust_i[1],
                 data.depot_coordinates[depot_id][0],
                 data.depot_coordinates[depot_id][1])
+                
             model.add_link(start_point_id=depot_id,
                            end_point_id=i + data.nb_depots + 1,
                            distance=dist
                            )
-            link_id += 1
 
     # Compute the links between points
     for i,cust_i in enumerate(data.cust_coordinates):
@@ -136,11 +134,11 @@ Add links
                                               cust_i[1],
                                               data.cust_coordinates[j][0],
                                               data.cust_coordinates[j][1])
+
             model.add_link(start_point_id=i + data.nb_depots + 1,
                            end_point_id=j + data.nb_depots + 1,
                            distance=dist
                            )
-            link_id += 1
                      
     }
 

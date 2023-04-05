@@ -71,7 +71,6 @@ Model VRPSolverEasy
 
     # Add links
     coordinates_values = list(coordinates.values())
-    enumerate = 1
     for i in range(0, 7):
         for j in range(i + 1, 7):
             dist = compute_euclidean_distance(coordinates_values[i][0],
@@ -83,7 +82,6 @@ Model VRPSolverEasy
                 end_point_id=j,
                 distance=dist,
                 time=dist)
-            enumerate += 1
 
 
 Solving model 
