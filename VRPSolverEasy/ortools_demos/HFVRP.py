@@ -339,7 +339,6 @@ def read_hfvrp_instances(
     # compute the links of graph
     links = []
     matrix = [[0 for i in range((len(points)))] for i in range(len(points))]
-    nb_link = 0
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
             dist = compute_euclidean_distance(point["x"],
@@ -347,8 +346,7 @@ def read_hfvrp_instances(
                                               points[j]["x"],
                                               points[j]["y"])
 
-            links.append({"name": "L" + str(nb_link),
-                          "start_point_id": point["id"],
+            links.append({"start_point_id": point["id"],
                           "end_point_id": points[j]["id"],
                           "distance": dist
                           })
@@ -356,7 +354,6 @@ def read_hfvrp_instances(
             matrix[i][j] = dist
             matrix[j][i] = dist
 
-            nb_link += 1
 
     data['distance_matrix'] = matrix
 

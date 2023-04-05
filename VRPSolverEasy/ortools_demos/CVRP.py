@@ -245,7 +245,6 @@ def read_cvrp_instances(instance_name, ext_heuristic=False, hgs=False):
 
     # Compute the links of graph
     links = []
-    nb_link = 0
     matrix = [[0 for i in range((len(points)))] for i in range(len(points))]
     for i, point in enumerate(points):
         for j in range(i + 1, len(points)):
@@ -254,8 +253,7 @@ def read_cvrp_instances(instance_name, ext_heuristic=False, hgs=False):
                                               points[j]["x"],
                                               points[j]["y"],
                                               0)
-            links.append({"name": "L" + str(nb_link),
-                          "start_point_id": point["id"],
+            links.append({"start_point_id": point["id"],
                           "end_point_id": points[j]["id"],
                           "distance": dist
                           })
@@ -263,7 +261,6 @@ def read_cvrp_instances(instance_name, ext_heuristic=False, hgs=False):
             matrix[i][j] = dist
             matrix[j][i] = dist
 
-            nb_link += 1
 
     data['distance_matrix'] = matrix
 

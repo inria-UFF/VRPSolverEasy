@@ -86,7 +86,7 @@ def solve_demo(instance_name,
     # add all customers
     for i in range(data.nb_customers):
         model.add_customer(id=i,
-                           id_customer = i+1,
+                           id_customer=i+1,
                            demand=data.cust_demands[i]
                            )
     # add depots
@@ -109,7 +109,6 @@ def solve_demo(instance_name,
                            end_point_id=i,
                            distance=dist
                            )
-            nb_link += 1
 
     # Compute the links between points
     for i,cust_i in enumerate(data.cust_coordinates):
@@ -122,7 +121,6 @@ def solve_demo(instance_name,
                            end_point_id=j,
                            distance=dist
                            )
-            nb_link += 1
 
     # set parameters
     model.set_parameters(time_limit=time_resolution,

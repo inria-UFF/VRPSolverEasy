@@ -93,20 +93,16 @@ def solve_demo(instance_name,
                            demand=data.cust_demands[i]
                            )
 
-    nb_link = 0
-
     # Compute the links between depot and other points
     for i,cust_i in enumerate(data.cust_coordinates):
         dist = compute_euclidean_distance(cust_i[0],
                                           cust_i[1],
                                           data.depot_coordinates[0],
                                           data.depot_coordinates[1])
-        model.add_link(name="L" + str(nb_link),
-                       start_point_id=0,
+        model.add_link(start_point_id=0,
                        end_point_id=i + 1,
                        distance=dist
                        )
-        nb_link += 1
 
     # Compute the links between points
     for i,cust_i in enumerate(data.cust_coordinates):
@@ -119,8 +115,6 @@ def solve_demo(instance_name,
                            end_point_id=j + 1,
                            distance=dist
                            )
-
-            nb_link += 1
 
     # set parameters
     model.set_parameters(time_limit=time_resolution,

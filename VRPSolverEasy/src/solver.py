@@ -1206,7 +1206,7 @@ class Solution:
 
 
     def __str__(self):
-        route_str =""
+        route_str =f'\nSolution cost : {self.__value} \n \n'
         for route in self.__routes:
             route_str += str(route)
         return route_str
