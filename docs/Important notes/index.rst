@@ -22,11 +22,11 @@ One can reasonably expect to solve to optimality instances with up to 100 custom
 Issues and debugging 
 --------------------
 
-If the output of the solver is not as expected, you may need to verify that your model is correct for your instances. For that, you can use enumeration feature of the solver. To use this feature, take a very small instance (up to 10-15 customers), and set the solver enumeration mode::
+If the output of the solver is not as expected, you may need to verify that your model is correct for your instances. For that, you can use enumeration feature of the solver. To use this feature, take a very small instance (up to 5-10 customers), and activate the solver enumeration mode::
 
         model.parameters.action = "enumAllFeasibleRoutes"  
   
-In this mode, the solver will return all feasible routes for your instance (or inform you that no feasible route exists). You then may analyze the routes to check that your model is correct.   
+In this mode, the solver will return all feasible routes for your instance (or inform you that no feasible route exists). You then may analyze the routes to check whether your model is correct.   
 
 If the solution status of the model is non-negative, then unexpected results generally come from non-correct model. If the solution status is negative then there might be an issue with the solver. 
 
@@ -39,4 +39,14 @@ and then open an issue on the `VRPSolverEasy Github repository <https://github.c
 Accompanying paper
 ------------------
 
-You may find additional helpful information about the solver in the accompanying paper (*in preparation*). Please cite this paper when you use VRPSolverEasy in your published research.  
+The paper presents the motivation to create VRPSolverEasy, the interface of 
+the package, the solution approach (optional to read), the computational 
+results for the three classic VRP variants (CVRP, VRPTW, HFVRP), and possible
+future extensions of the model. 
+For the moment, the paper is available as a preprint :
+    
+    \N. Errami, E. Queiroga, R. Sadykov, E. Uchoa. "VRPSolverEasy: a Python 
+    library for the exact solution of a rich vehicle routing problem", 
+    `Technical report HAL-04057985 <https://hal.inria.fr/hal-04057985/document>`__, 2023.
+
+Please cite it if you use VRPSolverEasy in your research.
