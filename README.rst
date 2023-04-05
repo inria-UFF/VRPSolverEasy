@@ -13,31 +13,27 @@ to pay for the simplicity, this interface is restricted to some standard
 VRP variants, which involve the following features and their
 combinations:
 
-    * capacitated vehicles, 
-    * customer time windows, 
-    * heterogeneous fleet,
-    * multiple depots,
-    * open routes,
-    * optional,
-    * customers with penalties,
-    * parallel links to model transition time/cost trade-off,
-    * incompatibilities between vehicles and customers,
-    * customers with alternative locations and/or time windows.
+* capacitated vehicles, 
+* customer time windows, 
+* heterogeneous fleet,
+* multiple depots,
+* open routes,
+* optional customers with penalties,
+* parallel links to model transition time/cost trade-off,
+* incompatibilities between vehicles and customers,
+* customers with alternative locations and/or time windows.
 
 To our knowledge, VRPSolver is the most efficient **exact** solver
 available for VRPs. Its particularity is to focus on finding and
 improving a **lower bound** on the optimal solution value of your
-instance. It is less efficient in finding feasible solutions, but still
+instance. It is less efficient in finding feasible solutions but still
 can be better than available heuristic solvers for non-classic VRP
 variants. One can expect to find **provably optimal solutions** for
-instances with up to 100 customers. Instances with up to 200-250
-customers may also be solved in some cases, usually in long runs.
-Performance of VRPSolver significantly improves when it is used together
-with an efficient heuristic VRP solver, which is able to provide *very
-good* initial upper bounds.
-
-VRPSolverEasy package is a **work in progress** for the moment. The
-accompanying paper is in preparation.
+most instances with up to 100 customers. A significant number of instances 
+in the range of 101-200 customers may be solved too. A few even larger 
+instances may be solved, but usually, this requires very long runs.
+The performance of VRPSolver improves when very good initial upper bounds, 
+obtained by an external heuristic solver, are provided. 
 
 VRPSolver is based on a research proof-of-concept code prone to issues.
 Use it only for research, teaching, testing, and R&D purposes at your
@@ -62,6 +58,21 @@ version of VRPSolverEasy additionally includes a MIP-based (slow)
 heuristic which is useful for finding feasible solutions in the absence
 of an external heuristic solver.
 
+Accompanying paper
+------------------
+
+The paper presents the motivation to create VRPSolverEasy, the interface of 
+the package, the solution approach (optional to read), the computational 
+results for the three classic VRP variants (CVRP, VRPTW, HFVRP), and possible
+future extensions of the model. 
+For the moment, the paper is available as a preprint :
+    
+    \N. Errami, E. Queiroga, R. Sadykov, E. Uchoa. "VRPSolverEasy: a Python 
+    library for the exact solution of a rich vehicle routing problem", 
+    `Technical report HAL-04057985 <https://hal.inria.fr/hal-04057985/document>`__, 2023.
+
+Please cite it if you use VRPSolverEasy in your research.
+
 Installation
 ------------
 
@@ -70,10 +81,10 @@ Installation
 ``VRPSolverEasy`` requires a version of python >= 3.6
 
 .. warning::
-        Before starting the installation, we invite you to update
-        your version of pip by running this command: ::
+    Before starting the installation, we invite you to update 
+    your version of pip by running this command: ::
 
-            python -m pip install --upgrade pip
+        python -m pip install --upgrade pip
 
 There is two different way to install ``VRPSolverEasy`` :
 
