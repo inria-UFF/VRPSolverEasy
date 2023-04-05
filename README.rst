@@ -156,7 +156,6 @@ A simple example that shows how to use the VRPSolverEasy package:
 
    # Add links
    coordinates_values = list(coordinates.values())
-   enumerate = 1
    for i in range(0, 7):
        for j in range(i + 1, 7):
            dist = compute_euclidean_distance(coordinates_values[i][0],
@@ -166,10 +165,8 @@ A simple example that shows how to use the VRPSolverEasy package:
            model.add_link(
                start_point_id=i,
                end_point_id=j,
-               name="arc" + str(enumerate),
                distance=dist,
                time=dist)
-           enumerate += 1
 
    # solve model
    model.solve()

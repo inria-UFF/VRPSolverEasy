@@ -119,7 +119,7 @@ def solve_demo(instance_name, solver_name="CLP", ext_heuristic=False,
     ), end='')
     print('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
         name_instance, solver_name, ext_heuristic,
-        model.solution_value,
+        model.solution.value,
         model.statistics.solution_time,
         model.statistics.best_lb,
         model.statistics.root_lb,
@@ -133,7 +133,7 @@ def solve_demo(instance_name, solver_name="CLP", ext_heuristic=False,
         with open("HFVRP_Results.txt", "a") as f:
             f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
             name_instance,solver_name,ext_heuristic,
-            model.solution_value,
+            model.solution.value,
             model.statistics.solution_time,
             model.statistics.best_lb,
             model.statistics.root_lb,
@@ -155,7 +155,7 @@ def solve_demo(instance_name, solver_name="CLP", ext_heuristic=False,
             ))
            f.write('{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}\n'.format(
             name_instance,solver_name,ext_heuristic,
-            model.solution_value,
+            model.solution.value,
             model.statistics.solution_time,
             model.statistics.best_lb,
             model.statistics.root_lb,

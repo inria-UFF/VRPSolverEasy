@@ -60,7 +60,6 @@ def run_example():
 
     # Add links
     coordinates_values = list(coordinates.values())
-    enum = 1
     for i in range(0, 7):
         for j in range(i + 1, 7):
             dist = compute_euclidean_distance(coordinates_values[i][0],
@@ -70,10 +69,9 @@ def run_example():
             model.add_link(
                 start_point_id=i,
                 end_point_id=j,
-                name = "arc" + str(enum),
                 distance=dist,
                 time=dist)
-            enum += 1
+
 
     # solver model
     model.solve()

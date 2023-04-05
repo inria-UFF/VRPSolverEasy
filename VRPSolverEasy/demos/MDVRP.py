@@ -141,7 +141,7 @@ def solve_demo(instance_name,
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
 
-    return model.solution_value
+    return model.solution.value
 
 
 def read_mdvrp_instances(instance_full_path):

@@ -12,7 +12,7 @@ else:
     import collections
 
 ########
-__version__ = "0.1"
+__version__ = "0.1.2"
 __author__ = "Najib ERRAMI Ruslan SADYKOV Eduardo UCHOA Eduardo QUEIROGA"
 __copyright__ = "Copyright VRPYSolver, all rights reserved"
 __email__ = "najib.errami@inria.fr"
@@ -405,7 +405,7 @@ class Point:
     """
 
     def __init__(self, id, name=str(), id_customer=0, penalty_or_cost=0.0,
-                 service_time=0, tw_begin=0, tw_end=0, demand_or_capacity=0,
+                 service_time=0, tw_begin=0, tw_end=0, demand=0,
                  incompatible_vehicles=[]):
         self.name = name
         self.id_customer = id_customer
@@ -415,9 +415,7 @@ class Point:
         self.tw_end = tw_end
         self.time_windows = (self.tw_begin, self.tw_end)
         self.penalty_or_cost = penalty_or_cost
-        self.demand_or_capacity = demand_or_capacity
-        self.demand = demand_or_capacity
-        self.capacity = demand_or_capacity
+        self.demand = demand
         self.incompatible_vehicles = incompatible_vehicles
 
     # using property decorator
@@ -567,7 +565,7 @@ class Point:
     @property
     def demand(self):
         """getter function of demand"""
-        return self._demand_or_capacity
+        return self._demand
 
     # a setter function of demand
     @demand.setter
@@ -579,44 +577,8 @@ class Point:
         if demand < 0:
             raise PropertyError(constants.POINT.DEMAND.value,
                                 constants.GREATER_ZERO_PROPERTY)
-        self._demand_or_capacity = demand
         self._demand = demand
 
-    # a getter function of capacity
-    @property
-    def capacity(self):
-        """getter function of capacity"""
-        return self._demand_or_capacity
-
-    # a setter function of capacity
-    @capacity.setter
-    def capacity(self, capacity):
-        """setter function of capacity"""
-        if not isinstance(capacity, (int)):
-            raise PropertyError(constants.POINT.CAPACITY.value,
-                                constants.INTEGER_PROPERTY)
-        if capacity < 0:
-            raise PropertyError(constants.POINT.CAPACITY.value,
-                                constants.GREATER_ZERO_PROPERTY)
-        self._demand_or_capacity = capacity
-        self._capacity = capacity
-
-    # a getter function of demand_or_capacity
-    @property
-    def demand_or_capacity(self):
-        """getter function of demand_or_capacity"""
-        return self._demand_or_capacity
-
-    @demand_or_capacity.setter
-    def demand_or_capacity(self, demand_or_capacity):
-        """setter function of demand_or_capacity"""
-        if not isinstance(demand_or_capacity, (int)):
-            raise PropertyError(constants.POINT.DEMAND_OR_CAPACITY.value,
-                                constants.INTEGER_PROPERTY)
-        if demand_or_capacity < 0:
-            raise PropertyError(constants.POINT.DEMAND_OR_CAPACITY.value,
-                                constants.GREATER_ZERO_PROPERTY)
-        self._demand_or_capacity = demand_or_capacity
 
     @property
     def incompatible_vehicles(self):
@@ -653,9 +615,9 @@ class Point:
             point[constants.POINT.TIME_WINDOWS_END.value] = self.tw_end
         if self.penalty_or_cost != 0 or debug:
             point[constants.POINT.PENALTY_OR_COST.value] = self.penalty_or_cost
-        if self.demand_or_capacity != 0 or debug:
+        if self.demand != 0 or debug:
             point[constants.POINT.DEMAND_OR_CAPACITY
-                  .value] = self.demand_or_capacity
+                  .value] = self.demand
         if self.incompatible_vehicles != [] or debug:
             point[constants.POINT.INCOMPATIBLE_VEHICLES
                   .value] = self.incompatible_vehicles
@@ -722,10 +684,9 @@ class Depot(Point):
             service_time=0,
             tw_begin=0,
             tw_end=0,
-            capacity=0,
             incompatible_vehicles=[]):
         super().__init__(id, name, 0, cost, service_time, tw_begin, tw_end,
-                         capacity, incompatible_vehicles)
+                         0, incompatible_vehicles)
 
 
 class Link:
@@ -1074,7 +1035,6 @@ class Statistics:
 
     def __init__(self, json_input=str()):
         self.__solution_time = 0
-       # self.__solution_value = 0
         self.__best_lb = 0
         self.__root_lb = 0
         self.__root_time = 0
@@ -1083,8 +1043,6 @@ class Statistics:
             self.__json_input = json_input
             self.__solution_time = json_input[constants.STATISTICS.
                                               SOLUTION_TIME.value]
-            #self.__solution_value = json_input[constants.STATISTICS.
-            #                                   SOLUTION_VALUE.value]
             self.__best_lb = json_input[constants.STATISTICS.
                                         BEST_LOWER_BOUND.value]
             self.__root_lb = json_input[constants.STATISTICS.
@@ -1119,10 +1077,6 @@ class Statistics:
         """float : best lower bound find during the resolution"""
         return self.__best_lb
 
-    @property
-    def solution_value(self):
-        """float : total cost of solution"""
-        return self.__solution_value
 
     @property
     def solution_time(self):
@@ -1238,13 +1192,18 @@ class Solution:
     def __init__(self, json_input=None, status=constants.MODEL_NOT_SOLVED):
         self.__json = {}
         self.__routes = []
+        self.__value = 0
 
         if json_input != None:
             self.__json = json_input
             if (status > -1 and status < 4) or status == 8:
+                self.__value = self.__json["Solution"][
+                                        constants.STATISTICS.
+                                        SOLUTION_VALUE.value]
                 if len(self.__json["Solution"]["Routes"]) > 0:
                     for route in self.__json["Solution"]["Routes"]:
                         self.__routes.append(Route(route))
+
 
     def __str__(self):
         route_str =""
@@ -1258,6 +1217,11 @@ class Solution:
     def is_defined(self):
         """ return true if a solution is defined"""
         return self.__routes != []
+
+    @property
+    def value(self):
+        """float : return the total cost of the solution"""
+        return self.__value
 
     @property
     def json(self):
@@ -1505,7 +1469,7 @@ class Model:
             penalty_or_cost=0.0,
             tw_begin=0.0,
             tw_end=0.0,
-            demand_or_capacity=0,
+            demand=0,
             incompatible_vehicles=[]):
         """Add Point in dictionary :py:attr:`points`, if we want to add Depot,
            id_customer must be equal to 0, otherwise it cannot be greater
@@ -1522,7 +1486,7 @@ class Model:
             service_time,
             tw_begin,
             tw_end,
-            demand_or_capacity,
+            demand,
             incompatible_vehicles)
 
         if id_customer>0:
@@ -1536,7 +1500,6 @@ class Model:
             cost=0.0,
             tw_begin=0.0,
             tw_end=0.0,
-            capacity=0,
             incompatible_vehicles=[]):
         """Add depot in dictionary :py:attr:`points`"""
         if id in self.points:
@@ -1544,7 +1507,6 @@ class Model:
         self.add_point(id=id, name=name, id_customer=0,
                        service_time=service_time, penalty_or_cost=cost,
                        tw_begin=tw_begin, tw_end=tw_end,
-                       demand_or_capacity=capacity,
                        incompatible_vehicles=incompatible_vehicles)
 
     def delete_depot(self, id: int):
@@ -1575,7 +1537,7 @@ class Model:
         self.add_point(id=id, name=name, id_customer=id_cust,
                        service_time=service_time, penalty_or_cost=penalty,
                        tw_begin=tw_begin, tw_end=tw_end,
-                       demand_or_capacity=demand,
+                       demand=demand,
                        incompatible_vehicles=incompatible_vehicles)
 
 
@@ -1764,9 +1726,7 @@ class Model:
 
             if self.status > -1 and self.status < 4 and self.parameters.action != "enumAllFeasibleRoutes":
                 self.statistics = Statistics(self.solution.json["Statistics"])
-                self.solution_value = self.solution.json["Solution"][
-                                                        constants.STATISTICS.
-                                                        SOLUTION_VALUE.value] #todo
+                
             free_memory(output)
         except BaseException:
             raise ModelError(constants.BAPCOD_ERROR)

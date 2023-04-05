@@ -140,7 +140,7 @@ def solve_demo(instance_name,
         
         number of nodes : {model.statistics.nb_branch_and_bound_nodes}
         
-        solution value : {model.solution_value}
+        solution value : {model.solution.value}
 
         root lower bound : {model.statistics.root_lb}
 
@@ -157,7 +157,7 @@ def solve_demo(instance_name,
     # export the result
     # model.solution.export(instance_name.split(".")[0] + "_result")
 
-    return model.solution_value
+    return model.solution.value
 
 
 def read_cvrp_instances(instance_full_path):

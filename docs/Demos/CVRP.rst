@@ -199,7 +199,7 @@ Print solution
 
         number of nodes : {model.model.statistics.nb_branch_and_bound_nodes}
         
-        solution value : {model.statistics.solution_value}
+        solution value : {model.solution.value}
 
         root lower bound : {model.statistics.root_lb}
 

@@ -79,7 +79,6 @@ Model VRPSolverEasy
                                               coordinates_values[i][1],
                                               coordinates_values[j][1])
             model.add_link(
-                "arc" + str(enumerate),
                 start_point_id=i,
                 end_point_id=j,
                 distance=dist,

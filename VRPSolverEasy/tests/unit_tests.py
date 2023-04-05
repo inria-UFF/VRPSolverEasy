@@ -36,7 +36,7 @@ class TestAllVariants(unittest.TestCase):
         cost = dist * cost_per_distance * nb_links
         self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
-            cost, model.solution_value, places=5)
+            cost, model.solution.value, places=5)
 
     def test_cvrp_no_feasible(self):
         """test model in there is only resource of capacity
@@ -130,7 +130,7 @@ class TestAllVariants(unittest.TestCase):
                 (time_between_points * cost_per_time)) * nb_links
         self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
-            cost, model.solution_value, places=5)
+            cost, model.solution.value, places=5)
         print(model.solution)
 
     def test_cvrptw_with_parallel_arcs(self):
@@ -202,7 +202,7 @@ class TestAllVariants(unittest.TestCase):
         model.solve()       
         self.assertEqual(constants.OPTIMAL_SOL_FOUND, model.status)
         self.assertAlmostEqual(
-            425, model.solution_value, places=5)
+            425, model.solution.value, places=5)
         print(model.solution)
 
     def test_cvrptw_nofeasible_on_time(self):
@@ -329,7 +329,7 @@ class TestAllVariants(unittest.TestCase):
         print(model.solution)
         print(model.message)
         self.assertAlmostEqual(
-            360, model.solution_value, places=5)
+            360, model.solution.value, places=5)
         print(model.solution)
 
     def test_solve_without_all(self):
@@ -488,13 +488,13 @@ class TestAllClass(unittest.TestCase):
         with self.assertRaises(solver.PropertyError):
             model.add_point(5, id_customer=1054)
 
-        # check demand_or_capacity is integer
+        # check demand is integer
         with self.assertRaises(solver.PropertyError):
-            model.add_point(5, demand_or_capacity=3.5)
+            model.add_point(5, demand=3.5)
 
-        # check demand_or_capacity>0
+        # check demand>0
         with self.assertRaises(solver.PropertyError):
-            model.add_point(5, demand_or_capacity=-20)
+            model.add_point(5, demand=-20)
 
     def test_add_in_dict_point(self):
         """ we must have a new point in dict points after add"""
@@ -656,7 +656,7 @@ class TestAllClass(unittest.TestCase):
 
         # test solution value
         self.assertAlmostEqual(
-            cost, model.solution_value, places=5)
+            cost, model.solution.value, places=5)
 
         # test ids
         self.assertIn(model.solution.routes[0].point_ids, [[0, 1, 2, 3, 4, 0],
