@@ -110,21 +110,20 @@ A simple example that shows how to use the VRPSolverEasy package:
 .. code:: python
 
 
-   import math
    import VRPSolverEasy as vrpse
+   import math
 
    def compute_euclidean_distance(x_i, y_i, x_j, y_j):
        """compute the euclidean distance between 2 points from graph"""
-       return round(math.sqrt((x_i - x_j)**2 +
-                              (y_i - y_j)**2), 3)
+       return round(math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2), 3)
 
-   # data
+   # Data
    cost_per_distance = 10
    begin_time = 0
    end_time = 5000
    nb_point = 7
 
-   # map with names and coordinates
+   # Map with names and coordinates
    coordinates = {"Wisconsin, USA": (44.50, -89.50),  # depot
                   "West Virginia, USA": (39.000000, -80.500000),
                   "Vermont, USA": (44.000000, -72.699997),
@@ -134,8 +133,7 @@ A simple example that shows how to use the VRPSolverEasy package:
                   "Oregon, the US": (44.000000, -120.500000)
                   }
 
-
-   # demands of points
+   # Demands of points
    demands = [0, 500, 300, 600, 658, 741, 436]
 
    # Initialisation
@@ -156,7 +154,7 @@ A simple example that shows how to use the VRPSolverEasy package:
    model.add_depot(id=0, name="D1", tw_begin=0, tw_end=5000)
 
    coordinates_keys = list(coordinates.keys())
-   # Add Customers
+   # Add customers
    for i in range(1, nb_point):
        model.add_customer(
            id=i,
