@@ -9,7 +9,7 @@
 project = 'VRPSolverEasy'
 copyright = '2023, ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo QUEIROGA Eduardo'
 author = 'ERRAMI Najib SADYKOV Ruslan UCHOA Eduardo QUEIROGA Eduardo'
-release = '0.1'
+release = '0.1.2'
 
 import sys, os
 
