@@ -1,7 +1,7 @@
 from enum import Enum
 
 # VRPSolverReal informations
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 
 LIBRARY_WINDOWS = "bapcod-shared.dll"
 LIBRARY_LINUX = "libbapcod-shared.so"

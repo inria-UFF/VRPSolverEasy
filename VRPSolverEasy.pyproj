@@ -27,6 +27,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="docs\conf.py" />
+    <Compile Include="docs\Example\Pictures\__init__.py" />
     <Compile Include="VRPSolverEasy\demos\cvrp.py" />
     <Compile Include="VRPSolverEasy\demos\cvrptw.py">
       <SubType>Code</SubType>
@@ -37,10 +39,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VRPSolverEasy\demos\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="VRPSolverEasy\doc\source\conf.py" />
-    <Compile Include="VRPSolverEasy\doc\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VRPSolverEasy\ortools_demos\CVRP.py" />
@@ -64,45 +62,24 @@
   <ItemGroup>
     <Folder Include=".github\" />
     <Folder Include=".github\workflows\" />
+    <Folder Include="docs\" />
+    <Folder Include="docs\.vscode\" />
+    <Folder Include="docs\Bibliography\" />
+    <Folder Include="docs\Demos\" />
+    <Folder Include="docs\Example\" />
+    <Folder Include="docs\Example\Pictures\" />
+    <Folder Include="docs\Important notes\" />
+    <Folder Include="docs\Installation\" />
+    <Folder Include="docs\Solver API\" />
+    <Folder Include="docs\_static\" />
+    <Folder Include="docs\_templates\" />
     <Folder Include="VRPSolverEasy\demos\" />
     <Folder Include="VRPSolverEasy\demos\data\" />
     <Folder Include="VRPSolverEasy\demos\data\CVRPTW\" />
     <Folder Include="VRPSolverEasy\demos\data\CVRP\" />
     <Folder Include="VRPSolverEasy\demos\data\HFVRP\" />
-    <Folder Include="VRPSolverEasy\doc\build\" />
-    <Folder Include="VRPSolverEasy\doc\build\doctrees\" />
-    <Folder Include="VRPSolverEasy\doc\build\doctrees\Demos\" />
-    <Folder Include="VRPSolverEasy\doc\build\doctrees\Installation\" />
-    <Folder Include="VRPSolverEasy\doc\build\doctrees\Mathematical modeling\" />
-    <Folder Include="VRPSolverEasy\doc\build\doctrees\Python modeling\" />
-    <Folder Include="VRPSolverEasy\doc\build\doctrees\Results\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\Demos\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\Installation\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\Mathematical modeling\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\Python modeling\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\Results\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_sources\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_sources\Demos\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_sources\Installation\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_sources\Mathematical modeling\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_sources\Python modeling\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_sources\Results\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_static\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_static\css\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_static\css\fonts\" />
-    <Folder Include="VRPSolverEasy\doc\build\html\_static\js\" />
-    <Folder Include="VRPSolverEasy\doc\source\" />
-    <Folder Include="VRPSolverEasy\doc\source\Demos\" />
-    <Folder Include="VRPSolverEasy\doc\source\Installation\" />
-    <Folder Include="VRPSolverEasy\doc\source\Mathematical modeling\" />
-    <Folder Include="VRPSolverEasy\doc\source\Python modeling\" />
-    <Folder Include="VRPSolverEasy\doc\source\Results\" />
-    <Folder Include="VRPSolverEasy\doc\source\_static\" />
-    <Folder Include="VRPSolverEasy\doc\source\_templates\" />
     <Folder Include="VRPSolverEasy\lib\" />
     <Folder Include="VRPSolverEasy\lib\Windows\" />
-    <Folder Include="VRPSolverEasy\doc\" />
     <Folder Include="VRPSolverEasy\" />
     <Folder Include="VRPSolverEasy\ortools_demos\" />
     <Folder Include="VRPSolverEasy\src\data\" />
@@ -127,7 +104,24 @@
   <ItemGroup>
     <Content Include=".github\workflows\python-package.yml" />
     <Content Include=".readthedocs.yaml" />
+    <Content Include="docs\Bibliography\index.rst" />
+    <Content Include="docs\Bibliography\refs.bib" />
+    <Content Include="docs\Demos\CVRP.rst" />
+    <Content Include="docs\Demos\CVRPTW.rst" />
+    <Content Include="docs\Demos\HFVRP.rst" />
+    <Content Include="docs\Demos\index.rst" />
+    <Content Include="docs\Demos\MDVRP.rst" />
+    <Content Include="docs\Example\index.rst" />
+    <Content Include="docs\Example\Pictures\data.jpg" />
+    <Content Include="docs\Example\Pictures\Results.jpg" />
+    <Content Include="docs\Important notes\index.rst" />
+    <Content Include="docs\index.rst" />
+    <Content Include="docs\Installation\index.rst" />
+    <Content Include="docs\requirements.txt" />
+    <Content Include="docs\Solver API\index.rst" />
+    <Content Include="pyproject.toml" />
     <Content Include="README.rst" />
+    <Content Include="setup.cfg" />
     <Content Include="VRPSolverEasy\demos\data\CVRPTW\C101.txt" />
     <Content Include="VRPSolverEasy\demos\data\CVRPTW\C201.txt" />
     <Content Include="VRPSolverEasy\demos\data\CVRPTW\R101.txt" />
@@ -258,87 +252,6 @@
     <Content Include="VRPSolverEasy\demos\data\HFVRP\c75_18hd.txt" />
     <Content Include="VRPSolverEasy\demos\data\HFVRP\c75_18hvrp.txt" />
     <Content Include="VRPSolverEasy\demos\data\HFVRP\toy.txt" />
-    <Content Include="VRPSolverEasy\doc\build\doctrees\Demos\index.doctree" />
-    <Content Include="VRPSolverEasy\doc\build\doctrees\environment.pickle" />
-    <Content Include="VRPSolverEasy\doc\build\doctrees\index.doctree" />
-    <Content Include="VRPSolverEasy\doc\build\doctrees\Installation\index.doctree" />
-    <Content Include="VRPSolverEasy\doc\build\doctrees\Mathematical modeling\index.doctree" />
-    <Content Include="VRPSolverEasy\doc\build\doctrees\Python modeling\Customer.doctree" />
-    <Content Include="VRPSolverEasy\doc\build\doctrees\Python modeling\index.doctree" />
-    <Content Include="VRPSolverEasy\doc\build\doctrees\Python modeling\VehicleType.doctree" />
-    <Content Include="VRPSolverEasy\doc\build\doctrees\Results\index.doctree" />
-    <Content Include="VRPSolverEasy\doc\build\html\.buildinfo" />
-    <Content Include="VRPSolverEasy\doc\build\html\Demos\index.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\genindex.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\index.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\Installation\index.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\Mathematical modeling\index.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\objects.inv" />
-    <Content Include="VRPSolverEasy\doc\build\html\Python modeling\Customer.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\Python modeling\index.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\Python modeling\VehicleType.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\Results\index.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\search.html" />
-    <Content Include="VRPSolverEasy\doc\build\html\searchindex.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_sources\Demos\index.rst.txt" />
-    <Content Include="VRPSolverEasy\doc\build\html\_sources\index.rst.txt" />
-    <Content Include="VRPSolverEasy\doc\build\html\_sources\Installation\index.rst.txt" />
-    <Content Include="VRPSolverEasy\doc\build\html\_sources\Mathematical modeling\index.rst.txt" />
-    <Content Include="VRPSolverEasy\doc\build\html\_sources\Python modeling\Customer.rst.txt" />
-    <Content Include="VRPSolverEasy\doc\build\html\_sources\Python modeling\index.rst.txt" />
-    <Content Include="VRPSolverEasy\doc\build\html\_sources\Python modeling\VehicleType.rst.txt" />
-    <Content Include="VRPSolverEasy\doc\build\html\_sources\Results\index.rst.txt" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\alabaster.css" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\basic.css" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\badge_only.css" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\fontawesome-webfont.eot" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\fontawesome-webfont.svg" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\fontawesome-webfont.ttf" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\fontawesome-webfont.woff" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\fontawesome-webfont.woff2" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\lato-bold-italic.woff" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\lato-bold-italic.woff2" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\lato-bold.woff" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\lato-bold.woff2" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\lato-normal-italic.woff" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\lato-normal-italic.woff2" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\lato-normal.woff" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\lato-normal.woff2" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\Roboto-Slab-Bold.woff" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\Roboto-Slab-Bold.woff2" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\Roboto-Slab-Regular.woff" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\fonts\Roboto-Slab-Regular.woff2" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\css\theme.css" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\custom.css" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\doctools.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\documentation_options.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\file.png" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\jquery-3.6.0.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\jquery.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\js\badge_only.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\js\html5shiv-printshiv.min.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\js\html5shiv.min.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\js\theme.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\language_data.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\minus.png" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\plus.png" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\pygments.css" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\searchtools.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\sphinx_highlight.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\underscore-1.13.1.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\underscore.js" />
-    <Content Include="VRPSolverEasy\doc\build\html\_static\_sphinx_javascript_frameworks_compat.js" />
-    <Content Include="VRPSolverEasy\doc\make.bat" />
-    <Content Include="VRPSolverEasy\doc\Makefile" />
-    <Content Include="VRPSolverEasy\doc\README.md" />
-    <Content Include="VRPSolverEasy\doc\source\Demos\index.rst" />
-    <Content Include="VRPSolverEasy\doc\source\index.rst" />
-    <Content Include="VRPSolverEasy\doc\source\Installation\index.rst" />
-    <Content Include="VRPSolverEasy\doc\source\Mathematical modeling\index.rst" />
-    <Content Include="VRPSolverEasy\doc\source\Python modeling\Customer.rst" />
-    <Content Include="VRPSolverEasy\doc\source\Python modeling\index.rst" />
-    <Content Include="VRPSolverEasy\doc\source\Python modeling\VehicleType.rst" />
-    <Content Include="VRPSolverEasy\doc\source\Results\index.rst" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

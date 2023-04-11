@@ -12,7 +12,7 @@ else:
     import collections
 
 ########
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __author__ = "Najib ERRAMI Ruslan SADYKOV Eduardo UCHOA Eduardo QUEIROGA"
 __copyright__ = "Copyright VRPYSolver, all rights reserved"
 __email__ = "najib.errami@inria.fr"
