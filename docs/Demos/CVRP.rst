@@ -193,7 +193,7 @@ Print solution
         
         solution time : {model.statistics.solution_time}
 
-        number of nodes : {model.model.statistics.nb_branch_and_bound_nodes}
+        number of nodes : {model.statistics.nb_branch_and_bound_nodes}
         
         solution value : {model.solution.value}
 
