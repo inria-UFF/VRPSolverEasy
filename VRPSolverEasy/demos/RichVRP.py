@@ -147,12 +147,12 @@ def solve_demo(instance_name,
     for customer in data.customers:
         # Add a point for each time window of a customer
         for i, tw in enumerate(customer.time_windows):
-            _id_c1 = customer.id
+            _id = customer.id
             if i > 0: # Is it an alternative point?
-                _id_c1 = next_alternative_id
+                _id = next_alternative_id
                 alternative_ids[customer.id].append(next_alternative_id) 
                 next_alternative_id += 1 # Update it for the next alternative point
-            model.add_customer(id = _id_c1, 
+            model.add_customer(id = _id, 
                                id_customer = customer.id,
                                demand = customer.demand,
                                service_time = customer.service_time,
@@ -165,9 +165,9 @@ def solve_demo(instance_name,
     for depot in data.depots:
         for customer in data.customers:
             dist = compute_euclidean_distance(customer.x, customer.y, depot.x, depot.y)
-            for _id_c1 in [customer.id] + alternative_ids[customer.id]:
+            for _id in [customer.id] + alternative_ids[customer.id]:
                 model.add_link(start_point_id = depot.id,
-                               end_point_id = _id_c1,
+                               end_point_id = _id,
                                distance = dist,
                                time = dist)
                 
