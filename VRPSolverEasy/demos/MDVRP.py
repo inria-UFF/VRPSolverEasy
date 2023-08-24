@@ -54,7 +54,7 @@ def solve_demo(instance_name,
     if len(sys.argv) > 1:
         print(instance_name)
         opts = getopt.getopt(instance_name, "i:t:s:p:")
-        for opt, arg in opts:
+        for opt, arg in opts[0]:
             if opt in ["-i"]:
                 instance_name = arg
                 folder_data = ""
