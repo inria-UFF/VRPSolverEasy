@@ -194,16 +194,19 @@ def solve_demo(instance_name,
     if (solver_name_input == "CPLEX" and solver_path != ""):
         model.parameters.cplex_path = solver_path
 
-    #model.export(instance_name)
+    model.export(instance_name)
 
     # solve model
     model.solve()
 
+    print("\nAlternative IDs for each customer (for alternative TWs): ", alternative_ids)
+    if model.solution.is_defined():
+        print(model.solution)
+
     # export the result
-    # model.solution.export(instance_name.split(".")[0] + "_result")
+    model.solution.export(instance_name.split(".")[0] + "_result")
 
     return model.solution.value
-
 
 def read_richvrp_instances(instance_full_path):
     """Read instance of RichVRP by giving the name of instance
