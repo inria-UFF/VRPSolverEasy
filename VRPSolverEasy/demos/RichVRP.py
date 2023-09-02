@@ -196,10 +196,16 @@ def solve_demo(instance_name,
 
     model.export(instance_name)
 
-    # solve model
+    # Solve model
     model.solve()
 
-    print("\nAlternative IDs for each customer (for alternative TWs): ", alternative_ids)
+    print("\nAlternative IDs and their time windows:")
+    for customer in data.customers:
+        ids_and_tws = []
+        for i, alt_id in enumerate([customer.id] + alternative_ids[customer.id]):
+            ids_and_tws.append(f"(id: {alt_id}, tw: {list(customer.time_windows[i])})")
+        print(f"Customer {customer.id}: {', '.join(ids_and_tws)}")
+
     if model.solution.is_defined():
         print(model.solution)
 
