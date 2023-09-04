@@ -1198,8 +1198,7 @@ class Solution:
             self.__json = json_input
             if (status > -1 and status < 4) or status == 8:
                 self.__value = self.__json["Solution"][
-                                        constants.STATISTICS.
-                                        SOLUTION_VALUE.value]
+                                        "bestSolutionValue"]
                 if len(self.__json["Solution"]["Routes"]) > 0:
                     for route in self.__json["Solution"]["Routes"]:
                         self.__routes.append(Route(route))
@@ -1264,7 +1263,7 @@ class Model:
         Type:
 
             VehicleTypesDict : dictionary contains only vehicle type
-
+            
         Informations:
 
             - For academic version, with CLP it's possible to resolve the
