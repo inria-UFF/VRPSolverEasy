@@ -109,23 +109,23 @@ You obtain the following output::
     Route for vehicle 1:
         ID : 0 --> 2 --> 5 --> 0
         Name : DEPOT --> Vermont, USA --> Rhode Island, the US --> DEPOT
-        End time : 0.0 --> 177.693 --> 340.47400000000005 --> 516.0720000000001
+        End time : 0.0 --> 16.807 --> 19.259 --> 37.230000000000004
         Load : 0.0 --> 300.0 --> 1041.0 --> 1041.0
-        Total cost : 10321.439999999999
+        Total cost : 372.29999999999995
 
     Route for vehicle 1:
         ID : 0 --> 1 --> 3 --> 0
         Name : DEPOT --> West Virginia, USA --> Texas, the USA --> DEPOT
-        End time : 0.0 --> 179.545 --> 356.86199999999997 --> 544.257
+        End time : 0.0 --> 10.548 --> 31.625 --> 48.728
         Load : 0.0 --> 500.0 --> 1100.0 --> 1100.0
-        Total cost : 10885.14
+        Total cost : 487.2800000000001
 
     Route for vehicle 1:
-        ID : 0 --> 6 --> 4 --> 0
-        Name : DEPOT --> Oregon, the US --> South Dakota, the US --> DEPOT
-        End time : 0.0 --> 212.17 --> 431.123 --> 628.192
-        Load : 0.0 --> 436.0 --> 1094.0 --> 1094.0
-        Total cost : 12563.84
+        ID : 0 --> 4 --> 6 --> 0
+        Name : DEPOT --> South Dakota, the US --> Oregon, the US --> DEPOT
+        End time : 0.0 --> 10.5 --> 31.006 --> 62.010000000000005
+        Load : 0.0 --> 658.0 --> 1094.0 --> 1094.0
+        Total cost : 620.1
 
 .. note::
    You can also enumerate all feasible solutions by changing parameters before solving ::

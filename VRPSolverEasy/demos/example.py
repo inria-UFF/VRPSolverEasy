@@ -4,7 +4,7 @@ import math
 from VRPSolverEasy.src import solver
 
 
-def compute_euclidean_distance(x_i, y_i, x_j, y_j):
+def compute_euclidean_distance(x_i, x_j, y_i, y_j):
     """compute the euclidean distance between 2 points from graph"""
     return round(math.sqrt((x_i - x_j)**2 +
                            (y_i - y_j)**2), 3)
