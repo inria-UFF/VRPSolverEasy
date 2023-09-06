@@ -10,3 +10,4 @@ VRPSolverEasy distribution provides the demos, which give VRPSolver models for s
    CVRPTW
    HFVRP
    MDVRP
+   RichVRP
