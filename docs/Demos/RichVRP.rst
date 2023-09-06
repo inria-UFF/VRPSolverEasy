@@ -1,7 +1,7 @@
 RichVRP
 =========
 
-The RichVRP is a demo that combines multiple elements supported by VRPSolverEasy. It has open routes, multiple depots, multiple time windows, two types of vehicle (small and big), opitional customers, and incompatible vehicles (some customers can be served only by small vehicles).
+The RichVRP is a demo that combines multiple elements supported by VRPSolverEasy. It has open routes, multiple depots, multiple time windows, two types of vehicles (small and big), optional customers, and incompatible vehicles (some customers can be served only by small vehicles).
  
 Instance format
 ----------------------------
