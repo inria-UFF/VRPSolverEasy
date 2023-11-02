@@ -54,6 +54,15 @@ VRPSolverEasy comes with x86_64 BaPCod and VRPSolver libraries only. Therefore, 
    /usr/local/homebrew/bin/python3 -m pip install VRPSolverEasy
    /usr/local/homebrew/bin/python3 VRPSolverEasy/demos/CVRP.py -i VRPSolverEasy/demos/data/CVRP/A-n32-k5.vrp
 
+Copy binaries
+^^^^^^^^^^^^^
+
+Once the package is installed you will need to request the Bapcod distribution here: https://bapcod.math.u-bordeaux.fr/
+Once you have downloaded the distribution. You just have to go to the ``VRPSolverEasy`` folder and copy the system folder corresponding to your computer and copy it into the ``lib`` folder of the ``VRPSolverEasy`` python package.
+For example if your computer is a Mac you will copy and replace the ``Darwin`` folder, you will then have ``VRPSolverEasy/lib/Darwin``.
+
+
+
 Installation of academic version 
 ---------------------------------
 
