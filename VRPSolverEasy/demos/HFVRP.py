@@ -53,11 +53,14 @@ def solve_demo(instance_name,
                solver_path=""):
     """return a solution from modelisation"""
 
+    upper_bound = 1000000
+    instance_format = 0
+
     # read parameters given in command line
     type_instance = "HFVRP/"
     if len(sys.argv) > 1:
         print(instance_name)
-        opts = getopt.getopt(instance_name, "i:t:s:p:")
+        opts = getopt.getopt(instance_name, "i:t:s:p:u:f:")
         for opt, arg in opts[0]:
             if opt in ["-i"]:
                 instance_name = arg
@@ -67,9 +70,19 @@ def solve_demo(instance_name,
                 solver_name_input = arg
             if opt in ["-p"]:
                 solver_path = arg
+            if opt in ["-u"]:
+                upper_bound = float(arg)
+            if opt in ["-f"]:
+                instance_format = int(arg)
 
     # read instance
-    data = read_hfvrp_instances(instance_name)
+    if instance_format == 0:
+        data = read_hfvrp_classic_instances(instance_name)
+    elif instance_format == 1:
+        data = read_hfvrp_XH_instances(instance_name)
+    else:
+        print("Instance format is not valid!")
+        exit(0)
 
     # modelisation of problem
     model = solver.Model()
@@ -118,7 +131,8 @@ def solve_demo(instance_name,
 
     # set parameters
     model.set_parameters(time_limit=time_resolution,
-                         solver_name=solver_name_input)
+                         solver_name=solver_name_input,
+                         upper_bound=upper_bound)
 
     ''' If you have cplex 22.1 installed on your laptop windows you have to specify
         solver path'''
@@ -136,7 +150,7 @@ def solve_demo(instance_name,
     return model.solution.value
 
 
-def read_hfvrp_instances(instance_full_path):
+def read_hfvrp_classic_instances(instance_full_path):
     """Read literature instances of HFVRP by giving the name of instance
         and returns dictionary containing all elements of model"""
     instance_iter = iter(
@@ -194,12 +208,100 @@ def read_hfvrp_instances(instance_full_path):
                      depot_coordinates
                      )
 
+def read_hfvrp_XH_instances(instance_full_path):
+    """Read new format instances of HFVRP by giving the path of the instance
+       and returns a DataHfvrp object containing all elements of the model."""
+    
+    with open(instance_full_path, 'r') as f:
+        lines = f.readlines()
+
+    vehicle_capacities = []
+    vehicle_fixed_costs = []
+    vehicle_var_costs = []
+    vehicle_max_numbers = []
+    cust_coordinates = []
+    cust_demands = []
+    depot_coordinates = None
+
+    reading_section = None
+
+    for line in lines:
+        line = line.strip()
+        if line.startswith("NAME") or line.startswith("COMMENT") or line.startswith("TYPE") or line.startswith("EDGE_WEIGHT_TYPE"):
+            continue
+        elif line.startswith("DIMENSION"):
+            nb_points = int(line.split(":")[1].strip()) - 1 
+        elif line.startswith("VEHICLE_KINDS"):
+            nb_vehicle_types = int(line.split(":")[1].strip())
+        elif line.startswith("CAPACITIES"):
+            reading_section = "CAPACITIES"
+            continue
+        elif line.startswith("FIXED_COSTS"):
+            reading_section = "FIXED_COSTS"
+            continue
+        elif line.startswith("VARIABLE_COSTS"):
+            reading_section = "VARIABLE_COSTS"
+            continue
+        elif line.startswith("NUMBER_OF_VEHICLES"):
+            reading_section = "NUMBER_OF_VEHICLES"
+            continue
+        elif line.startswith("NODE_COORD_SECTION"):
+            reading_section = "NODE_COORD_SECTION"
+            continue
+        elif line.startswith("DEMAND_SECTION"):
+            reading_section = "DEMAND_SECTION"
+            continue
+        elif line.startswith("DEPOT_SECTION"):
+            reading_section = "DEPOT_SECTION"
+            continue
+        elif line.startswith("EOF"):
+            break
+
+        if reading_section == "CAPACITIES":
+            vehicle_capacities = list(map(int, line.split()))
+        elif reading_section == "FIXED_COSTS":
+            vehicle_fixed_costs = list(map(float, line.split()))
+        elif reading_section == "VARIABLE_COSTS":
+            vehicle_var_costs = list(map(float, line.split()))
+        elif reading_section == "NUMBER_OF_VEHICLES":
+            vehicle_max_numbers = list(map(int, line.split()))
+        elif reading_section == "NODE_COORD_SECTION":
+            parts = line.split()
+            node_id = int(parts[0]) - 1  # Adjusting index to start from 0
+            x_coord = float(parts[1])
+            y_coord = float(parts[2])
+            if node_id == 0:
+                depot_coordinates = [x_coord, y_coord]
+            else:
+                cust_coordinates.append([x_coord, y_coord])
+        elif reading_section == "DEMAND_SECTION":
+            parts = line.split()
+            node_id = int(parts[0]) - 1  # Adjusting index to start from 0
+            demand = int(parts[1])
+            if node_id != 0:
+                cust_demands.append(demand)
+        elif reading_section == "DEPOT_SECTION":
+            depot_id = int(line) - 1  # Adjusting index to start from 0
+            if depot_id == -2:  # Depot end signal
+                break
+
+    return DataHfvrp(nb_points,
+                     nb_vehicle_types,
+                     vehicle_capacities,
+                     vehicle_fixed_costs,
+                     vehicle_var_costs,
+                     vehicle_max_numbers,
+                     cust_demands,
+                     cust_coordinates,
+                     depot_coordinates
+                     )
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         solve_demo(sys.argv[1:])
     else:
         print("""Please indicates the parameters of your model like this : \n
-       python HFVRP.py -i INSTANCE_PATH/NAME_INSTANCE \n
-       -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
+       python HFVRP.py -i INSTANCE_PATH/NAME_INSTANCE -f INSTANCE_FORMAT(O for classic, 1 for XH) \n
+       -t TIME_RESOLUTION -u UPPER_BOUND -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
        """)
