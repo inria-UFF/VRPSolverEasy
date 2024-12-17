@@ -1,14 +1,10 @@
-""" This module allows to solve Queiroga instances of
-Heterogeneous Fleet Vehicle Routing Problem """
+""" This module allows to solve Heterogeneous Fleet Vehicle Routing Problem """
 
-import os
-import math
-import sys
-import getopt
 from VRPSolverEasy.src import solver
+import os,sys,getopt
+import math
 
-
-class DataHfvrp:
+class DataHFVRP:
     """Contains all data for HFVRP problem
     """
 
@@ -33,128 +29,22 @@ class DataHfvrp:
         self.cust_coordinates = cust_coordinates
         self.depot_coordinates = depot_coordinates
 
-
-def compute_euclidean_distance(x_i, y_i, x_j, y_j, number_digit=3):
+def compute_euclidean_distance(x_i, y_i, x_j, y_j):
     """Compute the euclidean distance between 2 points from graph"""
-    return round(math.sqrt((x_i - x_j)**2 +
-                           (y_i - y_j)**2), number_digit)
+    return math.sqrt((x_i - x_j)**2 + (y_i - y_j)**2)
 
-
-def read_instance(name: str):
-    """ Read an instance in the folder data from a given name """
-    with open(
-            os.path.normpath(name),
-            "r", encoding="UTF-8") as file:
-        return [str(element) for element in file.read().split()]
-
-def solve_demo(instance_name,
-               time_resolution=30,
-               solver_name_input="CLP",
-               solver_path=""):
-    """return a solution from modelisation"""
-
-    upper_bound = 1000000
-    instance_format = 0
-
-    # read parameters given in command line
-    type_instance = "HFVRP/"
-    if len(sys.argv) > 1:
-        print(instance_name)
-        opts = getopt.getopt(instance_name, "i:t:s:p:u:f:")
-        for opt, arg in opts[0]:
-            if opt in ["-i"]:
-                instance_name = arg
-            if opt in ["-t"]:
-                time_resolution = float(arg)
-            if opt in ["-s"]:
-                solver_name_input = arg
-            if opt in ["-p"]:
-                solver_path = arg
-            if opt in ["-u"]:
-                upper_bound = float(arg)
-            if opt in ["-f"]:
-                instance_format = int(arg)
-
-    # read instance
-    if instance_format == 0:
-        data = read_hfvrp_classic_instances(instance_name)
-    elif instance_format == 1:
-        data = read_hfvrp_XH_instances(instance_name)
-    else:
-        print("Instance format is not valid!")
-        exit(0)
-
-    # modelisation of problem
-    model = solver.Model()
-
-    for i in range(data.nb_vehicle_types):
-        # add vehicle type
-        model.add_vehicle_type(id=i + 1,
-                               start_point_id=0,
-                               end_point_id=0,
-                               capacity=data.vehicle_capacities[i],
-                               max_number=data.vehicle_max_numbers[i],
-                               fixed_cost=data.vehicle_fixed_costs[i],
-                               var_cost_dist=data.vehicle_var_costs[i]
-                               )
-    # add depot
-    model.add_depot(id=0)
-
-    # add all customers
-    for i in range(data.nb_customers):
-        model.add_customer(id=i + 1,
-                           demand=data.cust_demands[i]
-                           )
-
-    # Compute the links between depot and other points
-    for i,cust_i in enumerate(data.cust_coordinates):
-        dist = compute_euclidean_distance(cust_i[0],
-                                          cust_i[1],
-                                          data.depot_coordinates[0],
-                                          data.depot_coordinates[1])
-        model.add_link(start_point_id=0,
-                       end_point_id=i + 1,
-                       distance=dist
-                       )
-
-    # Compute the links between points
-    for i,cust_i in enumerate(data.cust_coordinates):
-        for j in range(i + 1, len(data.cust_coordinates)):
-            dist = compute_euclidean_distance(cust_i[0],
-                                              cust_i[1],
-                                              data.cust_coordinates[j][0],
-                                              data.cust_coordinates[j][1])
-            model.add_link(start_point_id=i + 1,
-                           end_point_id=j + 1,
-                           distance=dist
-                           )
-
-    # set parameters
-    model.set_parameters(time_limit=time_resolution,
-                         solver_name=solver_name_input,
-                         upper_bound=upper_bound)
-
-    ''' If you have cplex 22.1 installed on your laptop windows you have to specify
-        solver path'''
-    if (solver_name_input == "CPLEX" and solver_path != ""):
-        model.parameters.cplex_path = solver_path
-
-    #model.export(instance_name)
-
-    # solve model
-    model.solve()
-
-    # export the result
-    # model.solution.export(instance_name.split(".")[0] + "_result")
-
-    return model.solution.value
-
-
-def read_hfvrp_classic_instances(instance_full_path):
+def read_hfvrp_classic_instances(instance_path):
     """Read literature instances of HFVRP by giving the name of instance
         and returns dictionary containing all elements of model"""
-    instance_iter = iter(
-        read_instance(instance_full_path))
+    try:
+        with open (instance_path,
+            "r",encoding="UTF-8" )as file:
+            elements = [str(element) for element in file.read().split()]
+    except FileNotFoundError:
+        print(f"Error: The file '{instance_path}' was not found.")
+        exit(0)
+
+    instance_iter = iter(elements)
 
     nb_points = int(next(instance_iter))
 
@@ -197,7 +87,7 @@ def read_hfvrp_classic_instances(instance_full_path):
         vehicle_var_costs.append(var_cost_dist)
         vehicle_max_numbers.append(max_number)
 
-    return DataHfvrp(nb_points,
+    return DataHFVRP(nb_points,
                      nb_vehicles,
                      vehicle_capacities,
                      vehicle_fixed_costs,
@@ -205,14 +95,13 @@ def read_hfvrp_classic_instances(instance_full_path):
                      vehicle_max_numbers,
                      cust_demands,
                      cust_coordinates,
-                     depot_coordinates
-                     )
+                     depot_coordinates)
 
-def read_hfvrp_XH_instances(instance_full_path):
+def read_hfvrp_XH_instances(instance_path):
     """Read new format instances of HFVRP by giving the path of the instance
-       and returns a DataHfvrp object containing all elements of the model."""
+       and returns a DataHFVRP object containing all elements of the model."""
     
-    with open(instance_full_path, 'r') as f:
+    with open(instance_path, 'r') as f:
         lines = f.readlines()
 
     vehicle_capacities = []
@@ -285,7 +174,7 @@ def read_hfvrp_XH_instances(instance_full_path):
             if depot_id == -2:  # Depot end signal
                 break
 
-    return DataHfvrp(nb_points,
+    return DataHFVRP(nb_points,
                      nb_vehicle_types,
                      vehicle_capacities,
                      vehicle_fixed_costs,
@@ -293,15 +182,149 @@ def read_hfvrp_XH_instances(instance_full_path):
                      vehicle_max_numbers,
                      cust_demands,
                      cust_coordinates,
-                     depot_coordinates
-                     )
+                     depot_coordinates)
 
+def solve_hfvrp(argv,
+                instance_path='',
+                time_limit=1e+10,
+                upper_bound=1e+5,
+                instance_format=0,
+                solver_name="CLP",
+                solver_path=""):
+    """It solves the HFVRP and returns a solution"""
+
+    # read parameters given in command line
+    opts, args = getopt.getopt(argv,"i:t:u:f:s:p:")
+    for opt, arg in opts:
+        if opt == "-i":
+            instance_path = os.path.abspath(arg)
+        elif opt == "-t":
+            time_limit = float(arg)
+        elif opt == "-u":
+            upper_bound = float(arg)
+        elif opt == "-f":
+            instance_format = int(arg)
+        elif opt == "-s":
+            solver_name = arg
+        if opt in ["-p"]:
+            solver_path = os.path.abspath(arg)
+
+    # read instance
+    if instance_format == 0:
+        data = read_hfvrp_classic_instances(instance_path)
+    elif instance_format == 1:
+        data = read_hfvrp_XH_instances(instance_path)
+    else:
+        print("Instance format is not valid!")
+        exit(0)
+
+    # VRPSolverEasy model
+    model = solver.Model()
+
+    # add vehicles
+    for i in range(data.nb_vehicle_types):
+        # add vehicle type
+        model.add_vehicle_type(id=i + 1,
+                               start_point_id=0,
+                               end_point_id=0,
+                               capacity=data.vehicle_capacities[i],
+                               max_number=data.vehicle_max_numbers[i],
+                               fixed_cost=data.vehicle_fixed_costs[i],
+                               var_cost_dist=data.vehicle_var_costs[i])
+
+    # add depot
+    model.add_depot(id=0)
+
+    # add all customers
+    for i in range(data.nb_customers):
+        model.add_customer(id=i + 1,
+                           demand=data.cust_demands[i])
+
+    # compute the links between depot and other points
+    for i,cust_i in enumerate(data.cust_coordinates):
+        dist = compute_euclidean_distance(cust_i[0],
+                                          cust_i[1],
+                                          data.depot_coordinates[0],
+                                          data.depot_coordinates[1])
+        model.add_link(start_point_id=0,
+                       end_point_id=i + 1,
+                       distance=dist)
+
+    # compute the links between points
+    for i,cust_i in enumerate(data.cust_coordinates):
+        for j in range(i + 1, len(data.cust_coordinates)):
+            dist = compute_euclidean_distance(cust_i[0],
+                                              cust_i[1],
+                                              data.cust_coordinates[j][0],
+                                              data.cust_coordinates[j][1])
+            model.add_link(start_point_id=i + 1,
+                           end_point_id=j + 1,
+                           distance=dist)
+
+    # set parameters
+    if solver_name == "CPLEX":
+        # Set heuristic_used=False to disable CPLEX built-in heuristic
+        model.set_parameters(time_limit=time_limit, solver_name=solver_name, 
+                            upper_bound=upper_bound, heuristic_used=True)
+    else: # CLP solver
+        model.set_parameters(time_limit=time_limit, 
+                            upper_bound=upper_bound, solver_name=solver_name)
+
+    ''' If you have cplex 22.1 installed on your laptop windows you have to specify
+        solver path'''
+    if (solver_name == "CPLEX" and solver_path != ""):
+        model.parameters.cplex_path = solver_path
+
+    # Uncomment the next line to write a JSON file for the model
+    # model.export(instance_path)
+
+    # solve model
+    model.solve()
+
+    if model.solution.is_defined :
+        print(f"""
+        VRPSolver statistics:
+        {'-'*30}
+        Solution value        : {model.solution.value}
+        Best lower bound      : {model.statistics.best_lb}
+        Total time            : {model.statistics.solution_time} seconds
+        Number of B&B nodes   : {model.statistics.nb_branch_and_bound_nodes}
+        Root lower bound      : {model.statistics.root_lb}
+        Root time             : {model.statistics.root_time} seconds
+        {'-'*30}
+        """)
+        print(f"Status : {model.status}\n")
+        print(f"Message : {model.message}\n")   
+        for route in model.solution.routes:            
+            print(f"Vehicle Type id : {route.vehicle_type_id}.")
+            print(f"Ids : {route.point_ids}.")
+            print(f"Load : {route.cap_consumption}.\n")
+
+    # Uncomment the next line to export the result
+    # model.solution.export(instance_path.split(".")[0] + "_result")
+
+    return model.solution
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        solve_demo(sys.argv[1:])
+        solve_hfvrp(sys.argv[1:])
     else:
-        print("""Please indicates the parameters of your model like this : \n
-       python HFVRP.py -i INSTANCE_PATH/NAME_INSTANCE -f INSTANCE_FORMAT(O for classic, 1 for XH) \n
-       -t TIME_RESOLUTION -u UPPER_BOUND -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
-       """)
+        print(
+            """
+            Usage:
+                python HFVRP.py -i <INSTANCE_PATH>
+                            -t <TIME_LIMIT>            # In seconds
+                            -u <UPPER_BOUND> 
+                            -f <INSTANCE_FORMAT>]        
+                            -s <SOLVER_NAME>      
+                            [-p <PATH_SOLVER>]         # Optional, Windows only
+
+            Parameters:
+                -i   Path to the instance file
+                -t   Execution time limit in seconds (default: 1e+10)
+                -u   Upper bound (default: 1e+5)
+                -f   Instance format (0 for classic and 1 for XH, default: 0)
+                -s   Name of the MIP/LP solver used by VRPSolver (CLP or CPLEX, default: CLP)
+                -p   Path to the MIP/LP solver used by VRPSolver (optional, Windows only)
+            """
+        )

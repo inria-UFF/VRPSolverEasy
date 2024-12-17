@@ -3,12 +3,10 @@
 import math
 from VRPSolverEasy.src import solver
 
-
 def compute_euclidean_distance(x_i, x_j, y_i, y_j):
     """compute the euclidean distance between 2 points from graph"""
     return round(math.sqrt((x_i - x_j)**2 +
                            (y_i - y_j)**2), 3)
-
 
 def run_example():
     """modelisation of small example using solver"""
@@ -79,7 +77,6 @@ def run_example():
 
     if model.solution.is_defined():
         print(model.solution)
-
 
 if __name__ == "__main__":
     run_example()

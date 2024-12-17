@@ -80,7 +80,7 @@ def read_instance(name: str):
         return [str(element) for element in file.read().split()]
 
 def solve_demo(instance_name,
-               time_resolution=30,
+               time_resolution=1e+10,
                solver_name_input="CLP",
                solver_path=""):
     """return a solution from modelisation"""
@@ -271,7 +271,18 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         solve_demo(sys.argv[1:])
     else:
-        print("""Please indicates the parameters of your model like this : \n
-       python RichVRP.py -i INSTANCE_PATH/NAME_INSTANCE \n
-       -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
-       """)
+        print(
+            """
+            Usage:
+                python CVRP.py -i <INSTANCE_PATH>
+                            -t <TIME_LIMIT>            # In seconds
+                            -s <SOLVER_NAME>      
+                            [-p <PATH_SOLVER>]         # Optional, Windows only
+
+            Parameters:
+                -i   Path to the instance file
+                -t   Execution time limit in seconds (default: 1e+10)
+                -s   Name of the MIP/LP solver used by VRPSolver (CLP or CPLEX, default: CLP)
+                -p   Path to the MIP/LP solver used by VRPSolver (optional, Windows only)
+            """
+        )

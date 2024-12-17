@@ -1,16 +1,12 @@
 """ This module allows to solve CVRPLIB instances of
 Capacitated Vehicle Routing Problem """
 
-import os
-import math
-import sys
-import getopt
 from VRPSolverEasy.src import solver
+import os,sys,getopt
+import math
 
-
-class DataCvrp:
-    """Contains all data for CVRP problem
-    """
+class DataCVRP:
+    """Contains all data for CVRP problem"""
 
     def __init__(
             self,
@@ -25,141 +21,24 @@ class DataCvrp:
         self.cust_coordinates = cust_coordinates
         self.depot_coordinates = depot_coordinates
 
-
-def compute_euclidean_distance(x_i, y_i, x_j, y_j, number_digit=3):
-    """Compute the euclidean distance between 2 points from graph"""
+def compute_euclidean_distance(x_i, y_i, x_j, y_j):
+    """Compute the rounded euclidean distance between 2 points"""
     return round(math.sqrt((x_i - x_j)**2 +
-                           (y_i - y_j)**2), number_digit)
+                           (y_i - y_j)**2))
 
-
-def read_instance(name: str):
-    """ Read an instance in the folder data from a given name """
-
-    with open(
-            os.path.normpath(name),
-            "r", encoding="UTF-8") as file:
-        return [str(element) for element in file.read().split()]
-
-
-def solve_demo(instance_name,
-               time_resolution=30,
-               solver_name_input="CLP",
-               solver_path=""):
-    """return a solution from modelisation"""
-
-    # read parameters given in command line
-    type_instance = "CVRP/"
-    if len(sys.argv) > 1:
-        opts = getopt.getopt(instance_name, "i:t:s:p:")
-        for opt, arg in opts[0]:
-            if opt in ["-i"]:
-                instance_name = arg
-                folder_data = ""
-                type_instance = ""
-            if opt in ["-t"]:
-                time_resolution = float(arg)
-            if opt in ["-s"]:
-                solver_name_input = arg
-            if opt in ["-p"]:
-                solver_path = arg
-
-    # read instance
-    data = read_cvrp_instances(instance_name)
-
-    # modelisation of problem
-    model = solver.Model()
-
-    # add vehicle type
-    model.add_vehicle_type(id=1,
-                           start_point_id=0,
-                           end_point_id=0,
-                           max_number=data.nb_customers,
-                           capacity=data.vehicle_capacity,
-                           var_cost_dist=1
-                           )
-    # add depot
-    model.add_depot(id=0)
-
-    # add all customers
-    for i in range(data.nb_customers):
-        model.add_customer(id=i + 1,
-                           demand=data.cust_demands[i]
-                           )
-
-    # Compute the links between depot and other points
-    for i,cust_i in enumerate(data.cust_coordinates):
-        dist = compute_euclidean_distance(cust_i[0],
-                                          cust_i[1],
-                                          data.depot_coordinates[0],
-                                          data.depot_coordinates[1],
-                                          0)
-
-        model.add_link(start_point_id=0,
-                       end_point_id=i + 1,
-                       distance=dist
-                       )
-
-    # Compute the links between points
-    for i,cust_i in enumerate(data.cust_coordinates):
-        for j in range(i + 1, len(data.cust_coordinates)):
-            dist = compute_euclidean_distance(cust_i[0],
-                                              cust_i[1],
-                                              data.cust_coordinates[j][0],
-                                              data.cust_coordinates[j][1],
-                                              0)
-            model.add_link(start_point_id=i + 1,
-                           end_point_id=j + 1,
-                           distance=dist
-                           )
-
-    # set parameters
-    model.set_parameters(time_limit=time_resolution,
-                         solver_name=solver_name_input)
-
-    ''' If you have cplex 22.1 installed on your laptop windows you have to specify
-        solver path'''
-    if (solver_name_input == "CPLEX" and solver_path != ""):
-        model.parameters.cplex_path = solver_path
-
-    #model.export(instance_name)
-
-    # solve model
-    model.solve()
-
-    if model.solution.is_defined :
-        print(f"""Statistics :
-        best lower bound : { model.statistics.best_lb } 
-        
-        solution time : {model.statistics.solution_time}
-        
-        number of nodes : {model.statistics.nb_branch_and_bound_nodes}
-        
-        solution value : {model.solution.value}
-
-        root lower bound : {model.statistics.root_lb}
-
-        root root time : {model.statistics.root_time}.
-        """)
-        print(f"Status : {model.status}.\n")
-        print(f"Message : {model.message}.\n")   
-        for route in model.solution.routes:            
-            print(f"Vehicle Type id : {route.vehicle_type_id}.")
-            print(f"Ids : {route.point_ids}.")
-            print(f"Load : {route.cap_consumption}.\n")
-
-
-    # export the result
-    # model.solution.export(instance_name.split(".")[0] + "_result")
-
-    return model.solution.value
-
-
-def read_cvrp_instances(instance_full_path):
+def read_cvrp_instances(instance_path):
     """Read literature instances from CVRPLIB by giving the name of instance
        and returns dictionary containing all elements of model"""
 
-    instance_iter = iter(
-        read_instance(instance_full_path))
+    try:
+        with open (instance_path,
+            "r",encoding="UTF-8" )as file:
+            elements = [str(element) for element in file.read().split()]
+    except FileNotFoundError:
+        print(f"Error: The file '{instance_path}' was not found.")
+        exit(0)
+
+    instance_iter = iter(elements)
 
     id_point = 0
     dimension_input = -1
@@ -223,19 +102,147 @@ def read_cvrp_instances(instance_full_path):
     if end_depot_section != -1:
         raise Exception("Expected only one depot.")
 
-    return DataCvrp(vehicle_capacity,
+    return DataCVRP(vehicle_capacity,
                     dimension_input - 1,
                     cust_demands,
                     cust_coordinates,
-                    depot_coordinates
-                    )
+                    depot_coordinates)
 
+def solve_cvrp(argv,
+                instance_path='',
+                time_limit=1e+10,
+                upper_bound=1e+5,
+                fixed_nb_veh=-1,
+                solver_name="CLP",
+                solver_path=""):
+    """It solves the CVRP and returns a solution"""
+
+    # read parameters given in command line
+    opts, args = getopt.getopt(argv,"i:t:u:v:s:p:")
+    for opt, arg in opts:
+        if opt == "-i":
+            instance_path = os.path.abspath(arg)
+        elif opt == "-t":
+            time_limit = float(arg)
+        elif opt == "-u":
+            upper_bound = float(arg)
+        elif opt == "-v":
+            fixed_nb_veh = int(arg)
+        elif opt == "-s":
+            solver_name = arg
+        if opt in ["-p"]:
+            solver_path = os.path.abspath(arg)
+
+    # read instance
+    data = read_cvrp_instances(instance_path)
+
+    # VRPSolverEasy model
+    model = solver.Model()
+
+    nbVehicles = data.nb_customers
+    if fixed_nb_veh != -1:
+        nbVehicles = fixed_nb_veh
+    # add vehicle type
+    model.add_vehicle_type(id=1,
+                        start_point_id=0,
+                        end_point_id=0,
+                        max_number=nbVehicles,
+                        capacity=data.vehicle_capacity,
+                        var_cost_dist=1)
+
+    # add depot
+    model.add_depot(id=0)
+
+    # add all customers
+    for i in range(data.nb_customers):
+        model.add_customer(id=i + 1, demand=data.cust_demands[i])
+
+    # compute the links between depot and other points
+    for i,cust_i in enumerate(data.cust_coordinates):
+        dist = compute_euclidean_distance(cust_i[0],
+                                          cust_i[1],
+                                          data.depot_coordinates[0],
+                                          data.depot_coordinates[1])
+
+        model.add_link(start_point_id=0,
+                       end_point_id=i + 1,
+                       distance=dist)
+
+    # compute the links between points
+    for i,cust_i in enumerate(data.cust_coordinates):
+        for j in range(i + 1, len(data.cust_coordinates)):
+            dist = compute_euclidean_distance(cust_i[0],
+                                              cust_i[1],
+                                              data.cust_coordinates[j][0],
+                                              data.cust_coordinates[j][1])
+            model.add_link(start_point_id=i + 1,
+                           end_point_id=j + 1,
+                           distance=dist)
+
+    # set parameters
+    if solver_name == "CPLEX":
+        # Set heuristic_used=False to disable CPLEX built-in heuristic
+        model.set_parameters(time_limit=time_limit, solver_name=solver_name, 
+                            upper_bound=upper_bound, heuristic_used=True)
+    else: # CLP solver
+        model.set_parameters(time_limit=time_limit, 
+                            upper_bound=upper_bound, solver_name=solver_name)
+
+    ''' If you have cplex 22.1 installed on your laptop windows you have to specify
+        solver path'''
+    if (solver_name == "CPLEX" and solver_path != ""):
+        model.parameters.cplex_path = solver_path
+
+    # Uncomment the next line to write a JSON file for the model
+    # model.export(instance_path)
+
+    # solve model
+    model.solve()
+
+    if model.solution.is_defined :
+        print(f"""
+        VRPSolver statistics:
+        {'-'*30}
+        Solution value        : {model.solution.value}
+        Best lower bound      : {model.statistics.best_lb}
+        Total time            : {model.statistics.solution_time} seconds
+        Number of B&B nodes   : {model.statistics.nb_branch_and_bound_nodes}
+        Root lower bound      : {model.statistics.root_lb}
+        Root time             : {model.statistics.root_time} seconds
+        {'-'*30}
+        """)
+        print(f"Status : {model.status}\n")
+        print(f"Message : {model.message}\n")   
+        for route in model.solution.routes:            
+            print(f"Vehicle Type id : {route.vehicle_type_id}.")
+            print(f"Ids : {route.point_ids}.")
+            print(f"Load : {route.cap_consumption}.\n")
+
+    # Uncomment the next line to export the result
+    # model.solution.export(instance_path.split(".")[0] + "_result")
+
+    return model.solution
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        solve_demo(sys.argv[1:])
+        solve_cvrp(sys.argv[1:])
     else:
-        print("""Please indicates the path of your instance like this : \n
-       python CVRP.py -i INSTANCE_PATH/NAME_INSTANCE \n
-       -t TIME_RESOLUTION -s SOLVER_NAME (-p PATH_SOLVER (WINDOWS only))
-       """)
+        print(
+            """
+            Usage:
+                python CVRP.py -i <INSTANCE_PATH>
+                            -t <TIME_LIMIT>            # In seconds
+                            -u <UPPER_BOUND> 
+                            [-v <NUM_VEHICLES>]        # Optional (for fixed fleet)
+                            -s <SOLVER_NAME>      
+                            [-p <PATH_SOLVER>]         # Optional, Windows only
+
+            Parameters:
+                -i   Path to the instance file
+                -t   Execution time limit in seconds (default: 1e+10)
+                -u   Upper bound (default: 1e+5)
+                -v   Number of vehicles for fixed fleet (default: unlimited fleet size)
+                -s   Name of the MIP/LP solver used by VRPSolver (CLP or CPLEX, default: CLP)
+                -p   Path to the MIP/LP solver used by VRPSolver (optional, Windows only)
+            """
+        )
