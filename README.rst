@@ -122,9 +122,9 @@ A simple example that shows how to use the VRPSolverEasy package:
    import math
 
    def compute_euclidean_distance(x_i, x_j, y_i, y_j):
-     """compute the euclidean distance between 2 points from graph"""
-        return round(math.sqrt((x_i - x_j)**2 +
-                               (y_i - y_j)**2), 3)
+       """compute the euclidean distance between 2 points from graph"""
+       return round(math.sqrt((x_i - x_j)**2 +
+                              (y_i - y_j)**2), 3)
 
    # Data
    cost_per_distance = 10
