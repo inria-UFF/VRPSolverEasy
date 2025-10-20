@@ -6,6 +6,7 @@ VERSION = "0.1.4"
 LIBRARY_WINDOWS = "bapcod-shared.dll"
 LIBRARY_LINUX = "libbapcod-shared.so"
 LIBRARY_MAC = "libbapcod-shared.dylib"
+LIBRARY_ARM_MAC = "libbapcod-shared-arm.dylib"
 
 WINDOWS_PLATFORM = "Windows"
 LINUX_PLATFORM = "Linux"
