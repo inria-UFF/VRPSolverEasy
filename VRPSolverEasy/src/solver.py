@@ -1661,7 +1661,10 @@ class Model:
         elif platform.system() == constants.LINUX_PLATFORM:
             _lib_name = constants.LIBRARY_LINUX
         elif platform.system() == constants.MAC_PLATFORM:
-            _lib_name = constants.LIBRARY_MAC
+            if platform.machine() == 'arm64':
+                _lib_name = constants.LIBRARY_ARM_MAC
+            else:
+                _lib_name = constants.LIBRARY_MAC
 
         else:
             raise ModelError(constants.PLATFORM_ERROR)
